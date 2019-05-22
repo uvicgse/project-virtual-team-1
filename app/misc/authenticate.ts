@@ -125,6 +125,7 @@ function getUserInfo(callback) {
 
   ghme.info(function(err, data, head) {
     if (err) {
+      console.log(err);
       if (err.toString().indexOf("OTP") !== -1)
       {
         github.auth.config({
@@ -139,7 +140,7 @@ function getUserInfo(callback) {
           $("#otpModal").modal('show');
         });
       }
-      else if (err == "Error: getaddrinfo ENOTFOUND api.github.com api.github.com:443"){
+      else if (err.toString().indexOf("ENOTFOUND") != 0 || err.toString().indexOf("ENOENT") != 0){
         displayModal("No internet connection");
       }else{
         displayModal(err);
