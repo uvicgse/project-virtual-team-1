@@ -125,7 +125,6 @@ function getUserInfo(callback) {
 
   ghme.info(function(err, data, head) {
     if (err) {
-      console.log(err);
       if (err.toString().indexOf("OTP") !== -1)
       {
         github.auth.config({
