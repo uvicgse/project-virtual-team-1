@@ -140,7 +140,7 @@ function setMyMenu() {
 				click () { require('electron').shell.openExternal('https://github.com/kblincoe/VisualGit_SE701_2019_3#help'); }
 			}
 		]
-	}, 
+	},
 	{
 		label: 'Application',
             submenu: [
@@ -159,7 +159,7 @@ function setMyMenu() {
                     }
                 }
             ]
-	}, 
+	},
 	{
 		label: 'Edit',
             submenu: [
@@ -192,13 +192,14 @@ app.on('activate', () => {
 });
 
 app.on('ready', () => {
-	const ret = globalShortcut.register('CommandOrControl+R', () => {
-		globalShortcut.unregister('CommandOrControl+R');
-		//console.log('CommandOrControl+R is pressed')
+	globalShortcut.register('CommandOrControl+R', () => {
+	 // console.log('CommandOrControl+R is pressed')
 	})
-	const ret1 = globalShortcut.register('F5', () => {
-		globalShortcut.unregister('F5');
+	globalShortcut.register('F5', () => {
 		//console.log('F5 is pressed')
+	})
+	globalShortcut.register('Ctrl+R', () => {
+		//console.log('Ctrl+R is pressed')
 	})
 	mainWindow = createMainWindow();
 
