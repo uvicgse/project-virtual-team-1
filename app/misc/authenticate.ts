@@ -140,7 +140,7 @@ function getUserInfo(callback) {
         });
       }
       else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT"){
-        displayModal("No internet connection");
+        displayModal("Authentication Error: Please check your internet connection");
       }else{
         displayModal(err);
       }
