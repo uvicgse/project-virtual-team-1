@@ -24,8 +24,8 @@ function createMainWindow() {
 		backgroundColor : "#000",
 		icon: __dirname + "/assets/icons/Icon.png"
 	});
-	globalShortcut.register('f5', function() {
-		console.log('f5 is pressed')
+	globalShortcut.register('F5', function() {
+		console.log('F5 is pressed')
 		globalShortcut.unregister('f5')
 		//mainWindow.reload()
 	})
