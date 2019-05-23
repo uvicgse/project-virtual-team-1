@@ -4,10 +4,13 @@ const electron = require('electron');
 const app = electron.app;
 const Menu = electron.Menu;
 const BrowserWindow = electron.BrowserWindow;
-const globalShortcut = electron.globalShortcut
+const { globalShortcut } = require('electron')
+
+
 
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
+
 
 // prevent window being garbage collected
 let mainWindow;
@@ -24,16 +27,6 @@ function createMainWindow() {
 		backgroundColor : "#000",
 		icon: __dirname + "/assets/icons/Icon.png"
 	});
-	globalShortcut.register('F5', function() {
-		console.log('F5 is pressed')
-		globalShortcut.unregister('f5')
-		//mainWindow.reload()
-	})
-	globalShortcut.register('CommandOrControl+R', function() {
-		globalShortcut.unregister('CommandOrControl+X')
-		console.log('CommandOrControl+R is pressed')
-		//mainWindow.reload()
-	})
 
 
 	win.setMinimumSize(900, 720);
@@ -191,11 +184,24 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
 	if (!mainWindow) {
+
 		mainWindow = createMainWindow();
 	}
+
+
 });
 
 app.on('ready', () => {
+	const ret = globalShortcut.register('CommandOrControl+R', () => {
+		globalShortcut.unregister('CommandOrControl+R');
+		//console.log('CommandOrControl+R is pressed')
+	})
+	const ret1 = globalShortcut.register('F5', () => {
+		globalShortcut.unregister('F5');
+		//console.log('F5 is pressed')
+	})
 	mainWindow = createMainWindow();
+
+
 	Menu.setApplicationMenu(Menu.buildFromTemplate(setMyMenu()));
 });

@@ -44,6 +44,7 @@
     "crypto-js": "^3.1.9-1",
     "diff2html": "^2.7.0",
     "electron-debug": "1.0.0",
+    "electron-localshortcut": "^3.1.0",
     "font-awesome": "4.7.0",
     "fs-sync": "1.0.3",
     "github-avatar-url": "1.0.0",
