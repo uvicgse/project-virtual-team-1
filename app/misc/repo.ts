@@ -3,6 +3,7 @@ let repoFullPath;
 let repoLocalPath;
 let bname = {};
 let branchCommit = [];
+let tags = {}
 let remoteName = {};
 let localBranches = [];
 let readFile = require("fs-sync");
@@ -261,7 +262,9 @@ function openRepository() {
   function refreshAll(repository) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
-    bname = [];
+    bname = {};
+    tags = {}
+
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
@@ -274,41 +277,52 @@ function openRepository() {
         //Get the list of branches from the repo
         return repository.getReferences(Git.Reference.TYPE.LISTALL);
       })
-      .then(function (branchList) {
+      .then(function (refList) {
         let count = 0;
         clearBranchElement();
         //for each branch
-        for (let i = 0; i < branchList.length; i++) {
-          console.log("branch name: " + branchList[i].name());
-          //get simplified name
-          let bp = branchList[i].name().split("/")[branchList[i].name().split("/").length - 1];
+        for (let i = 0; i < refList.length; i++) {
+          console.log("reference name: " + refList[i].name());
 
-          Git.Reference.nameToId(repository, branchList[i].name()).then(function (oid) {
+          //get simplified name
+          let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+          Git.Reference.nameToId(repository, refList[i].name()).then(function (oid) {
             // Use oid
-            console.log("old id " + oid);
-            if (branchList[i].isRemote()) {
+            if (refList[i].isRemote()) {
               // for remote branches add oid and branch name to remote branches map
-              remoteName[bp] = oid;
-            } else {
-              //add branch name to the branch list
-              branchCommit.push(branchList[i]);
-              console.log(bp + " adding to end of " + oid.tostrS());
+              remoteName[refName] = oid;
+            } else if (refList[i].isBranch()){
+              // add to list of branches
+              branchCommit.push(refList[i]);
+              console.log(refName + ": adding branch to end of " + oid.tostrS());
               if (oid.tostrS() in bname) {
-                bname[oid.tostrS()].push(branchList[i]);
+                bname[oid.tostrS()].push(refList[i]);
               } else {
-                bname[oid.tostrS()] = [branchList[i]];
+                bname[oid.tostrS()] = [refList[i]];
               }
+            } else if (refList[i].isTag()){
+              // add to list of tags
+              console.log(refName + ": adding tag to end of " + oid.tostrS());
+              if (oid.tostrS() in tags) {
+                tags[oid.tostrS()].push(refList[i]);
+              } else {
+                tags[oid.tostrS()] = [refList[i]];
+              }
+            }else{
+              console.log("Unsupported reference: " + refList[i].name());
             }
           }, function (err) {
             console.log("repo.ts, line 273, could not find referenced branch" + err);
           });
-          if (branchList[i].isRemote()) {
-            if (localBranches.indexOf(bp) < 0) {
-              displayBranch(bp, "branch-dropdown", "checkoutRemoteBranch(this)");
+
+          if (refList[i].isRemote()) {
+            if (localBranches.indexOf(refName) < 0) {
+              displayBranch(refName, "branch-dropdown", "checkoutRemoteBranch(this)");
             }
           } else {
-            localBranches.push(bp);
-            displayBranch(bp, "branch-dropdown", "checkoutLocalBranch(this)");
+            localBranches.push(refName);
+            displayBranch(refName, "branch-dropdown", "checkoutLocalBranch(this)");
           }
 
         }
