@@ -14,6 +14,7 @@ let theirCommit = null;
 let modifiedFiles;
 let warnbool;
 var CommitButNoPush = 0;
+let noCommitYesPush = 0;
 let stagedFiles: any;
 let vis = require("vis");
 let commitHistory = [];
@@ -101,6 +102,7 @@ function stage() {
         }
       }
       if (filesToStage.length > 0) {
+        noCommitYesPush = 1;
         console.log("staging files");
         stagedFiles = index.addAll(filesToStage);
       } else {
@@ -387,6 +389,14 @@ function pullFromRemote() {
 
 function pushToRemote() {
   let branch = document.getElementById("branch-name").innerText;
+
+  // Check to make sure we are not pushing without first committing files
+  if (noCommitYesPush == 0) {
+    console.log("There are no staged files")
+    displayModal("You have not committed, your push cannot be empty.");
+    return;
+  }
+
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       console.log("Pushing changes to remote")
