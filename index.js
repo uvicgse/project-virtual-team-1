@@ -27,7 +27,15 @@ function createMainWindow() {
 		backgroundColor : "#000",
 		icon: __dirname + "/assets/icons/Icon.png"
 	});
-
+	globalShortcut.register('CommandOrControl+R', () => {
+		// console.log('CommandOrControl+R is pressed')
+	})
+	globalShortcut.register('F5', () => {
+		//console.log('F5 is pressed')
+	})
+	globalShortcut.register('Ctrl+R', () => {
+		//console.log('Ctrl+R is pressed')
+	})
 
 	win.setMinimumSize(900, 720);
 
@@ -184,7 +192,15 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
 	if (!mainWindow) {
-
+		globalShortcut.register('CommandOrControl+R', () => {
+			// console.log('CommandOrControl+R is pressed')
+		})
+		globalShortcut.register('F5', () => {
+			//console.log('F5 is pressed')
+		})
+		globalShortcut.register('Ctrl+R', () => {
+			//console.log('Ctrl+R is pressed')
+		})
 		mainWindow = createMainWindow();
 	}
 
