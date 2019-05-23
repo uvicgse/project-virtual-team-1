@@ -139,7 +139,7 @@ function getUserInfo(callback) {
           $("#otpModal").modal('show');
         });
       }
-      else if (err.toString().indexOf("ENOTFOUND") != 0 || err.toString().indexOf("ENOENT") != 0){
+      else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT"){
         displayModal("No internet connection");
       }else{
         displayModal(err);
