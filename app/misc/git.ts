@@ -825,7 +825,7 @@ function displayModifiedFiles() {
           let filePaths = document.getElementsByClassName('file-path');
           for (let i = 0; i < filePaths.length; i++) {
             if (filePaths[i].parentElement.className !== "file file-deleted") {
-              let filePath = repoFullPath + "\\" + filePaths[i].innerHTML;
+              let filePath = path.join(repoFullPath, filePaths[i].innerHTML);
               if (!fs.existsSync(filePath)) {
                 filePaths[i].parentElement.remove();
               }
@@ -1233,7 +1233,7 @@ function cleanRepo() {
 
         //Gets NEW/untracked files and deletes them
         function deleteUntrackedFiles(file) {
-          let filePath = repoFullPath + "\\" + file.path();
+          let filePath = path.join(repoFullPath, file.path());
           let modification = calculateModification(file);
           if (modification === "NEW") {
             console.log("DELETING FILE " + filePath);
