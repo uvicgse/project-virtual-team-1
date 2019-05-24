@@ -14,7 +14,7 @@ let theirCommit = null;
 let modifiedFiles;
 let warnbool;
 var CommitButNoPush = 0;
-let PushButNoCommit = 0;
+let pushButNoCommit = 0;
 let stagedFiles: any;
 let vis = require("vis");
 let commitHistory = [];
@@ -102,7 +102,7 @@ function stage() {
         }
       }
       if (filesToStage.length > 0) {
-        PushButNoCommit = 1;
+        pushButNoCommit = 1;
         console.log("staging files");
         stagedFiles = index.addAll(filesToStage);
       } else {
@@ -391,7 +391,7 @@ function pushToRemote() {
   let branch = document.getElementById("branch-name").innerText;
 
   // Check to make sure we are not pushing without first committing files
-  if (PushButNoCommit == 0) {
+  if (pushButNoCommit == 0) {
     console.log("There are no staged files")
     displayModal("You have not committed, your push cannot be empty.");
     return;
@@ -419,6 +419,7 @@ function pushToRemote() {
             })
             .then(function () {
               CommitButNoPush = 0;
+              pushButNoCommit = 0;
               window.onbeforeunload = Confirmed;
               console.log("Push successful");
               updateModalText("Push successful");
