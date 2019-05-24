@@ -139,8 +139,8 @@ function getUserInfo(callback) {
           $("#otpModal").modal('show');
         });
       }
-      else if (err == "Error: getaddrinfo ENOTFOUND api.github.com api.github.com:443"){
-        displayModal("No internet connection");
+      else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT"){
+        displayModal("Authentication Error: Please check your internet connection");
       }else{
         displayModal(err);
       }
