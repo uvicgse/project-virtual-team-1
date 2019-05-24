@@ -23,15 +23,16 @@ function onClosed() {
 }
 
 function overrideRefreshWindowShotcuts(){
-	/*const ret = */globalShortcut.register('CmdOrCtrl+R', () => {
+	//On Referesh( CmdOrCtrl+R and F5 do nothing )
+	const ret = globalShortcut.register('CmdOrCtrl+R', () => {
 		//console.log('CmdOrCtrl+R')
 	})
-	/*const ret1 = */globalShortcut.register('F5', () =>  {
+	const ret1 = globalShortcut.register('F5', () =>  {
 		//console.log('F5')
 	});
 
-	/*if (!ret || !ret1) {
-		console.log('registration failed')
+	if (!ret || !ret1) {
+		console.log('shortcut key F5 Or CmdOrCtrl+R registration failed')
 	}
 
 	// Check whether a shortcut is registered.
@@ -44,7 +45,7 @@ function createMainWindow() {
 		backgroundColor : "#000",
 		icon: __dirname + "/assets/icons/Icon.png"
 	});
-	//electronLocalshortcut.unregisterAll(win);
+	
 
 	win.setMinimumSize(900, 720);
 
