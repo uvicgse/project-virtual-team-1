@@ -307,7 +307,7 @@ function openRepository() {
               } else {
                 tags[oid.tostrS()] = [refList[i]];
               }
-            }else{
+            } else{
               console.log("Unsupported reference: " + refList[i].name());
             }
           }, function (err) {
@@ -318,9 +318,13 @@ function openRepository() {
             if (localBranches.indexOf(refName) < 0) {
               displayBranch(refName, "branch-item-list", "checkoutRemoteBranch(this)");
             }
-          } else {
+          } else if (refList[i].isBranch()){
             localBranches.push(refName);
             displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
+          } else if (refList[i].isTag()){
+            displayTag(refName, "tag-item-list", ""); // TODO: support switching to a tag by adding an on-click function
+          } else{
+            console.log("Unsupported reference: " + refList[i].name());
           }
 
         }
@@ -487,6 +491,10 @@ function openRepository() {
       }
     }
     ul.appendChild(li);
+  }
+
+  function displayTag(name, id, onclick){
+    
   }
 
   function createDropDownFork(name, id) {
