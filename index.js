@@ -22,6 +22,23 @@ function onClosed() {
 	mainWindow = null;
 }
 
+function overrideRefreshWindowShotcuts(){
+	/*const ret = */globalShortcut.register('CmdOrCtrl+R', () => {
+		//console.log('CmdOrCtrl+R')
+	})
+	/*const ret1 = */globalShortcut.register('F5', () =>  {
+		//console.log('F5')
+	});
+
+	/*if (!ret || !ret1) {
+		console.log('registration failed')
+	}
+
+	// Check whether a shortcut is registered.
+	console.log(globalShortcut.isRegistered('CmdOrCtrl+R'))
+	console.log(globalShortcut.isRegistered('F5'))*/
+}
+
 function createMainWindow() {
 	const win = new electron.BrowserWindow({
 		backgroundColor : "#000",
@@ -185,99 +202,23 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
 	if (!mainWindow) {
 		mainWindow = createMainWindow();
-
-
 	}
-
-
-
 });
 
 app.on('ready', () => {
-
 	mainWindow = createMainWindow();
-
 	Menu.setApplicationMenu(Menu.buildFromTemplate(setMyMenu()));
-});
-
-
-app.on('ready', () => {
-	const ret = globalShortcut.register('CmdOrCtrl+R', () =>{
-		//console.log('CmdOrCtrl+R')
-	});
-	const ret1 = globalShortcut.register('CommandOrControl+R', () =>  {
-		//console.log('CommandOrControl+R')
-	});
-	const ret2 = globalShortcut.register('F5', () =>  {
-		//console.log('F5')
-	});
-	// if (!ret || !ret1 || !ret2) {
-	// 	// 	console.log('registration failed')
-	// 	// }
-
-	// Check whether a shortcut is registered.
-	/*console.log(globalShortcut.isRegistered('CmdOrCtrl+R'))
-	console.log(globalShortcut.isRegistered('CommandOrControl+R'))
-	console.log(globalShortcut.isRegistered('F5'))*/
+	overrideRefreshWindowShotcuts();
 });
 
 app.on('activate', () => {
-	const ret = globalShortcut.register('CmdOrCtrl+R', () => {
-		//console.log('CmdOrCtrl+R')
-	});
-	const ret1 = globalShortcut.register('CommandOrControl+R', () =>  {
-		//console.log('CommandOrControl+R')
-	});
-	const ret2 = globalShortcut.register('F5', () =>  {
-		//console.log('F5')
-	});
-
-	/*if (!ret || !ret1) {
-		console.log('registration failed')
-	}
-
-	// Check whether a shortcut is registered.
-	console.log(globalShortcut.isRegistered('CmdOrCtrl+R'))
-	console.log(globalShortcut.isRegistered('CommandOrControl+R'))*/
+	overrideRefreshWindowShotcuts();
 });
 
-
 app.on('browser-window-focus', () => {
-	const ret = globalShortcut.register('CmdOrCtrl+R', () => {
-		//console.log('CmdOrCtrl+R')
-	});
-	const ret1 = globalShortcut.register('CommandOrControl+R', () =>  {
-		//console.log('CommandOrControl+R')
-	});
-	const ret2 = globalShortcut.register('F5', () =>  {
-		//console.log('F5')
-	});
-
-	/*if (!ret || !ret1) {
-		console.log('registration failed')
-	}
-
-	// Check whether a shortcut is registered.
-	console.log(globalShortcut.isRegistered('CmdOrCtrl+R'))
-	console.log(globalShortcut.isRegistered('CommandOrControl+R'))*/
+	overrideRefreshWindowShotcuts();
 });
 
 app.on('browser-window-blur', () => {
-	const ret = globalShortcut.register('CmdOrCtrl+R', () => {
-		//console.log('CmdOrCtrl+R')
-	})
-	const ret1 = globalShortcut.register('CommandOrControl+R', () =>  {
-		//console.log('CommandOrControl+R')
-	})
-	const ret2 = globalShortcut.register('F5', () =>  {
-		//console.log('F5')
-	});
-
-	/*if (!ret || !ret1) {
-		console.log('registration failed')
-	}
-
-	// Check whether a shortcut is registered.
-	console.log(globalShortcut.isRegistered('CmdOrCtrl+R'))
-	console.log(globalShortcut.isRegistered('CommandOrControl+R'))*/
+	overrideRefreshWindowShotcuts();
 });
