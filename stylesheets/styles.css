@@ -135,8 +135,66 @@ body .navbar .dropdown-menu {
   color: #ffffff;
 }
 
+#branch-dropdown {
+  background-color: #fff;
+}
+
 body .navbar .dropdown-menu a {
   color: #000;
+}
+
+body .navbar .dropdown-menu .select-menu-header {
+  background: #f6f8fa;
+  border-bottom: 1px solid #e1e4e8;
+  line-height: 16px;
+  padding: 8px 10px;
+}
+
+body .navbar .dropdown-menu .select-menu-title {
+  color: #000;
+  font-weight: 500;
+}
+
+body .navbar .dropdown-menu .select-menu-tabs {
+  border-bottom: 1px solid #dfe2e5;
+  padding: 10px 10px 0;
+}
+
+body .navbar .dropdown-menu .select-menu-tabs-wrapper {
+  position: relative;
+  bottom: -1px;
+}
+
+#create-branch {
+  padding: 10px 10px 0;
+}
+
+body .navbar .dropdown-menu .select-menu-tab {
+  color: #6a737d;
+  text-decoration: none;
+  border: 1px solid transparent;
+  background-color: transparent;
+  border-radius: 3px 3px 0 0;
+  outline: none;
+  font-weight: 500;
+}
+
+body .navbar .dropdown-menu .select-menu-text-filters {
+  background-color: #f6f8fa;
+}
+
+body .navbar .dropdown-menu .select-menu-tab:hover {
+  color: #000;
+}
+
+body .navbar .dropdown-menu .selected {
+  color: #000;
+  border-color: #dfe2e5 #dfe2e5 #fff;
+  background-color: #fff;
+}
+
+body .navbar .dropdown-menu .select-menu-list {
+  position: relative;
 }
 
 #repo-list-modal{

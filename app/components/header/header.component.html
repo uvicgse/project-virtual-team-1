@@ -21,17 +21,39 @@
         <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
         <li class="branch-name dropdown">
           <a href="#" class="dropdown-toggle" id="branch-name" data-toggle="dropdown" onclick="switchToMainPanel()">
-            branch<span class="caret"></span>
+            branch/tag<span class="caret"></span>
           </a>
           <ul class="dropdown-menu" id="branch-dropdown" role="menu" aria-labelledby="branch-name">
-            <li role="presentation" id="create-branch">
-              <div class="input-group menuitem">
-                <input type="text" id="branchName" class="form-control" placeholder="Search or create branch">
-                <span class="input-group-btn">
-                  <button class="btn btn-default" type="button" onclick="createBranch()">OK</button>
-                </span>
+            <div class="select-menu-header">
+              <span class="select-menu-title">Switch branches/tags</span>
+            </div>
+
+            <div class="select-menu-text-filters">
+              <div role="presentation" id="create-branch">
+                <div id="branch-button" class="input-group menuitem">
+                  <input type="text" id="branchName" class="form-control" placeholder="Search or create branch">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" onclick="createBranch()">OK</button>
+                  </span>
+                </div>
+                <div id="tag-button" class="input-group menuitem hidden">
+                  <input type="text" id="tag-name" class="form-control" placeholder="Search a tag">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" onclick="">OK</button>
+                  </span>
+                </div>
               </div>
-            </li>
+              <div class="select-menu-tabs" role="presentation" id="menu-select">
+                <div class="select-menu-tabs-wrapper">
+                  <button class="select-menu-tab selected">Branch</button>
+                  <button class="select-menu-tab">Tag</button>
+                </div>
+
+              </div>
+            </div>
+
+            <div id="tag-item-list" class="select-menu-list" role="tabpanel" tabindex="0"></div>
+            <div id="branch-item-list" class="select-menu-list" role="tabpanel" tabindex="0"></div>
           </ul>
         </li>
       </ul>

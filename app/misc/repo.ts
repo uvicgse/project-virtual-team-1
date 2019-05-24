@@ -400,10 +400,15 @@ function openRepository() {
   }
 
   function clearBranchElement() {
-    let ul = document.getElementById("branch-dropdown");
-    let li = document.getElementById("create-branch");
-    ul.innerHTML = '';
-    ul.appendChild(li);
+    // clean input fields
+    document.getElementById("branchName").value = '';
+    document.getElementById("tag-name").value = '';
+
+    // clean branch and tag list
+    var selectMenuList = document.getElementsByClassName("select-menu-list");
+    Array.prototype.forEach.call(selectMenuList, function (list) {
+        list.innerHTML = '';
+    })
   }
 
   function displayBranch(name, id, onclick) {
@@ -413,7 +418,7 @@ function openRepository() {
     a.setAttribute("href", "#");
     a.setAttribute("class", "list-group-item");
     a.setAttribute("onclick", onclick + ";event.stopPropagation()");
-    li.setAttribute("role", "presentation")
+    li.setAttribute("role", "presentation");
     a.appendChild(document.createTextNode(name));
     a.innerHTML = name;
     li.appendChild(a);
