@@ -2,7 +2,6 @@ let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
-let branchCommit = [];
 let tags = {}
 let remoteName = {};
 let localBranches = [];
@@ -294,7 +293,6 @@ function openRepository() {
               remoteName[refName] = oid;
             } else if (refList[i].isBranch()){
               // add to list of branches
-              branchCommit.push(refList[i]);
               console.log(refName + ": adding branch to end of " + oid.tostrS());
               if (oid.tostrS() in bname) {
                 bname[oid.tostrS()].push(refList[i]);
