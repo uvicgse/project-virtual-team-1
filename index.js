@@ -1,8 +1,10 @@
 'use strict';
 
 const electron = require('electron');
-
-const { app, Menu, BrowserWindow, globalShortcut } = require('electron');
+const app = electron.app;
+const Menu = electron.Menu;
+const BrowserWindow = electron.BrowserWindow;
+const { globalShortcut } = require('electron');
 
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
