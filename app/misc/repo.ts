@@ -316,11 +316,11 @@ function openRepository() {
 
           if (refList[i].isRemote()) {
             if (localBranches.indexOf(refName) < 0) {
-              displayBranch(refName, "branch-dropdown", "checkoutRemoteBranch(this)");
+              displayBranch(refName, "branch-item-list", "checkoutRemoteBranch(this)");
             }
           } else {
             localBranches.push(refName);
-            displayBranch(refName, "branch-dropdown", "checkoutLocalBranch(this)");
+            displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
           }
 
         }
@@ -338,7 +338,8 @@ function openRepository() {
           repoLocalPath = "..." + repoLocalPath.slice(breakStringFrom, repoLocalPath.length);
         }
         document.getElementById("repo-name").innerHTML = repoLocalPath;
-        document.getElementById("branch-name").innerHTML = branch + '<span class="caret"></span>';
+        // TODO: add a condition here to switch between tag and branch name string
+        document.getElementById("branch-name").innerHTML = 'Branch: ' + branch + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
         //Default values will be set for the branch labels
@@ -350,7 +351,8 @@ function openRepository() {
         drawGraph();
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         //default label set to master
-        document.getElementById("branch-name").innerHTML = "master" + '<span class="caret"></span>';
+        // TODO: add a condition here to switch between tag and branch name string
+        document.getElementById("branch-name").innerHTML = 'Branch: ' + "master" + '<span class="caret"></span>';
       });
   }
 
@@ -434,7 +436,7 @@ function openRepository() {
     a.appendChild(document.createTextNode(name));
     a.innerHTML = name;
     li.appendChild(a);
-    if (id == "branch-dropdown") {
+    if (id == "branch-item-list") {
       var isLocal = 0;
       var isRemote = 0;
       // Add a remote branch icon for remote branches
