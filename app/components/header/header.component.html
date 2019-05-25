@@ -23,7 +23,7 @@
           <a href="#" class="dropdown-toggle" id="branch-name" data-toggle="dropdown" onclick="switchToMainPanel()">
             branch/tag<span class="caret"></span>
           </a>
-          <ul class="dropdown-menu" id="branch-dropdown" role="menu" aria-labelledby="branch-name">
+          <ul class="dropdown-menu" id="branch-dropdown" role="menu" aria-labelledby="branch-name" (click)="$event.stopPropagation()">
             <div class="select-menu-header">
               <span class="select-menu-title">Switch branches/tags</span>
             </div>
@@ -45,8 +45,8 @@
               </div>
               <div class="select-menu-tabs" role="presentation" id="menu-select">
                 <div class="select-menu-tabs-wrapper">
-                  <button class="select-menu-tab selected">Branch</button>
-                  <button class="select-menu-tab">Tag</button>
+                  <button class="select-menu-tab selected" onclick="showBranchList()">Branch</button>
+                  <button class="select-menu-tab" onclick="showTagList()">Tag</button>
                 </div>
 
               </div>

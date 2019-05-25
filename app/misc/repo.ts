@@ -493,8 +493,42 @@ function openRepository() {
     ul.appendChild(li);
   }
 
-  function displayTag(name, id, onclick){
-    
+  function displayTag(name, id, onclick) {
+    let tagList = document.getElementById(id);
+    let li = document.createElement("li");
+    let a = document.createElement("a");
+    a.setAttribute("href", "#");
+    a.setAttribute("class", "list-group-item");
+    a.setAttribute("onclick", onclick + ";event.stopPropagation()");
+    li.setAttribute("role", "presentation");
+    a.appendChild(document.createTextNode(name));
+    a.innerHTML = name;
+    li.appendChild(a);
+
+    if (id === "tag-item-list") {
+      // TODO: tagging support - add delete button here
+    }
+
+    tagList.appendChild(li);
+  }
+
+
+  function showBranchList() {
+    $("#branch-button").removeClass("hidden");
+    $("#tag-button").addClass("hidden");
+    $("#branch-item-list").removeClass("hidden");
+    $("#tag-item-list").addClass("hidden");
+    $(".select-menu-tab:nth-child(1)").addClass("selected");
+    $(".select-menu-tab:nth-child(2)").removeClass("selected");
+  }
+
+  function showTagList() {
+    $("#branch-button").addClass("hidden");
+    $("#tag-button").removeClass("hidden");
+    $("#branch-item-list").addClass("hidden");
+    $("#tag-item-list").removeClass("hidden");
+    $(".select-menu-tab:nth-child(1)").removeClass("selected");
+    $(".select-menu-tab:nth-child(2)").addClass("selected");
   }
 
   function createDropDownFork(name, id) {
