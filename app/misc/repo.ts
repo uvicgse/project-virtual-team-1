@@ -512,25 +512,6 @@ function openRepository() {
     tagList.appendChild(li);
   }
 
-
-  function showBranchList() {
-    $("#branch-button").removeClass("hidden");
-    $("#tag-button").addClass("hidden");
-    $("#branch-item-list").removeClass("hidden");
-    $("#tag-item-list").addClass("hidden");
-    $(".select-menu-tab:nth-child(1)").addClass("selected");
-    $(".select-menu-tab:nth-child(2)").removeClass("selected");
-  }
-
-  function showTagList() {
-    $("#branch-button").addClass("hidden");
-    $("#tag-button").removeClass("hidden");
-    $("#branch-item-list").addClass("hidden");
-    $("#tag-item-list").removeClass("hidden");
-    $(".select-menu-tab:nth-child(1)").removeClass("selected");
-    $(".select-menu-tab:nth-child(2)").addClass("selected");
-  }
-
   function createDropDownFork(name, id) {
     let ul = document.getElementById(id);
     let button = document.createElement("div");

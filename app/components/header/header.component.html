@@ -30,13 +30,13 @@
 
             <div class="select-menu-text-filters">
               <div role="presentation" id="create-branch">
-                <div id="branch-button" class="input-group menuitem">
+                <div id="branch-button" class="input-group menuitem" [ngClass]="{'hidden' : !branchSelectedInRefDropdown}">
                   <input type="text" id="branchName" class="form-control" placeholder="Search or create branch">
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="button" onclick="createBranch()">OK</button>
                   </span>
                 </div>
-                <div id="tag-button" class="input-group menuitem hidden">
+                <div id="tag-button" class="input-group menuitem" [ngClass]="{'hidden' : branchSelectedInRefDropdown}">
                   <input type="text" id="tag-name" class="form-control" placeholder="Search a tag">
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="button" onclick="">OK</button>
@@ -45,15 +45,15 @@
               </div>
               <div class="select-menu-tabs" role="presentation" id="menu-select">
                 <div class="select-menu-tabs-wrapper">
-                  <button class="select-menu-tab selected" onclick="showBranchList()">Branch</button>
-                  <button class="select-menu-tab" onclick="showTagList()">Tag</button>
+                  <button class="select-menu-tab" (click)="showBranchList()" [ngClass]="{'selected' : branchSelectedInRefDropdown}">Branch</button>
+                  <button class="select-menu-tab" (click)="showTagList()" [ngClass]="{'selected' : !branchSelectedInRefDropdown}">Tag</button>
                 </div>
 
               </div>
             </div>
 
-            <div id="tag-item-list" class="select-menu-list hidden" role="tabpanel" tabindex="0"></div>
-            <div id="branch-item-list" class="select-menu-list" role="tabpanel" tabindex="0"></div>
+            <div id="tag-item-list" class="select-menu-list" role="tabpanel" tabindex="0" [ngClass]="{'hidden' : branchSelectedInRefDropdown}" ></div>
+            <div id="branch-item-list" class="select-menu-list" role="tabpanel" tabindex="0" [ngClass]="{'hidden' : !branchSelectedInRefDropdown}"></div>
           </ul>
         </li>
       </ul>
