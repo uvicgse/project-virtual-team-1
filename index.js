@@ -4,9 +4,11 @@ const electron = require('electron');
 const app = electron.app;
 const Menu = electron.Menu;
 const BrowserWindow = electron.BrowserWindow;
+const { globalShortcut } = require('electron');
 
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
+
 
 // prevent window being garbage collected
 let mainWindow;
@@ -18,12 +20,30 @@ function onClosed() {
 	mainWindow = null;
 }
 
+function overrideRefreshWindowShotcuts(){
+	//On Referesh( CmdOrCtrl+R and F5 do nothing )
+	const ret = globalShortcut.register('CmdOrCtrl+R', () => {
+		//console.log('CmdOrCtrl+R')
+	})
+	const ret1 = globalShortcut.register('F5', () =>  {
+		//console.log('F5')
+	});
+
+	if (!ret || !ret1) {
+		console.log('shortcut key F5 Or CmdOrCtrl+R registration failed')
+	}
+
+	// Check whether a shortcut is registered.
+	/*console.log(globalShortcut.isRegistered('CmdOrCtrl+R'))
+	console.log(globalShortcut.isRegistered('F5'))*/
+}
+
 function createMainWindow() {
 	const win = new electron.BrowserWindow({
 		backgroundColor : "#000",
 		icon: __dirname + "/assets/icons/Icon.png"
 	});
-
+	
 
 	win.setMinimumSize(900, 720);
 
@@ -136,7 +156,7 @@ function setMyMenu() {
 				click () { require('electron').shell.openExternal('https://github.com/kblincoe/VisualGit_SE701_2019_3#help'); }
 			}
 		]
-	}, 
+	},
 	{
 		label: 'Application',
             submenu: [
@@ -155,7 +175,7 @@ function setMyMenu() {
                     }
                 }
             ]
-	}, 
+	},
 	{
 		label: 'Edit',
             submenu: [
@@ -187,4 +207,17 @@ app.on('activate', () => {
 app.on('ready', () => {
 	mainWindow = createMainWindow();
 	Menu.setApplicationMenu(Menu.buildFromTemplate(setMyMenu()));
+	overrideRefreshWindowShotcuts();
+});
+
+app.on('activate', () => {
+	overrideRefreshWindowShotcuts();
+});
+
+app.on('browser-window-focus', () => {
+	overrideRefreshWindowShotcuts();
+});
+
+app.on('browser-window-blur', () => {
+	overrideRefreshWindowShotcuts();
 });

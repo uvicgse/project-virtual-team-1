@@ -238,7 +238,7 @@ function processLogin(ghme, callback) {
           }
           else {
             //Create a collapseable list for the forked repo
-            createDropDownFork(rep['full_name'],"repo-dropdown";
+            createDropDownFork(rep['full_name'],"repo-dropdown");
             repoList[rep['full_name']] = rep['html_url'];
             //Reiterate through and get all the forks of the repo and add to list
             for(let i = 0; i < data.length; i++) {
