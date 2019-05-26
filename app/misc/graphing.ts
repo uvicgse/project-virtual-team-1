@@ -15,6 +15,7 @@ let columns: boolean[] = [];
 let edgeDic = {};
 let numOfCommits = 0;
 let branchIds = {};
+let tagIds = {};
 
 function processGraph(commits: nodegit.Commit[]) {
     var promise = new Promise(function(resolve,reject){
@@ -257,6 +258,9 @@ function sortBasicGraph() {
         if (idList[i] in branchIds) {
             bsNodes.update({id: branchIds[idList[i]], y: (i + 0.7) * spacingY})
         }
+        // if (idList[i] in tagIds) {
+        //     bsNodes.update({id: tagIds[idList[i]], y: (i - 0.7) * spacingY})
+        // }
     }
 }
 
@@ -311,6 +315,58 @@ function makeBranchColor(oldResult) {
     });
     return promise;
 }
+
+// function makeTagColor(oldResult) {
+//     var promise = new Promise((resolve, reject) => {
+//         let tcList = [];
+//
+//         for (let i = 0; i < commitHistory.length; i++) {
+//             if (commitHistory[i].toString() in tagList) {
+//                 tcList.push({
+//                     oid: commitHistory[i],
+//                     cid: i
+//                 });
+//             }
+//         }
+//
+//         var chunk = 10;
+//
+//         function computeChunk() {
+//             var count = chunk;
+//             while (tcList.length > 0 && count--) {
+//                 let commit = tcList.pop();
+//                 let oid = commit.oid.toString();
+//                 let cid = commit.cid;
+//                 if (oid in bDict) {
+//                     bDict[oid].push(cid);
+//                 } else {
+//                     bDict[oid] = [cid];
+//                 }
+//
+//                 let parents = commit.oid.parents();
+//
+//                 for (let i = 0; i < parents.length; i++) {
+//                     for (let j = 0; j < commitHistory.length; j++) {
+//                         if (commitHistory[j].toString() === parents[i].toString()) {
+//                             tcList.push({
+//                                 oid: commitHistory[j],
+//                                 cid: cid
+//                             });
+//                         }
+//                     }
+//                 }
+//             }
+//             if(tcList.length > 0){
+//                 setTimeout(computeChunk, 1);
+//             } else {
+// 				resolve(oldResult);
+// 			}
+//
+//         }
+//         computeChunk();
+//     });
+//     return promise;
+// }
 
 function makeBasicNode(c, column: number) {
     let reference;
@@ -392,6 +448,36 @@ function makeBasicNode(c, column: number) {
             branchIds[id] = id + numOfCommits * (i + 1);
         }
     }
+
+    // if (c.toString() in tagList) {
+    //     for (let i = 0; i < tagList[c.toString()].length; i++) {
+    //         let tagName = tagList[c.toString()][i];
+    //         // TODO: Figure out short name for TAGS to print to console and display
+    //         // let bp = branchName.name().split("/");
+    //         // let shortName = bp[bp.length - 1];
+    //         // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+    //         // if (branchName.isHead()) {
+    //         //     shortName = "*" + shortName;
+    //         // }
+    //         bsNodes.add({
+    //             id: id + numOfCommits * (i + 1),
+    //             shape: "database",
+    //             title: tag-name, // hover text
+    //             label: "Tag", // shown under/in shape
+    //             physics: false,
+    //             fixed: false,
+    //             x: (column + 0.6 * (i + 1)) * spacingX,
+    //             y: (id + 0.3) * spacingY,
+    //         });
+    //
+    //         bsEdges.add({
+    //             from: id + numOfCommits * (i + 1),
+    //             to: id
+    //         });
+    //
+    //         // tagIds[id] = id + numOfCommits * (i + 1);
+    //     }
+    // }
 }
 
 function makeAbsNode(c, column: number) {
@@ -459,6 +545,34 @@ function makeAbsNode(c, column: number) {
             }
         }
 
+        // if (c.toString() in tagList) {
+        //     for (let i = 0; i < tagList[c.toString()].length; i++) {
+        //         let tagName = tagList[c.toString()][i];
+        //         // TODO: Figure out short name for TAGS to print to console and display
+        //         // let bp = branchName.name().split("/");
+        //         // let shortName = bp[bp.length - 1];
+        //         // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+        //         // if (branchName.isHead()) {
+        //         //     shortName = "*" + shortName;
+        //         // }
+        //         abNodes.add({
+        //             id: id + numOfCommits * (i + 1),
+        //             shape: "database",
+        //             title: tagName,
+        //             label: "Tags",
+        //             physics: false,
+        //             fixed: false,
+        //             x: (column + 0.6 * (i + 1)) * spacingX,
+        //             y: (id + 0.3) * spacingY,
+        //         });
+        //
+        //         abEdges.add({
+        //             from: id + numOfCommits * (i + 1),
+        //             to: id
+        //         });
+        //     }
+        // }
+
         let shaList = [];
         shaList.push(c.toString());
 
@@ -481,7 +595,7 @@ function makeNode(c, column: number) {
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
     let email = stringer.split("%")[1];
-    let title = "Author: " + name + "<br>" + "Message: " + c.message();
+    let title = "Author: " + name + "<br>" + "Message: " + c.message() + "<br>" + "Tags: "; // + c.tags();
     let flag = false;
     nodes.add({
         id: id,
@@ -523,6 +637,35 @@ function makeNode(c, column: number) {
         flag = true;
     }
 
+    // if (c.toString() in tagList) {
+    //     for (let i = 0; i < tagList[c.toString()].length; i++) {
+    //         let tagName = tagList[c.toString()][i];
+    //         // TODO: Figure out short name for TAGS to print to console and display
+    //         // let bp = branchName.name().split("/");
+    //         // let shortName = bp[bp.length - 1];
+    //         // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+    //         // if (branchName.isHead()) {
+    //         //     shortName = "*" + shortName;
+    //         // }
+    //         nodes.add({
+    //             id: id + numOfCommits * (i + 1),
+    //             shape: "database",
+    //             title: tagName,
+    //             label: "Tags",
+    //             physics: false,
+    //             fixed: false,
+    //             x: (column + 0.6 * (i + 1)) * spacingX,
+    //             y: (id + 0.3) * spacingY,
+    //         });
+    //
+    //         edges.add({
+    //             from: id + numOfCommits * (i + 1),
+    //             to: id
+    //         });
+    //     }
+    //     flag = true;
+    // }
+
     commitList.push({
         sha: c.sha(),
         id: id,
@@ -533,7 +676,7 @@ function makeNode(c, column: number) {
         branch: flag,
     });
 
-    console.log("commit: "+ id + ", message: " +commitList[id-1]['id']);
+    console.log("commit: "+ id + ", message: " +commitList[id-1]['id']); // + ", tags: " + tagList[id]; ??
 }
 
 function makeEdge(sha: string, parentSha: string) {
