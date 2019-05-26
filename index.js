@@ -41,6 +41,9 @@ function overrideRefreshWindowShotcuts(){
 function createMainWindow() {
 	const win = new electron.BrowserWindow({
 		backgroundColor : "#000",
+		webPreferences: {
+            nodeIntegration: true
+        },
 		icon: __dirname + "/assets/icons/Icon.png"
 	});
 	
