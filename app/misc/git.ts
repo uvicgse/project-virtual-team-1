@@ -1,7 +1,6 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
 
-let opn = require('opn');
 let $ = require("jquery");
 let Git = require("nodegit");
 let fs = require("fs");
