@@ -195,6 +195,8 @@ body .navbar .dropdown-menu .selected {
 
 body .navbar .dropdown-menu .select-menu-list {
   position: relative;
+  overflow-y: scroll;
+  max-height: 50vh;
 }
 
 body .navbar .dropdown-menu .select-menu-list .list-group-item {
