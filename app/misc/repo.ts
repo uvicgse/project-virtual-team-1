@@ -2,7 +2,7 @@ let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
-let branchCommit = [];
+let tags = {}
 let remoteName = {};
 let localBranches = [];
 let readFile = require("fs-sync");
@@ -261,7 +261,9 @@ function openRepository() {
   function refreshAll(repository) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
-    bname = [];
+    bname = {};
+    tags = {}
+
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
@@ -274,41 +276,55 @@ function openRepository() {
         //Get the list of branches from the repo
         return repository.getReferences(Git.Reference.TYPE.LISTALL);
       })
-      .then(function (branchList) {
+      .then(function (refList) {
         let count = 0;
         clearBranchElement();
         //for each branch
-        for (let i = 0; i < branchList.length; i++) {
-          console.log("branch name: " + branchList[i].name());
-          //get simplified name
-          let bp = branchList[i].name().split("/")[branchList[i].name().split("/").length - 1];
+        for (let i = 0; i < refList.length; i++) {
+          console.log("reference name: " + refList[i].name());
 
-          Git.Reference.nameToId(repository, branchList[i].name()).then(function (oid) {
+          //get simplified name
+          let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+          Git.Reference.nameToId(repository, refList[i].name()).then(function (oid) {
             // Use oid
-            console.log("old id " + oid);
-            if (branchList[i].isRemote()) {
+            if (refList[i].isRemote()) {
               // for remote branches add oid and branch name to remote branches map
-              remoteName[bp] = oid;
-            } else {
-              //add branch name to the branch list
-              branchCommit.push(branchList[i]);
-              console.log(bp + " adding to end of " + oid.tostrS());
+              remoteName[refName] = oid;
+            } else if (refList[i].isBranch()){
+              // add to list of branches
+              console.log(refName + ": adding branch to end of " + oid.tostrS());
               if (oid.tostrS() in bname) {
-                bname[oid.tostrS()].push(branchList[i]);
+                bname[oid.tostrS()].push(refList[i]);
               } else {
-                bname[oid.tostrS()] = [branchList[i]];
+                bname[oid.tostrS()] = [refList[i]];
               }
+            } else if (refList[i].isTag()){
+              // add to list of tags
+              console.log(refName + ": adding tag to end of " + oid.tostrS());
+              if (oid.tostrS() in tags) {
+                tags[oid.tostrS()].push(refList[i]);
+              } else {
+                tags[oid.tostrS()] = [refList[i]];
+              }
+            } else{
+              console.log("Unsupported reference: " + refList[i].name());
             }
           }, function (err) {
             console.log("repo.ts, line 273, could not find referenced branch" + err);
           });
-          if (branchList[i].isRemote()) {
-            if (localBranches.indexOf(bp) < 0) {
-              displayBranch(bp, "branch-dropdown", "checkoutRemoteBranch(this)");
+
+          if (refList[i].isRemote()) {
+            if (localBranches.indexOf(refName) < 0) {
+              displayBranch(refName, "branch-item-list", "checkoutRemoteBranch(this)");
             }
-          } else {
-            localBranches.push(bp);
-            displayBranch(bp, "branch-dropdown", "checkoutLocalBranch(this)");
+          } else if (refList[i].isBranch()){
+            localBranches.push(refName);
+            displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
+          } else if (refList[i].isTag()){
+            displayTag(refName, "tag-item-list", ""); // TODO: support switching to a tag by adding an on-click function
+          } else{
+            console.log("Unsupported reference: " + refList[i].name());
           }
 
         }
@@ -326,7 +342,8 @@ function openRepository() {
           repoLocalPath = "..." + repoLocalPath.slice(breakStringFrom, repoLocalPath.length);
         }
         document.getElementById("repo-name").innerHTML = repoLocalPath;
-        document.getElementById("branch-name").innerHTML = branch + '<span class="caret"></span>';
+        // TODO: add a condition here to switch between tag and branch name string
+        document.getElementById("branch-name").innerHTML = 'Branch: ' + branch + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
         //Default values will be set for the branch labels
@@ -338,7 +355,8 @@ function openRepository() {
         drawGraph();
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         //default label set to master
-        document.getElementById("branch-name").innerHTML = "master" + '<span class="caret"></span>';
+        // TODO: add a condition here to switch between tag and branch name string
+        document.getElementById("branch-name").innerHTML = 'Branch: ' + "master" + '<span class="caret"></span>';
       });
   }
 
@@ -400,10 +418,15 @@ function openRepository() {
   }
 
   function clearBranchElement() {
-    let ul = document.getElementById("branch-dropdown");
-    let li = document.getElementById("create-branch");
-    ul.innerHTML = '';
-    ul.appendChild(li);
+    // clean input fields
+    document.getElementById("branchName").value = '';
+    document.getElementById("tag-name").value = '';
+
+    // clean branch and tag list
+    var selectMenuList = document.getElementsByClassName("select-menu-list");
+    Array.prototype.forEach.call(selectMenuList, function (list) {
+        list.innerHTML = '';
+    })
   }
 
   function displayBranch(name, id, onclick) {
@@ -413,11 +436,11 @@ function openRepository() {
     a.setAttribute("href", "#");
     a.setAttribute("class", "list-group-item");
     a.setAttribute("onclick", onclick + ";event.stopPropagation()");
-    li.setAttribute("role", "presentation")
+    li.setAttribute("role", "presentation");
     a.appendChild(document.createTextNode(name));
     a.innerHTML = name;
     li.appendChild(a);
-    if (id == "branch-dropdown") {
+    if (id == "branch-item-list") {
       var isLocal = 0;
       var isRemote = 0;
       // Add a remote branch icon for remote branches
@@ -468,6 +491,25 @@ function openRepository() {
       }
     }
     ul.appendChild(li);
+  }
+
+  function displayTag(name, id, onclick) {
+    let tagList = document.getElementById(id);
+    let li = document.createElement("li");
+    let a = document.createElement("a");
+    a.setAttribute("href", "#");
+    a.setAttribute("class", "list-group-item");
+    a.setAttribute("onclick", onclick + ";event.stopPropagation()");
+    li.setAttribute("role", "presentation");
+    a.appendChild(document.createTextNode(name));
+    a.innerHTML = name;
+    li.appendChild(a);
+
+    if (id === "tag-item-list") {
+      // TODO: tagging support - add delete button here
+    }
+
+    tagList.appendChild(li);
   }
 
   function createDropDownFork(name, id) {

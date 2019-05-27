@@ -14,6 +14,9 @@ export class HeaderComponent   {
   repoBranch: string = "Repo branch";
   repository: any;
 
+  // If 'branch' is the selected tab in the dropdown of references. False means that 'tag' is the selected tab. 
+  branchSelectedInRefDropdown: boolean = true;
+
   promptUserToAddRepository(): void {
     switchToAddRepositoryPanel();
   }
@@ -82,6 +85,14 @@ export class HeaderComponent   {
       document.getElementById('Password1').classList.remove('error');
       document.getElementById('password-error-icon').style.visibility = 'hidden';
     }
+  }
+
+  showBranchList(): void {
+    this.branchSelectedInRefDropdown = true
+  }
+
+  showTagList(): void {
+    this.branchSelectedInRefDropdown = false
   }
 
 }

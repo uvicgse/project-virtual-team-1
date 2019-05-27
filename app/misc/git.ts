@@ -268,12 +268,12 @@ function getAllCommits(callback) {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repos = repo;
-      console.log("fetching all remote repositories");
+      console.log("fetching all refs");
       return repo.getReferences(Git.Reference.TYPE.LISTALL);
     })
     .then(function (refs) {
       let count = 0;
-      console.log("getting " + refs.length + " remote repositories");
+      console.log("getting " + refs.length + " refs");
       async.whilst(
         function () {
           return count < refs.length;
@@ -282,7 +282,9 @@ function getAllCommits(callback) {
         function (cb) {
           if (!refs[count].isRemote()) {
             console.log("referenced branch exists on remote repository");
-            repos.getReferenceCommit(refs[count])
+            refs[count].peel(Git.Object.TYPE.COMMIT) 
+            .then(function(ref) {
+              repos.getCommit(ref)
               .then(function (commit) {
                 let history = commit.history(Git.Revwalk.SORT.Time);
                 history.on("end", function (commits) {
@@ -299,6 +301,7 @@ function getAllCommits(callback) {
 
                 history.start();
               });
+            })
           } else {
             console.log('current branch does not exist on remote');
             count++;
