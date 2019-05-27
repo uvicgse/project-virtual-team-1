@@ -24,14 +24,11 @@ function overrideRefreshWindowShotcuts(){
 	//On Referesh( CmdOrCtrl+R and F5 do nothing )
 	const ret = globalShortcut.register('CmdOrCtrl+R', () => {
 		//console.log('CmdOrCtrl+R')
-	})
+	});
 	const ret1 = globalShortcut.register('F5', () =>  {
 		//console.log('F5')
 	});
 
-	if (!ret || !ret1) {
-		console.log('shortcut key F5 Or CmdOrCtrl+R registration failed')
-	}
 
 	// Check whether a shortcut is registered.
 	/*console.log(globalShortcut.isRegistered('CmdOrCtrl+R'))
