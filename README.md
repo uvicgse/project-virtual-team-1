@@ -12,7 +12,7 @@ Version Manager). To setup `node` to have the correct version, see the
 [Project Setup](https://github.com/uvicgse/project-seed/wiki/Project-Setup).
 
 **_Note:_** _If you used `Homebrew` to install `node` on macOS, you may need to reinstall `node` by uninstalling the `brew` 
-version first. See the [Project Setup](https://github.com/uvicgse/project-seed/wiki/Project-Setup) to do so._
+version first. See the [Project Setup](https://github.com/uvicgse/project-virtual-team-1/wiki/Project-Setup) to do so._
 
 ### Repository Setup
 The repository can be cloned using either HTTPS or SSH, but SSH will be needed for making pull requests.
