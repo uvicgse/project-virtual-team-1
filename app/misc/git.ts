@@ -102,7 +102,7 @@ function stage() {
         }
       }
       if (filesToStage.length > 0) {
-        pushButNoCommit = 1;
+        pushButNoCommit = 0;
         console.log("staging files");
         stagedFiles = index.addAll(filesToStage);
       } else {
@@ -117,6 +117,7 @@ function stage() {
       filePanelMessage.parentNode.removeChild(filePanelMessage);
     }
   }
+  pushButNoCommit = 0;
 }
 
 function addAndCommit() {
@@ -221,6 +222,7 @@ function addAndCommit() {
         updateModalText("You have not logged in. Please login to commit a change");
       }
     });
+    pushButNoCommit = 1;
 }
 
 function clearStagedFilesList() {
