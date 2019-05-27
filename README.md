@@ -7,9 +7,8 @@ VisualGit is a visually-oriented desktop client for Git aimed at helping student
 ### Prerequisites
 
 `Node.js` and its package manager - `npm` (Node Package Manager) are used to manage VisualGit's dependencies. To run 
-this project,`node v6.11` and `npm v3.10` is required. Downgrading your `node` version can be done through `nvm` (Node 
-Version Manager). To setup `node` to have the correct version, see the 
-[Project Setup](https://github.com/uvicgse/project-seed/wiki/Project-Setup).
+this project, `node` and `npm` are required. To setup `node` to have the correct version, see the 
+[Project Setup](https://github.com/uvicgse/project-virtual-team-1/wiki/Project-Setup).
 
 **_Note:_** _If you used `Homebrew` to install `node` on macOS, you may need to reinstall `node` by uninstalling the `brew` 
 version first. See the [Project Setup](https://github.com/uvicgse/project-virtual-team-1/wiki/Project-Setup) to do so._
