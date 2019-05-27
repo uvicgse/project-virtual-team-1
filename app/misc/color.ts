@@ -7,7 +7,9 @@ function changeColor(color) {
 
   // Check if .settings/ exists and make it if it doesn't
   if (!fs.existsSync(userSettingsDirectory)) {
-    fs.mkdir(userSettingsDirectory);
+    fs.mkdir(userSettingsDirectory,(err) => {
+      if (err) throw err;
+    });
   }
 
   // Save user color selection
