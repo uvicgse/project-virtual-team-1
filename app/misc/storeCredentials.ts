@@ -31,7 +31,7 @@ function encryptAccessToken(accessToken) {
   })
 }
 
-function getAccesToken(){
+function getAccessToken(){
   if (encryptAccessToken === undefined)
     return null;
   else {
