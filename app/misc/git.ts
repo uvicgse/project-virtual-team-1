@@ -394,8 +394,8 @@ function pushToRemote() {
 
   // Check to make sure we are not pushing without first committing files
   if (pushButNoCommit == 0) {
-    console.log("There are no staged files")
-    displayModal("You have not committed, your push cannot be empty.");
+    console.log("There are no commits available to push")
+    displayModal("You have not committed any files, your push cannot be empty.");
     return;
   }
 
