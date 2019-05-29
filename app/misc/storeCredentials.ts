@@ -19,6 +19,27 @@ function encrypt(username, password) {
     
 }
 
+function encryptAccessToken(accessToken) {
+  encryptedAccessToken = CryptoJS.AES.encrypt(accessToken, os.hostname());
+  var file = 'data.json';
+  var obj = {'accessToken': encryptedAccessToken.toString()};
+
+  jsonfile.writeFile(file, obj, function (err) {
+    if (err) throw err;
+    console.log('Access Token Saved to File System');
+
+  })
+}
+
+function getAccessToken(){
+  if (encryptAccessToken === undefined)
+    return null;
+  else {
+    var decryptedAccessTokenBytes = CryptoJS.AES.decrypt(encryptedUsername.toString(), os.hostname());
+    return decryptedAccessTokenBytes.toString(CryptoJS.enc.Utf8);
+  }
+}
+
 function encryptTemp(username, password) {
   encryptedUsername = CryptoJS.AES.encrypt(username, os.hostname());
   encryptedPassword = CryptoJS.AES.encrypt(password, os.hostname());  
