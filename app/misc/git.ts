@@ -1,7 +1,6 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
 
-let opn = require('opn');
 let $ = require("jquery");
 let Git = require("nodegit");
 let fs = require("fs");
@@ -774,7 +773,7 @@ function revertCommit() {
       console.log(err);
       updateModalText("Error reverting commit, please commit changes as they will be overwritten, then try again");
     })
-  }
+  })
 }
 
 // Makes a modal for confirmation pop up instead of actually exiting application for confirmation.
@@ -828,7 +827,7 @@ function displayModifiedFiles() {
           let filePaths = document.getElementsByClassName('file-path');
           for (let i = 0; i < filePaths.length; i++) {
             if (filePaths[i].parentElement.className !== "file file-deleted") {
-              let filePath = repoFullPath + "\\" + filePaths[i].innerHTML;
+              let filePath = path.join(repoFullPath, filePaths[i].innerHTML);
               if (!fs.existsSync(filePath)) {
                 filePaths[i].parentElement.remove();
               }
@@ -1236,7 +1235,7 @@ function cleanRepo() {
 
         //Gets NEW/untracked files and deletes them
         function deleteUntrackedFiles(file) {
-          let filePath = repoFullPath + "\\" + file.path();
+          let filePath = path.join(repoFullPath, file.path());
           let modification = calculateModification(file);
           if (modification === "NEW") {
             console.log("DELETING FILE " + filePath);

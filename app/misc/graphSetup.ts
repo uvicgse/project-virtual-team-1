@@ -364,4 +364,4 @@ function showDiff(commitId): void {
       editorPanel.hidden = true;
     }
   }
-}
+

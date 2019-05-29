@@ -5,10 +5,12 @@ let $ = require("jquery");
 //import * as nodegit from "git";
 //import NodeGit, { Status } from "nodegit";
 
-let Git = require("nodegit");
-let repo;
+// Oauth Import
+let electronOauth2 = require('electron-oauth2');
 
+let Git = require("nodegit");
 let github = require("octonode");
+let repo;
 let repoName;
 let githubName;
 let aid, atoken;
@@ -25,8 +27,26 @@ let loginScopes = [
   "user"
 ];
 
-//Called then user pushes to sign out even if they have commited changes but not pushed; prompts a confirmation modal
+const OauthConfig = {
+  clientId: 'CLIENT_ID',
+  clientSecret: 'CLIENT_SECRET',
+  authorizationUrl: 'https://github.com/login/oauth/authorize',
+  tokenUrl: 'https://github.com/login/oauth/access_token',
+  useBasicAuthorizationHeader: false,
+  redirectUri: 'http://localhost'
+};
 
+const windowParams = {
+  alwaysOnTop: true,
+  autoHideMenuBar: true,
+  webPreferences: {
+    nodeIntegration: false,
+  }
+};
+
+const githubOAuth = electronOauth2(OauthConfig, windowParams);
+
+//Called then user pushes to sign out even if they have commited changes but not pushed; prompts a confirmation modal
 function CommitNoPush() {
         if (CommitButNoPush == 1) {
                 $("#modalW2").modal();
@@ -105,6 +125,25 @@ function searchRepoName() {
   });
 }
 
+function authenticateUser(callback) {
+  // Opens Oauth Window and Retrieves Token
+  githubOAuth.getAccessToken({})
+    .then(token => {
+      // Save access token to filesystem
+      encryptAccessToken(token['access_token']);
+
+      // Initialize github client with token from Oauth
+      client = github.client(token['access_token']);
+      
+      // Trigger next step in login process
+      getUserInfo(callback);
+
+    }, err => {
+      console.log('Error while getting token', err);
+	});
+}
+
+
 function getUserInfo(callback) {
 
   
@@ -117,10 +156,12 @@ function getUserInfo(callback) {
 
   cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
 
+  // Remove, once Oauth implemented
   client = github.client({
     username: getUsernameTemp(),
     password: getPasswordTemp()
   });
+
   var ghme = client.me();
 
   ghme.info(function(err, data, head) {
@@ -139,8 +180,8 @@ function getUserInfo(callback) {
           $("#otpModal").modal('show');
         });
       }
-      else if (err == "Error: getaddrinfo ENOTFOUND api.github.com api.github.com:443"){
-        displayModal("No internet connection");
+      else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT"){
+        displayModal("Authentication Error: Please check your internet connection");
       }else{
         displayModal(err);
       }
@@ -238,7 +279,7 @@ function processLogin(ghme, callback) {
           }
           else {
             //Create a collapseable list for the forked repo
-            createDropDownFork(rep['full_name'],"repo-dropdown";
+            createDropDownFork(rep['full_name'],"repo-dropdown");
             repoList[rep['full_name']] = rep['html_url'];
             //Reiterate through and get all the forks of the repo and add to list
             for(let i = 0; i < data.length; i++) {
