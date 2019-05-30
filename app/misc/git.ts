@@ -340,7 +340,7 @@ function pullFromRemote() {
       return repository.fetchAll({
         callbacks: {
           credentials: function () {
-            return cred;
+            return getCredentials();
           },
           certificateCheck: function () {
             return 1;
@@ -403,7 +403,7 @@ function pushToRemote() {
                 {
                   callbacks: {
                     credentials: function () {
-                      return cred;
+                      return getCredentials();
                     }
                   }
                 }
@@ -559,7 +559,7 @@ function deleteRemoteBranch() {
               {
                 callbacks: { // pass in user credentials as a parameter
                   credentials: function () {
-                    return cred;
+                    return getCredentials();
                   }
                 }
               }).then(function () {

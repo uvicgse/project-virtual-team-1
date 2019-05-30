@@ -80,6 +80,10 @@ function ModalSignIn(callback) {
         getUserInfo(callback);
 }
 
+function getCredentials(){
+  // might change with Oauth
+  return Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+}
 
 
 function loginWithSaved(callback) {
