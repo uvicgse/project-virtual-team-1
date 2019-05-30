@@ -203,7 +203,9 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-      clearSelectAllCheckbox();
+      //This function is commented out as it is not currently implemented
+      //It also seems to be causing issues with the graph updating commits
+      //clearSelectAllCheckbox();
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
@@ -393,6 +395,7 @@ function pushToRemote() {
     .then(function (repo) {
       console.log("Pushing changes to remote")
       displayModal("Pushing changes to remote...");
+      console.log("Branch name: " + branch);
       addCommand("git push -u origin " + branch);
       repo.getRemotes()
         .then(function (remotes) {
