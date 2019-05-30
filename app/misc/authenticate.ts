@@ -142,10 +142,10 @@ function getUserInfo(callback) {
       else if (401 == err.statusCode) {
         displayModal("Authentication Error: Please check your username and password.")
       }
-      else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT"){
+      else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT") {
         displayModal("Authentication Error: Please check your internet connection");
       }
-      else{
+      else{ 
         displayModal(err);
       }
       document.getElementById('grey-out').style.display = 'none';
