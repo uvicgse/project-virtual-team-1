@@ -734,7 +734,7 @@ div.selected-commit-diff-panel button.close-button {
 
 /*Toolbar Styles*/
 .toolbar-Container {
-  /*max-height: 75px;*/
+  max-height: 65px;
  }
 
 .toolbar-Icons {
