@@ -166,8 +166,7 @@ function getUserInfo(callback) {
 
   ghme.info(function(err, data, head) {
     if (err) {
-      if (err.toString().indexOf("OTP") !== -1)
-      {
+      if (err.toString().indexOf("OTP") !== -1) {
         github.auth.config({
           username: getUsernameTemp(),
           password: getPasswordTemp()
@@ -180,9 +179,13 @@ function getUserInfo(callback) {
           $("#otpModal").modal('show');
         });
       }
-      else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT"){
+      else if (401 == err.statusCode) {
+        displayModal("Authentication Error: Please check your username and password.")
+      }
+      else if (err.errno == "ENOTFOUND" || err.errno =="ENOENT") {
         displayModal("Authentication Error: Please check your internet connection");
-      }else{
+      }
+      else { 
         displayModal(err);
       }
       document.getElementById('grey-out').style.display = 'none';
