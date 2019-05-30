@@ -202,7 +202,7 @@ function addAndCommit() {
       stagedFiles = null;
       hideDiffPanel();
       clearStagedFilesList();
-      clearCommitMessage();
+     // clearCommitMessage();
       //This function is commented out as it is not currently implemented
       //It also seems to be causing issues with the graph updating commits
       //clearSelectAllCheckbox();
@@ -252,13 +252,7 @@ function clearModifiedFilesList() {
   refreshColor();
 }
 
-function clearCommitMessage() {
-  document.getElementById('commit-message-input').value = "";
-}
 
-function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
-}
 
 function getAllCommits(callback) {
   clearModifiedFilesList();
