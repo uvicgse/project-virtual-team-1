@@ -217,8 +217,8 @@ body .navbar .dropdown-menu .select-menu-list .list-group-item:hover {
 }
 
 #visual-git-logo{
-  width: 150px; 
-  height: 150px; 
+  width: 150px;
+  height: 150px;
 }
 
 /*body .navbar .repo-name {
@@ -530,6 +530,7 @@ body .footer .commit-panel .commit-button-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
 }
 
 body .footer .commit-panel .commit-button-wrapper .commit-button {
@@ -544,6 +545,7 @@ body .footer .commit-panel .commit-button-wrapper .commit-button {
   padding: 0 15px;
   background-color: #39c0ba;
   color: #fff;
+  white-space: nowrap;
 }
 
 body .footer .commit-panel .commit-button:hover {
@@ -561,7 +563,7 @@ body .footer .terminal{
 
 body .footer{
   display: flex;
-  flex-flow: row wrap; 
+  flex-flow: row wrap;
 }
 
 .file-created {
@@ -627,7 +629,7 @@ div.editor-header button.close-button, div.editor-header button.open-button, but
   color: #fff;
 }
 
-div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover { 
+div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover {
   opacity: 0.8;
 }
 
@@ -747,7 +749,7 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .toolbar-Icons:hover {
-  
+
   text-align: center;
   cursor: pointer;
   padding: 10px;
@@ -822,7 +824,7 @@ div.wiki-header button.close-button, div.wiki-header button.open-button {
 
 #open-editor-button {
   float: right;
-  margin-right: 10px; 
+  margin-right: 10px;
   visibility: hidden;
 }
 
