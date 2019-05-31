@@ -4,32 +4,24 @@ var jsonfile = require("jsonfile");
 var fs = require("fs");
 var file;
 
-var encryptedPassword;
-var encryptedUsername;
+var encryptedToken;
 
 function decrypt() {
   file = "data.json";
 
   var objRead = jsonfile.readFileSync(file); //JSON Object containing credentials
 
-  encryptedUsername = objRead.username;
-  encryptedPassword = objRead.password;
+  encryptedToken = objRead.accessToken;
 }
 
-function getUsername() {
-  if (encryptedUsername != null) {
-    var decryptedUsernameBytes = CryptoJS.AES.decrypt(
-      encryptedUsername.toString(),
-      os.hostname()
-    );
-    return decryptedUsernameBytes.toString(CryptoJS.enc.Utf8);
-  }
-}
+function getToken() {
+  // If access token not present in data.json, return null
+  if(!encryptedToken)
+    return null;
 
-function getPassword() {
-  var decryptedPasswordBytes = CryptoJS.AES.decrypt(
-    encryptedPassword.toString(),
+  var decryptedTokenBytes = CryptoJS.AES.decrypt(
+    encryptedToken.toString(),
     os.hostname()
   );
-  return decryptedPasswordBytes.toString(CryptoJS.enc.Utf8);
+  return decryptedTokenBytes.toString(CryptoJS.enc.Utf8);
 }

@@ -85,13 +85,18 @@ function ModalSignIn(callback) {
 
 
 function loginWithSaved(callback) {
-<<<<<<< HEAD
-    document.getElementById("username").value = getUsername();
-    document.getElementById("password").value = getPassword(); //get decrypted username n password
-=======
     document.getElementById("username").value = '';
     document.getElementById("password").value = ''; //get decrypted username n password  
->>>>>>> Currently logging user in with Oath. Nodegit Credentials are set to empty string - MUST BE FIXED
+
+  // Get the saved access token from the file system
+  var accessToken = getToken();
+  // Store the token in memory
+  encryptTemp(accessToken);
+  // Set the client for future use
+  client = github.client(accessToken);
+  // Trigger next step in login process
+  getUserInfo(callback);
+  
 }
 
 function searchRepoName() {
