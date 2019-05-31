@@ -386,7 +386,7 @@ function refreshList() {
               console.log("Unsupported reference: " + refList[i].name());
             }
           }, function (err) {
-            console.log("repo.ts, line 273, could not find referenced branch" + err);
+            console.log("repo.ts, line 275, could not find referenced branch" + err);
           });
 
           if (refList[i].isRemote()) {
