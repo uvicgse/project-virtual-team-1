@@ -395,10 +395,10 @@ function pushToRemote() {
       displayModal("Pushing changes to remote...");
       addCommand("git push -u origin " + branch);
       repo.getRemotes()
-        .then(function (remotes) {
-          repo.getRemote(remotes[0])
-            .then(function (remote) {
-              return remote.push(
+      .then(function (remotes) {
+        repo.getRemote(remotes[0])
+        .then(function (remote) {
+          return remote.push(
                 ["refs/heads/" + branch + ":refs/heads/" + branch],
                 {
                   callbacks: {
@@ -408,14 +408,16 @@ function pushToRemote() {
                   }
                 }
               );
-            })
-            .then(function () {
-              CommitButNoPush = 0;
-              window.onbeforeunload = Confirmed;
-              console.log("Push successful");
-              updateModalText("Push successful");
-              refreshAll(repo);
-            });
+        }).then(function() {
+          CommitButNoPush = 0;
+          window.onbeforeunload = Confirmed;
+          console.log("Push successful");
+          updateModalText("Push successful");
+          refreshAll(repo);
+        }).catch(function(err) {
+          console.log(err);
+          updateModalText("Push Failed : "+err.message);
+          });            
         });
     });
 }
