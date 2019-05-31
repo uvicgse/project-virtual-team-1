@@ -259,30 +259,29 @@ function openRepository() {
     }
   }
 
+// works as a monitor for any change to the reference list
 function refreshList() {
-  let branch;
-  bname = {};
-  tags = {};
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repo.getCurrentBranch()
-        .then(function (reference) {
-          let branchParts = reference.name().split("/");
-          branch = branchParts[branchParts.length - 1];
-        })
         .then(function () {
+          // grab the list
           return repo.getReferences(Git.Reference.TYPE.LISTALL);
         })
         .then(function (refList) {
-          // sort refList alphabetically
+          // sort refList alphabetically to get uniform order of the list
           refList.sort();
 
-          // monitoring changes
+          // monitor any changes to reference list
           if (lastRefList.length === refList.length && lastRefList.every(function(value, index) { return value.name() === refList[index].name()})) {
+            // no change to the ref list, do nothing
             return;
           }
 
+          // detects changes, refresh the lists
           console.log("branch or tag changes detected... refreshing branch and tag list");
+          bname = {};
+          tags = {};
           clearBranchAndTagElement();
           for (let i = 0; i < refList.length; i++) {
             //get simplified name
@@ -311,7 +310,7 @@ function refreshList() {
                 console.log("Unsupported reference: " + refList[i].name());
               }
             }, function (err) {
-              console.log("repo.ts, line 273, could not find referenced branch" + err);
+              console.log("repo.ts, line 269, could not find referenced branch" + err);
             });
 
             // display branch list and tag list
@@ -328,6 +327,7 @@ function refreshList() {
               console.log("Unsupported reference: " + refList[i].name());
             }
           }
+          // update lastRefList
           lastRefList = refList.slice();
         })
     });
