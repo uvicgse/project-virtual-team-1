@@ -2,7 +2,7 @@ let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
-let tags = {}
+let tags = {};
 let remoteName = {};
 let localBranches = [];
 let readFile = require("fs-sync");
@@ -258,11 +258,78 @@ function openRepository() {
     }
   }
 
+function refreshList() {
+  let branch;
+  bname = {};
+  tags = {};
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getCurrentBranch()
+        .then(function (reference) {
+          let branchParts = reference.name().split("/");
+          branch = branchParts[branchParts.length - 1];
+        })
+        .then(function () {
+          return repo.getReferences(Git.Reference.TYPE.LISTALL);
+        })
+        .then(function (refList) {
+          clearBranchAndTagElement();
+          // sort refList alphabetically
+          refList.sort();
+          for (let i = 0; i < refList.length; i++) {
+            //get simplified name
+            let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+            Git.Reference.nameToId(repo, refList[i].name()).then(function (oid) {
+              // Use oid
+              if (refList[i].isRemote()) {
+                // for remote branches add oid and branch name to remote branches map
+                remoteName[refName] = oid;
+              } else if (refList[i].isBranch()){
+                // add to list of branches
+                if (oid.tostrS() in bname) {
+                  bname[oid.tostrS()].push(refList[i]);
+                } else {
+                  bname[oid.tostrS()] = [refList[i]];
+                }
+              } else if (refList[i].isTag()){
+                // add to list of tags
+                if (oid.tostrS() in tags) {
+                  tags[oid.tostrS()].push(refList[i]);
+                } else {
+                  tags[oid.tostrS()] = [refList[i]];
+                }
+              } else{
+                console.log("Unsupported reference: " + refList[i].name());
+              }
+            }, function (err) {
+              console.log("repo.ts, line 273, could not find referenced branch" + err);
+            });
+
+            // display branch list and tag list
+            if (refList[i].isRemote()) {
+              if (localBranches.indexOf(refName) < 0) {
+                displayBranch(refName, "branch-item-list", "checkoutRemoteBranch(this)");
+              }
+            } else if (refList[i].isBranch()){
+              localBranches.push(refName);
+              displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
+            } else if (refList[i].isTag()){
+              displayTag(refName, "tag-item-list", ""); // TODO: support switching to a tag by adding an on-click function
+            } else{
+              console.log("Unsupported reference: " + refList[i].name());
+            }
+          }
+        })
+    });
+  console.log("refreshing branch and tag list");
+}
+
   function refreshAll(repository) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
     bname = {};
-    tags = {}
+    tags = {};
 
     //Get the current branch from the repo
     repository.getCurrentBranch()
@@ -277,8 +344,8 @@ function openRepository() {
         return repository.getReferences(Git.Reference.TYPE.LISTALL);
       })
       .then(function (refList) {
-        let count = 0;
-        clearBranchElement();
+        clearBranchAndTagElement();
+        refList.sort();
         //for each branch
         for (let i = 0; i < refList.length; i++) {
           console.log("reference name: " + refList[i].name());
@@ -368,7 +435,7 @@ function openRepository() {
         return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
       })
       .then(function (branchList) {
-        clearBranchElement();
+        clearBranchAndTagElement();
         for (let i = 0; i < branchList.length; i++) {
           console.log("branch discovered: " + branchList[i]);
           let bp = branchList[i].split("/");
@@ -401,7 +468,7 @@ function openRepository() {
       .then(function (ref) {
         let name = ref.name().split("/");
         console.log("merging remote branch with tracked local branch");
-        clearBranchElement();
+        clearBranchAndTagElement();
         for (let i = 0; i < list.length; i++) {
           let bp = list[i].split("/");
           if (bp[1] !== "remotes" && bp[bp.length - 1] !== name[name.length - 1]) {
@@ -417,7 +484,7 @@ function openRepository() {
     ul.innerHTML = '';
   }
 
-  function clearBranchElement() {
+  function clearBranchAndTagElement() {
     // clean input fields
     document.getElementById("branchName").value = '';
     document.getElementById("tag-name").value = '';
