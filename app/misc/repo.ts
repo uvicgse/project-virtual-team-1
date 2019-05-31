@@ -311,7 +311,7 @@ function openRepository() {
               console.log("Unsupported reference: " + refList[i].name());
             }
           }, function (err) {
-            console.log("repo.ts, line 273, could not find referenced branch" + err);
+            console.log("repo.ts, line 275, could not find referenced branch" + err);
           });
 
           if (refList[i].isRemote()) {
@@ -360,8 +360,7 @@ function openRepository() {
       });
   }
 
-// TODO: function getAllTags()
-
+  // Displaying branches in a dropdown menu
   function getAllBranches() {
     let repos;
     Git.Repository.open(repoFullPath)
@@ -431,6 +430,7 @@ function openRepository() {
     })
   }
 
+// Adding features to branch dropdown menu
   function displayBranch(name, id, onclick) {
     let ul = document.getElementById(id);
     let li = document.createElement("li");
@@ -495,6 +495,7 @@ function openRepository() {
     ul.appendChild(li);
   }
 
+// Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
     let tagList = document.getElementById(id);
     let li = document.createElement("li");
