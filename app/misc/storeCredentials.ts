@@ -4,6 +4,7 @@ var jsonfile = require('jsonfile');
 var fs = require('fs');
 var encryptedPassword;
 var encryptedUsername;
+var encryptedToken;
 
 
 function encrypt(username, password) {
@@ -40,9 +41,17 @@ function getAccessToken(){
   }
 }
 
-function encryptTemp(username, password) {
-  encryptedUsername = CryptoJS.AES.encrypt(username, os.hostname());
-  encryptedPassword = CryptoJS.AES.encrypt(password, os.hostname());  
+function encryptTemp(token) {
+  encryptedToken = CryptoJS.AES.encrypt(token, os.hostname());
+}
+
+function getTokenTemp() {
+  if (encryptedToken === undefined){ // the user has not logged in, return null
+    return null;
+  }else {
+    var decryptedTokenBytes = CryptoJS.AES.decrypt(encryptedToken.toString(), os.hostname());
+    return decryptedTokenBytes.toString(CryptoJS.enc.Utf8);
+  }
 }
 
 function getUsernameTemp() {
