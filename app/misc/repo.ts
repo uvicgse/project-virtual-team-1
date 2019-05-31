@@ -13,6 +13,7 @@ let span;
 let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
+let lastRefList = [];
 
 function downloadRepository() {
   let fullLocalPath;
@@ -273,9 +274,15 @@ function refreshList() {
           return repo.getReferences(Git.Reference.TYPE.LISTALL);
         })
         .then(function (refList) {
-          clearBranchAndTagElement();
           // sort refList alphabetically
           refList.sort();
+
+          // monitoring changes
+          if (lastRefList.length === refList.length && lastRefList.every(function(value, index) { return value.name() === refList[index].name()})) {
+            return;
+          }
+
+          clearBranchAndTagElement();
           for (let i = 0; i < refList.length; i++) {
             //get simplified name
             let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
@@ -320,9 +327,10 @@ function refreshList() {
               console.log("Unsupported reference: " + refList[i].name());
             }
           }
+          lastRefList = refList.slice();
+          console.log("branch or tag changes detected... refreshing branch and tag list");
         })
     });
-  console.log("refreshing branch and tag list");
 }
 
   function refreshAll(repository) {
