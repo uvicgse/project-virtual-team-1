@@ -6,14 +6,18 @@ import { Component } from "@angular/core";
 })
 
 export class AddRepositoryComponent {
-
+  repoEntries = [
+    "repo1",
+    "repo2",
+    "repo3"
+  ];
 
   selectClone(): void {
     if (document.getElementById("repoClone").value == null || document.getElementById("repoClone").value == "") {
       window.alert("Please enter the URL of the repository you wish to clone");
     } else if (document.getElementById("repoSave").value == null || document.getElementById("repoSave").value == "") {
       updateLocalPath();
-    
+
     } else {
       // If directory is specified, continue as normal
       this.addRepository();
