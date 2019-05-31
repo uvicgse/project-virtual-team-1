@@ -10,13 +10,7 @@
           <p>URL to clone from</p>
         </div>
         <div class="right">
-          <input type="text" oninput="updateLocalPath()" name="repositoryRemote" class="path-textbox" id="repoClone" placeholder="https://github.com/user/repository.git" list="repolistA">
-          <!-- TODO: Dynamically update list, this is placeholder -->
-          <datalist id="repolistA">
-            <option value="https://github.com/some-repo/">
-            <option value="https://github.com/another-repo/">
-            <option value="https://github.com/the-last-repo/">
-          </datalist>
+          <input type="text" oninput="updateLocalPath()" name="repositoryRemote" class="path-textbox" id="repoClone" placeholder="https://github.com/user/repository.git"/>
           <button type="button" class="button-clone" id="cloneButton" (click)="selectClone()">Clone</button>
         </div>
       </div>
@@ -42,8 +36,8 @@
           <p>Location of existing repository</p>
         </div>
         <div class="right">
-          <input type="text" name="repositoryLocal" class = "path-textbox" id="repoOpen" list="repolistB"/>
-          <datalist id="repolistB">
+          <input type="text" name="repositoryLocal" class = "path-textbox" id="repoOpen" list="repolist"/>
+          <datalist id="repolist">
             <option value="https://github.com/best-repo/">
             <option value="https://github.com/worst-repo/">
             <option value="https://github.com/okay-repo/">
@@ -65,12 +59,7 @@
 	        </div>
 
 	        <div class="right">
-	          <input type="text" name="folderLocal" class = "path-textbox" id="repoCreate" list="repolistC"/>
-              <datalist id="repolistC">
-                <option value="https://github.com/a-repo/">
-                <option value="https://github.com/b-repo/">
-                <option value="https://github.com/c-repo/">
-              </datalist>
+	          <input type="text" name="folderLocal" class = "path-textbox" id="repoCreate"/>
 	          <button class="button-open" (click)="selectLocalRepoDirectory()">Create</button>
 	          <input type="file" id="dirPickerCreateLocal" name="localDir" (change)="createLocalRepository()" style="display: none;" webkitdirectory />
 	        </div>
