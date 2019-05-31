@@ -282,6 +282,7 @@ function refreshList() {
             return;
           }
 
+          console.log("branch or tag changes detected... refreshing branch and tag list");
           clearBranchAndTagElement();
           for (let i = 0; i < refList.length; i++) {
             //get simplified name
@@ -328,7 +329,6 @@ function refreshList() {
             }
           }
           lastRefList = refList.slice();
-          console.log("branch or tag changes detected... refreshing branch and tag list");
         })
     });
 }

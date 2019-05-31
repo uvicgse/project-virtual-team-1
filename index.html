@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
     displayModifiedFiles();
   }, 3000);
 
-  // update branch list and tag list every 1 seconds
+  // monitor changes on branch list and tag list, 1 check per second
   setInterval(refreshList, 1000);
 }, false);
 
