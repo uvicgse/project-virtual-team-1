@@ -85,8 +85,15 @@ function ModalSignIn(callback) {
 
 
 function loginWithSaved(callback) {
-    document.getElementById("username").value = '';
-    document.getElementById("password").value = ''; //get decrypted username n password  
+  // Get the saved access token from the file system
+  var accessToken = getToken();
+  // Store the token in memory
+  encryptTemp(accessToken);
+  // Set the client for future use
+  client = github.client(accessToken);
+  // Trigger next step in login process
+  getUserInfo(callback);
+  
 }
 
 function searchRepoName() {
