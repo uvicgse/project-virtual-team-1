@@ -80,8 +80,10 @@ function ModalSignIn(callback) {
         getUserInfo(callback);
 }
 
+// provide a fresh cred object. 
+// previously we were trying to use same object again and again which was cauing issues
 function getCredentials(){
-  // might change with Oauth
+  //Note: might change with Oauth
   return Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
 }
 

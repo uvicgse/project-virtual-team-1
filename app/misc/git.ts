@@ -347,26 +347,20 @@ function pullFromRemote() {
           }
         }
       });
-    })
     // Now that we're finished fetching, go ahead and merge our local branch
     // with the new one
-    .then(function () {
+    }).then(function () {
       return Git.Reference.nameToId(repository, "refs/remotes/origin/" + branch);
-    })
-    .then(function (oid) {
+    }).then(function (oid) {
       console.log("Looking up commit with id " + oid + " in all repositories");
       return Git.AnnotatedCommit.lookup(repository, oid);
-    }, function (err) {
-      console.log("fetching all remgit.ts, line 251, cannot find repository with old id" + err);
-    })
-    .then(function (annotated) {
+    }).then(function (annotated) {
       console.log("merging " + annotated + "with local forcefully");
       Git.Merge.merge(repository, annotated, null, {
         checkoutStrategy: Git.Checkout.STRATEGY.FORCE,
       });
       theirCommit = annotated;
-    })
-    .then(function () {
+    }).then(function () {
       let conflicsExist = false;
       let tid = "";
       if (readFile.exists(repoFullPath + "/.git/MERGE_MSG")) {
@@ -384,7 +378,11 @@ function pullFromRemote() {
         updateModalText("Successfully pulled from remote branch " + branch + ", and your repo is up to date now!");
         refreshAll(repository);
       }
-    });
+    }).catch(function(err) {
+      console.log(err);
+      updateModalText("Pull Failed : "+err.message);
+    }); 
+    
 }
 
 function pushToRemote() {
