@@ -10,7 +10,7 @@
           <p>URL to clone from</p>
         </div>
         <div class="right">
-          <input type="text" oninput="updateLocalPath()" name="repositoryRemote" class="path-textbox" id="repoClone" placeholder="https://github.com/user/repository.git"/>
+          <input type="text" oninput="updateLocalPath()" name="repositoryRemote" class = "path-textbox" id="repoClone" placeholder="https://github.com/user/repository.git"/>
           <button type="button" class="button-clone" id="cloneButton" (click)="selectClone()">Clone</button>
         </div>
       </div>
@@ -37,14 +37,6 @@
         </div>
         <div class="right">
           <input type="text" name="repositoryLocal" class = "path-textbox" id="repoOpen"/>
-          <option *ngFor="let repo of repoEntries">
-              {{ repo }}
-          </option>
-          <!-- <datalist id="repolist">
-            <option value="https://github.com/best-repo/">
-            <option value="https://github.com/worst-repo/">
-            <option value="https://github.com/okay-repo/">
-          </datalist> -->
           <button class="button-open" (click)="selectDirectory()">Open</button>
           <input type="file" id="dirPickerOpenLocal" name="dirList" (change)="openRepository()" style="display: none;" webkitdirectory />
         </div>
