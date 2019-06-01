@@ -1072,6 +1072,18 @@ body .pull-request-panel {
   margin: auto;
   width: 90%;
 }
-/*
- End of pull request css.
-*/
+
+.context-menu{
+  position: absolute;
+  display: none;
+}
+
+.context-menu .dropdown-menu{
+  display: list-item;
+}
+
+.modal-body label { 
+  display: inline-block; 
+  width: 20%; 
+  text-align: left; 
+}

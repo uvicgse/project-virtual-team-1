@@ -218,18 +218,19 @@ function drawGraph() {
             secP = null;
         });
 
-        network.on('oncontext', function (callback) {
-            toNode = network.getNodeAt(callback.pointer.DOM);
-            if (flag === 'node' && nodes.get(toNode)['shape'] === 'box') {
-                toNode = nodes.get(toNode);
-            } else if (flag === 'abstract' && abNodes.get(toNode)['shape'] === 'box') {
-                toNode = abNodes.get(toNode);
-            } else if (flag === 'basic' && bsNodes.get(toNode)['shape'] === 'box') {
-                toNode = bsNodes.get(toNode);
-            } else {
-                toNode = undefined;
+        network.on('oncontext', function (properties) {
+            if (flag === 'node') { // Only show context menu at the lowest zoom level
+                let contextNode = nodes.get(network.getNodeAt(properties.pointer.DOM));
+                if (contextNode.nodeType == NodeType.Node) { // Only show context menu for nodes (not branches/tags)
+                    let contextMenu = $("#networkContext");
+                    contextMenu.css({
+                        top: properties.event.pageY + "px",
+                        left: properties.event.pageX + "px"
+                    });
+                    contextMenu.finish().toggle();
+                    contextMenu.focus();
+                }
             }
-            console.log("toNode:  " + toNode);
         });
 
         network.on('click', function (properties) {
@@ -263,22 +264,18 @@ function drawGraph() {
                 }
             }
         })
+        
+        network.on("click", function (properties) {
+            let contextMenu = $("#networkContext")
+            contextMenu.hide()
+        });
 
-        network.on("oncontext", function(params) {
-    
-            if(GraphNodeID != 0){
-              GraphNodeID = 0;
-            }else{
-              //console.log("Please right click and select the appropriate ID");
-            }
-          });
-        
-    
-        
-          network.on("click", function (params) {
-              GraphNodeID = parseInt(params.nodes.toString());
-              console.log("Graph Node ID is: " + GraphNodeID);
-          });
+        network.on("dragStart", function (properties) {
+            let contextMenu = $("#networkContext")
+            contextMenu.hide()
+        });
+
+
     })
 }
 
@@ -335,7 +332,7 @@ function showDiff(commitId): void {
     }
   }
 
-  function displaySelectedCommitDiffPanel(commitId): void {
+function displaySelectedCommitDiffPanel(commitId): void {
     let closeButton = document.getElementById("commit-close");
     if (closeButton != null) {
       closeButton.style.display = "inline";
@@ -363,5 +360,4 @@ function showDiff(commitId): void {
     if (editorPanel != null){
       editorPanel.hidden = true;
     }
-  }
-
+}

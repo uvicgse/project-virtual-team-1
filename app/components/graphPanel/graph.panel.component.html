@@ -1,13 +1,13 @@
 <div class="graph-panel" id="graph-panel">
   <div class="network" id="my-network">
   </div>
-  <ul class="dropdown-menu" role="menu" id="branchOptions">
-    <li><a tabindex="0" href="#">Checkout this branch</a></li>
-    <li class="dropdown-submenu">
-      <a tabindex="0" href="#">Merge from</a>
-      <ul class="dropdown-menu" role="menu" id="otherBranches"></ul>
-    </li>
-  </ul>
+  <div id="networkContext" class="context-menu" tabindex="-1" (blur)="disableContextMenu()">
+      <ul class="dropdown-menu">
+        <li>
+          <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create Tag</a>
+        </li>
+      </ul>
+    </div>
   <div class="modal fade" id="mergeModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -60,6 +60,26 @@
         </div>
         <div class="modal-footer">
           <button id="authorModalProfileButton" type="button" class="btn btn-primary" data-dismiss="modal">View Github Profile</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+  <div class="modal fade" id="createTagModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Create Tag</h4>
+        </div>
+        <div class="modal-body">
+          <label>Tag Name:</label><input type="text"><br>
+          <label>Tag Message:</label><input type="text"><br>
+          <label>Push Tag:</label><input type="checkbox"><br>
+          <p class="clear">&nbsp;</p>
+        </div>
+        <div class="modal-footer">
+          <button id="createTagModalCreateButton" type="button" class="btn btn-primary" data-dismiss="modal">Create</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div><!-- /.modal-content -->

@@ -16,6 +16,8 @@ let edgeDic = {};
 let numOfCommits = 0;
 let branchIds = {};
 
+enum NodeType{Basic, Abstract, Node, Branch, Tag}
+
 function processGraph(commits: nodegit.Commit[]) {
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
@@ -346,7 +348,8 @@ function makeBasicNode(c, column: number) {
             fixed: false,
             x: (column - 1) * spacingX,
             y: (id - 1) * spacingY,
-            author: c.author()
+            author: c.author(),
+            nodeType: NodeType.Basic
         });
 
         let shaList = [];
@@ -382,6 +385,7 @@ function makeBasicNode(c, column: number) {
                 fixed: false,
                 x: (column - 0.6 * (i + 1)) * spacingX,
                 y: (id - 0.3) * spacingY,
+                nodeType: NodeType.Branch
             });
 
             bsEdges.add({
@@ -429,7 +433,8 @@ function makeAbsNode(c, column: number) {
             fixed: false,
             x: (column - 1) * spacingX,
             y: (id - 1) * spacingY,
-            author: c.author()
+            author: c.author(),
+            nodeType: NodeType.Abstract
         });
 
         if (c.toString() in bname) {
@@ -450,6 +455,7 @@ function makeAbsNode(c, column: number) {
                     fixed: false,
                     x: (column - 0.6 * (i + 1)) * spacingX,
                     y: (id - 0.3) * spacingY,
+                    nodeType: NodeType.Branch
                 });
 
                 abEdges.add({
@@ -492,7 +498,8 @@ function makeNode(c, column: number) {
         fixed: false,
         x: (column - 1) * spacingX,
         y: (id - 1) * spacingY,
-        author: c.author()
+        author: c.author(),
+        nodeType: NodeType.Node
     });
 
     if (c.toString() in bname) {
@@ -513,6 +520,7 @@ function makeNode(c, column: number) {
                 fixed: false,
                 x: (column - 0.6 * (i + 1)) * spacingX,
                 y: (id - 0.3) * spacingY,
+                nodeType: NodeType.Branch
             });
 
             edges.add({
