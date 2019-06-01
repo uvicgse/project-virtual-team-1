@@ -160,7 +160,7 @@ function getUserInfo(callback) {
     encryptTemp(document.getElementById("username").value, document.getElementById("password").value);
   }
 
-  cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+  cred = getCredentials();
 
   // Remove, once Oauth implemented
   client = github.client({
