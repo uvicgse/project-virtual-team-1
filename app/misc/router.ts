@@ -1,3 +1,4 @@
+let fs = require('fs').promises;
 let cred;
 let blue = "#39c0ba";
 let gray = "#5b6969";
@@ -60,25 +61,29 @@ function checkSignedIn() {
 
 function checkIfInTheApp(){
   return inTheApp;
-} 
+}
 
 function switchToAddRepositoryPanelWhenNotSignedIn() {
   previousWindow = "repoPanel";
   continuedWithoutSignIn = true;
   showUsername = false;
   switchToAddRepositoryPanel();
-  
+
 }
 
 function switchToAddRepositoryPanel() {
   inTheApp = true
   console.log("Switching to add repo panel");
+
+  console.log("testing method")
+  useRecentRepositories();
+
   hideAuthenticatePanel();
   hideFilePanel();
   hidePullRequestPanel();
   hideGraphPanel();
   displayAddRepositoryPanel();
-  
+
   if(showUsername){
     document.getElementById("Button_Sign_out").style.display = "block";
     document.getElementById("Button_Sign_in").style.display = "none";
@@ -158,14 +163,14 @@ function displayPullRequestPanel() {
   let prPanel = document.getElementById("pull-request-panel")
   if (prPanel != null) {
     prPanel.style.zIndex = "10";
-  }  
+  }
 }
 
 function hidePullRequestPanel() {
   let prPanel = document.getElementById("pull-request-panel")
   if (prPanel != null) {
     prPanel.style.zIndex = "-10";
-  }  
+  }
 }
 
 function displayGraphPanel() {
@@ -240,12 +245,12 @@ function hideDiffPanel() {
   if (diffPanel != null) {
     diffPanel.style.width = "0";
   }
-  
+
   let graphPanel = document.getElementById("graph-panel");
   if (graphPanel != null) {
     graphPanel.style.width = "100%";
   }
-  
+
   disableDiffPanelEditOnHide();
   hideDiffPanelButtons();
 }
@@ -285,12 +290,12 @@ function displayDiffPanelButtons() {
   if (saveButton != null) {
     saveButton.style.visibility = "visible";
   }
-  
+
   let cancelButton = document.getElementById("cancel-button");
   if (cancelButton != null) {
     cancelButton.style.visibility = "visible";
   }
-  document.getElementById("open-editor-button").style.visibility = "visible"; 
+  document.getElementById("open-editor-button").style.visibility = "visible";
 }
 
 function hideDiffPanelButtons() {
@@ -298,12 +303,12 @@ function hideDiffPanelButtons() {
   if (saveButton != null) {
     saveButton.style.visibility = "hidden";
   }
-  
+
   let cancelButton = document.getElementById("cancel-button");
   if (cancelButton != null) {
     cancelButton.style.visibility = "hidden";
   }
-  document.getElementById("open-editor-button").style.visibility = "hidden"; 
+  document.getElementById("open-editor-button").style.visibility = "hidden";
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
 }
@@ -343,4 +348,24 @@ function useSavedCredentials() : boolean {
     return true;
   }
   return false;
+}
+
+function createRecentRepositories(file) {
+    console.log('Creating recent repositories file: ' + file);
+    try {
+        fs.writeFileSync(file);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function useRecentRepositories() : boolean {
+    let file = 'repos.json';
+    // check if the repo.json file exists
+    if (!fs.existsSync(file)) {
+        console.log('No file found');
+        createRecentRepositories(file);
+        return true;
+    }
+    return false;
 }

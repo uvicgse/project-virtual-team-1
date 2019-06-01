@@ -658,7 +658,7 @@ function openRepository() {
       localPath = document.getElementById("dirPickerSaveNew").files[0].webkitRelativePath;
       fullLocalPath = document.getElementById("dirPickerSaveNew").files[0].path;
 
-      // display the new folder location on repoSave text field 
+      // display the new folder location on repoSave text field
       updateRepoSaveText(fullLocalPath);
     }
   }
@@ -715,8 +715,8 @@ function openRepository() {
       prPanel.style.width = "60px";
       prListContainer.style.display = "none";
 
-      /* 
-        Calulates space leftover for the body panel after 
+      /*
+        Calulates space leftover for the body panel after
         accounting for the space taken up by the side panel.
       */
       bodyPanel.style.width = "calc(80% - 60px)";
