@@ -384,6 +384,7 @@ function refreshList(verbose) {
       });
   }
 
+  // Displaying branches in a dropdown menu
   function getAllBranches() {
     let repos;
     Git.Repository.open(repoFullPath)
@@ -453,6 +454,7 @@ function refreshList(verbose) {
     })
   }
 
+// Adding features to branch dropdown menu
   function displayBranch(name, id, onclick) {
     let ul = document.getElementById(id);
     let li = document.createElement("li");
@@ -517,6 +519,7 @@ function refreshList(verbose) {
     ul.appendChild(li);
   }
 
+// Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
     let tagList = document.getElementById(id);
     let li = document.createElement("li");
@@ -682,7 +685,7 @@ function refreshList(verbose) {
       localPath = document.getElementById("dirPickerSaveNew").files[0].webkitRelativePath;
       fullLocalPath = document.getElementById("dirPickerSaveNew").files[0].path;
 
-      // display the new folder location on repoSave text field 
+      // display the new folder location on repoSave text field
       updateRepoSaveText(fullLocalPath);
     }
   }
@@ -739,8 +742,8 @@ function refreshList(verbose) {
       prPanel.style.width = "60px";
       prListContainer.style.display = "none";
 
-      /* 
-        Calulates space leftover for the body panel after 
+      /*
+        Calulates space leftover for the body panel after
         accounting for the space taken up by the side panel.
       */
       bodyPanel.style.width = "calc(80% - 60px)";

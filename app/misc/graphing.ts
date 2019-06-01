@@ -15,6 +15,7 @@ let columns: boolean[] = [];
 let edgeDic = {};
 let numOfCommits = 0;
 let branchIds = {};
+let tagIds = {};
 
 function processGraph(commits: nodegit.Commit[]) {
     var promise = new Promise(function(resolve,reject){
@@ -257,6 +258,10 @@ function sortBasicGraph() {
         if (idList[i] in branchIds) {
             bsNodes.update({id: branchIds[idList[i]], y: (i + 0.7) * spacingY})
         }
+        if (idList[i] in tagIds) {
+          // CHANGEME
+            bsNodes.update({id: tagIds[idList[i]], y: (i + 0.7) * spacingY, x: (i + 0.7) * spacingX})
+        }
     }
 }
 
@@ -312,6 +317,7 @@ function makeBranchColor(oldResult) {
     return promise;
 }
 
+
 function makeBasicNode(c, column: number) {
     let reference;
     let name = getName(c.author().toString());
@@ -319,6 +325,7 @@ function makeBasicNode(c, column: number) {
     let flag = true;
     let count = 1;
     let id;
+    let tagid;
     let colors1 = JSON.stringify(bDict[c.toString()]);
     for (let i = 0; i < basicList.length; i++) {
         let colors2 = JSON.stringify(basicList[i]['colors']);
@@ -336,6 +343,7 @@ function makeBasicNode(c, column: number) {
 
     if (flag) {
         id = basicNodeId++;
+        tagid = basicNodeId++;
         let title = "Number of Commits: " + count;
         bsNodes.add({
             id: id,
@@ -392,6 +400,37 @@ function makeBasicNode(c, column: number) {
             branchIds[id] = id + numOfCommits * (i + 1);
         }
     }
+
+    // Initializing viewable tags in graph mode
+    if (c.toString() in tags) {
+        for (let i = 0; i < tags[c.toString()].length; i++) {
+            let tagName = tags[c.toString()][i];
+            let tp = tagName.name().split("/");
+            let shortTagName = tp[tp.length - 1];
+            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            if (tagName.isHead()) {
+                shortTagName = "*" + shortTagName;
+            }
+            bsNodes.add({
+                id: tagid + numOfCommits * (i + 1),
+                shape: "database",
+                title: tagName, // hover text
+                label: shortTagName, // shown under/in shape
+                physics: false,
+                fixed: false,
+                x: (column - 0.6 * (i + 1)) * spacingX,
+                y: (tagid - 0.3) * spacingY,
+            });
+
+            bsEdges.add({
+                from: tagid + numOfCommits * (i + 1),
+                to: tagid
+            });
+
+            tagIds[tagid] = tagid + numOfCommits * (i + 1);
+        }
+    }
+
 }
 
 function makeAbsNode(c, column: number) {
@@ -418,6 +457,7 @@ function makeAbsNode(c, column: number) {
 
     if (flag) {
         let id = absNodeId++;
+        let tagid = absNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
 
         abNodes.add({
@@ -459,6 +499,34 @@ function makeAbsNode(c, column: number) {
             }
         }
 
+        // Initializing viewable tags in graph mode
+        if (c.toString() in tags) {
+            for (let i = 0; i < tags[c.toString()].length; i++) {
+                let tagName = tags[c.toString()][i];
+                let tp = tagName.name().split("/");
+                let shortTagName = tp[tp.length - 1];
+                console.log(shortTagName + " tag: " + tagName.isHead().toString());
+                if (tagName.isHead()) {
+                    shortTagName = "*" + shortTagName;
+                }
+                abNodes.add({
+                    id: tagid + numOfCommits * (i + 1),
+                    shape: "database",
+                    title: tagName, // hover text
+                    label: shortTagName, // shown under/in shape
+                    physics: false,
+                    fixed: false,
+                    x: (column + 0.6 * (i + 1)) * spacingX,
+                    y: (tagid + 0.3) * spacingY,
+                });
+
+                abEdges.add({
+                    from: tagid + numOfCommits * (i + 1),
+                    to: tagid
+                });
+            }
+        }
+
         let shaList = [];
         shaList.push(c.toString());
 
@@ -477,11 +545,12 @@ function makeAbsNode(c, column: number) {
 
 function makeNode(c, column: number) {
     let id = nodeId++;
+    // console.log(">>>NodeID: " + nodeId++);
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
     let email = stringer.split("%")[1];
-    let title = "Author: " + name + "<br>" + "Message: " + c.message();
+    let title = "Author: " + name + "<br>" + "Message: " + c.message() + "<br>" + "Tags: ";// + c.tags();
     let flag = false;
     nodes.add({
         id: id,
@@ -523,6 +592,35 @@ function makeNode(c, column: number) {
         flag = true;
     }
 
+    if (c.toString() in tags) {
+        let tagid = nodeId++;
+        for (let i = 0; i < tags[c.toString()].length; i++) {
+            let tagName = tags[c.toString()][i];
+            let tp = tagName.name().split("/");
+            let shortTagName = tp[tp.length - 1];
+            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            if (tagName.isHead()) {
+                shortTagName = "*" + shortTagName;
+            }
+            nodes.add({
+                id: tagid + numOfCommits * (i + 1),
+                shape: "database",
+                title: tagName, // hover text
+                label: shortTagName, // shown under/in shape
+                physics: false,
+                fixed: false,
+                x: (column + 0.6 * (i + 1)) * spacingX,
+                y: (tagid + 0.3) * spacingY,
+            });
+
+            edges.add({
+                from: tagid + numOfCommits * (i + 1),
+                to: tagid
+            });
+        }
+        flag = true;
+    }
+
     commitList.push({
         sha: c.sha(),
         id: id,
@@ -533,7 +631,7 @@ function makeNode(c, column: number) {
         branch: flag,
     });
 
-    console.log("commit: "+ id + ", message: " +commitList[id-1]['id']);
+    // console.log("commit: "+ id + ", message: " + commitList[id-1]['id']); // + ", tags: " + tags[tagid]; ??
 }
 
 function makeEdge(sha: string, parentSha: string) {
