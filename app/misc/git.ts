@@ -378,6 +378,8 @@ function pullFromRemote() {
         updateModalText("Successfully pulled from remote branch " + branch + ", and your repo is up to date now!");
         refreshAll(repository);
       }
+      //anywhere during the above process if there is a error the following catch will catch and report it 
+      //and stop the process then and there. 
     }).catch(function(err) {
       console.log(err);
       updateModalText("Pull Failed : "+err.message);
