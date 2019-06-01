@@ -333,6 +333,7 @@ function makeBasicNode(c, column: number) {
         if (colors1 === colors2) {
             flag = false;
             id = basicList[i]['id'];
+            tagid = basicList[i]['id'] + 1;
             basicList[i]['count'] += 1;
             count = basicList[i]['count'];
             bsNodes.update({id: i+1, title: "Number of Commits: " + count});
