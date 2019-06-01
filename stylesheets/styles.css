@@ -47,7 +47,7 @@ ul{
   position: relative;
 }
 .navbar .navbar-collapse .navbar-right > li:last-child {
-  padding-left: 22px;
+  padding-left: 30px;
 }
 .navbar .nav-collapse {
   position: absolute;
