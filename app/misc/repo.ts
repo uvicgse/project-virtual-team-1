@@ -260,7 +260,7 @@ function openRepository() {
   }
 
 // works as a monitor for any change to the reference list
-function refreshList(verbose) {
+function refreshList() {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repo.getCurrentBranch()
@@ -284,7 +284,6 @@ function refreshList(verbose) {
           tags = {};
           clearBranchAndTagElement();
           for (let i = 0; i < refList.length; i++) {
-            if (verbose) { console.log("reference name: " + refList[i].name()); }
             //get simplified name
             let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
 
@@ -294,7 +293,6 @@ function refreshList(verbose) {
                 // for remote branches add oid and branch name to remote branches map
                 remoteName[refName] = oid;
               } else if (refList[i].isBranch()){
-                if (verbose) { console.log(refName + ": adding branch to end of " + oid.tostrS()); }
                 // add to list of branches
                 if (oid.tostrS() in bname) {
                   bname[oid.tostrS()].push(refList[i]);
@@ -302,7 +300,6 @@ function refreshList(verbose) {
                   bname[oid.tostrS()] = [refList[i]];
                 }
               } else if (refList[i].isTag()){
-                if (verbose) { console.log(refName + ": adding tag to end of " + oid.tostrS()); }
                 // add to list of tags
                 if (oid.tostrS() in tags) {
                   tags[oid.tostrS()].push(refList[i]);
@@ -351,7 +348,61 @@ function refreshList(verbose) {
         branch = branchParts[branchParts.length - 1];
       })
       .then(function () {
-        refreshList(true);
+        //Get the list of branches from the repo
+        return repository.getReferences(Git.Reference.TYPE.LISTALL);
+      })
+      .then(function (refList) {
+        clearBranchAndTagElement();
+        refList.sort();
+        //for each branch
+        for (let i = 0; i < refList.length; i++) {
+          console.log("reference name: " + refList[i].name());
+
+          //get simplified name
+          let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+          Git.Reference.nameToId(repository, refList[i].name()).then(function (oid) {
+            // Use oid
+            if (refList[i].isRemote()) {
+              // for remote branches add oid and branch name to remote branches map
+              remoteName[refName] = oid;
+            } else if (refList[i].isBranch()){
+              // add to list of branches
+              console.log(refName + ": adding branch to end of " + oid.tostrS());
+              if (oid.tostrS() in bname) {
+                bname[oid.tostrS()].push(refList[i]);
+              } else {
+                bname[oid.tostrS()] = [refList[i]];
+              }
+            } else if (refList[i].isTag()){
+              // add to list of tags
+              console.log(refName + ": adding tag to end of " + oid.tostrS());
+              if (oid.tostrS() in tags) {
+                tags[oid.tostrS()].push(refList[i]);
+              } else {
+                tags[oid.tostrS()] = [refList[i]];
+              }
+            } else{
+              console.log("Unsupported reference: " + refList[i].name());
+            }
+          }, function (err) {
+            console.log("repo.ts, line 273, could not find referenced branch" + err);
+          });
+
+          if (refList[i].isRemote()) {
+            if (localBranches.indexOf(refName) < 0) {
+              displayBranch(refName, "branch-item-list", "checkoutRemoteBranch(this)");
+            }
+          } else if (refList[i].isBranch()){
+            localBranches.push(refName);
+            displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
+          } else if (refList[i].isTag()){
+            displayTag(refName, "tag-item-list", ""); // TODO: support switching to a tag by adding an on-click function
+          } else{
+            console.log("Unsupported reference: " + refList[i].name());
+          }
+
+        }
       })
       .then(function () {
         console.log("Updating the graph and the labels");

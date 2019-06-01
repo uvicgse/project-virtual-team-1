@@ -100,9 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 3000);
 
   // monitor changes on branch list and tag list, 1 check per second
-  setInterval(function () {
-    refreshList(false);
-  }, 1000);
+  setInterval(refreshList, 1000);
 }, false);
 
 
