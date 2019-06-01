@@ -319,6 +319,7 @@ function makeBranchColor(oldResult) {
 
 
 function makeBasicNode(c, column: number) {
+  console.log("!!! Entering basicNode"); //REMOVEME
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -343,8 +344,13 @@ function makeBasicNode(c, column: number) {
 
     if (flag) {
         id = basicNodeId++;
-        tagid = basicNodeId++;
+        console.log("basicNode id: " + id); //REMOVEME
+        tagid = id + 1;
+        console.log("basicNode tagid: " + tagid); //REMOVEME
+        console.log("basicNode id after tag: " + id); //REMOVEME
+
         let title = "Number of Commits: " + count;
+        console.log(title);
         bsNodes.add({
             id: id,
             shape: "circularImage",
@@ -374,6 +380,8 @@ function makeBasicNode(c, column: number) {
 
     if (c.toString() in bname) {
         for (let i = 0; i < bname[c.toString()].length; i++) {
+          let fullid = id + numOfCommits * (i + 1); //REMOVEME
+          console.log("---BASICNODE FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1];
@@ -404,6 +412,9 @@ function makeBasicNode(c, column: number) {
     // Initializing viewable tags in graph mode
     if (c.toString() in tags) {
         for (let i = 0; i < tags[c.toString()].length; i++) {
+            let iPlusbnameLength = i + bname[c.toString()].length;
+          let fullid = tagid + numOfCommits * (iPlusbnameLength + 1); //REMOVEME
+          console.log("---TAGID FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
@@ -412,7 +423,7 @@ function makeBasicNode(c, column: number) {
                 shortTagName = "*" + shortTagName;
             }
             bsNodes.add({
-                id: tagid + numOfCommits * (i + 1),
+                id: tagid + numOfCommits * (iPlusbnameLength + 1),
                 shape: "database",
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
@@ -423,17 +434,18 @@ function makeBasicNode(c, column: number) {
             });
 
             bsEdges.add({
-                from: tagid + numOfCommits * (i + 1),
-                to: tagid
+                from: tagid + numOfCommits * (iPlusbnameLength + 1),
+                to: id
             });
 
-            tagIds[tagid] = tagid + numOfCommits * (i + 1);
+            tagIds[tagid] = tagid + numOfCommits * (iPlusbnameLength + 1);
         }
     }
-
+    console.log(">>>> basicNode COMPLETE"); //REMOVEME
 }
 
 function makeAbsNode(c, column: number) {
+  console.log("!!! Entering absNode"); //REMOVEME
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -457,7 +469,10 @@ function makeAbsNode(c, column: number) {
 
     if (flag) {
         let id = absNodeId++;
-        let tagid = absNodeId++;
+        console.log("absNode id: " + id); //REMOVEME
+        let tagid = id + 1;
+        console.log("absNode tagid: " + tagid); //REMOVEME
+        console.log("absNode id after tag: " + id); //REMOVEME
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
 
         abNodes.add({
@@ -474,6 +489,8 @@ function makeAbsNode(c, column: number) {
 
         if (c.toString() in bname) {
             for (let i = 0; i < bname[c.toString()].length; i++) {
+              let fullid = id + numOfCommits * (i + 1); //REMOVEME
+              console.log("---ABSNODE FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
                 let branchName = bname[c.toString()][i];
                 let bp = branchName.name().split("/");
                 let shortName = bp[bp.length - 1];
@@ -502,6 +519,9 @@ function makeAbsNode(c, column: number) {
         // Initializing viewable tags in graph mode
         if (c.toString() in tags) {
             for (let i = 0; i < tags[c.toString()].length; i++) {
+                let iPlusbnameLength = i + bname[c.toString()].length;
+              let fullid = tagid + numOfCommits * (iPlusbnameLength + 1); //REMOVEME
+              console.log("---TAGID FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
                 let tagName = tags[c.toString()][i];
                 let tp = tagName.name().split("/");
                 let shortTagName = tp[tp.length - 1];
@@ -510,7 +530,7 @@ function makeAbsNode(c, column: number) {
                     shortTagName = "*" + shortTagName;
                 }
                 abNodes.add({
-                    id: tagid + numOfCommits * (i + 1),
+                    id: tagid + numOfCommits * (iPlusbnameLength + 1),
                     shape: "database",
                     title: tagName, // hover text
                     label: shortTagName, // shown under/in shape
@@ -521,8 +541,8 @@ function makeAbsNode(c, column: number) {
                 });
 
                 abEdges.add({
-                    from: tagid + numOfCommits * (i + 1),
-                    to: tagid
+                    from: tagid + numOfCommits * (iPlusbnameLength + 1),
+                    to: id
                 });
             }
         }
@@ -541,17 +561,23 @@ function makeAbsNode(c, column: number) {
             count: 1,
         });
     }
+    console.log(">>>> absNode COMPLETE"); //REMOVEME
 }
 
 function makeNode(c, column: number) {
+    console.log("!!! Entering makeNode, NODEID: " + nodeId); //REMOVEME
     let id = nodeId++;
-    // console.log(">>>NodeID: " + nodeId++);
+    console.log("nodeId id: " + id); //REMOVEME
+    let tagid = id + 1;
+    console.log("nodeId tagid: " + tagid); //REMOVEME
+    console.log("nodeId id after tagid: " + id); //REMOVEME
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
     let email = stringer.split("%")[1];
     let title = "Author: " + name + "<br>" + "Message: " + c.message() + "<br>" + "Tags: ";// + c.tags();
     let flag = false;
+    console.log("+++++ attempting to add makeNode node with id: " + id); //REMOVEME
     nodes.add({
         id: id,
         shape: "circularImage",
@@ -566,6 +592,8 @@ function makeNode(c, column: number) {
 
     if (c.toString() in bname) {
         for (let i = 0; i < bname[c.toString()].length; i++) {
+          let fullid = id + numOfCommits * (i + 1); //REMOVEME
+          console.log("---MAKENODE FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1];
@@ -591,10 +619,11 @@ function makeNode(c, column: number) {
         }
         flag = true;
     }
-
     if (c.toString() in tags) {
-        let tagid = nodeId++;
         for (let i = 0; i < tags[c.toString()].length; i++) {
+            let iPlusbnameLength = i + bname[c.toString()].length;
+          let fullid = tagid + numOfCommits * (iPlusbnameLength + 1); //REMOVEME
+          console.log("---TAGID FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
@@ -603,7 +632,7 @@ function makeNode(c, column: number) {
                 shortTagName = "*" + shortTagName;
             }
             nodes.add({
-                id: tagid + numOfCommits * (i + 1),
+                id: tagid + numOfCommits * (iPlusbnameLength + 1),
                 shape: "database",
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
@@ -614,8 +643,8 @@ function makeNode(c, column: number) {
             });
 
             edges.add({
-                from: tagid + numOfCommits * (i + 1),
-                to: tagid
+                from: tagid + numOfCommits * (iPlusbnameLength + 1),
+                to: id
             });
         }
         flag = true;
@@ -630,7 +659,7 @@ function makeNode(c, column: number) {
         reference: reference,
         branch: flag,
     });
-
+    console.log(">>>> makeNode COMPLETE"); //REMOVEME
     // console.log("commit: "+ id + ", message: " + commitList[id-1]['id']); // + ", tags: " + tags[tagid]; ??
 }
 
