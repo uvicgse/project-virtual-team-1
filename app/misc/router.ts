@@ -58,16 +58,30 @@ function checkSignedIn() {
   }
 }
 
+function credentialsEntered() {
+    console.log("opening hamburger menu");
+    // for hamburger menu
+    if (!continuedWithoutSignIn) {
+        // if not logged in, display login
+        console.log("user is not logged in");
+        //document.getElementById("hamsignout").style.display = "block";
+        document.getElementById("hamsignin").style.display = "none";
+    } else {
+        document.getElementById("hamsignout").style.display = "none";
+        //document.getElementById("hamsignin").style.display = "block";
+    }
+}
+
 function checkIfInTheApp(){
   return inTheApp;
-} 
+}
 
 function switchToAddRepositoryPanelWhenNotSignedIn() {
   previousWindow = "repoPanel";
   continuedWithoutSignIn = true;
   showUsername = false;
   switchToAddRepositoryPanel();
-  
+
 }
 
 function switchToAddRepositoryPanel() {
@@ -78,7 +92,7 @@ function switchToAddRepositoryPanel() {
   hidePullRequestPanel();
   hideGraphPanel();
   displayAddRepositoryPanel();
-  
+
   if(showUsername){
     document.getElementById("Button_Sign_out").style.display = "block";
     document.getElementById("Button_Sign_in").style.display = "none";
@@ -158,14 +172,14 @@ function displayPullRequestPanel() {
   let prPanel = document.getElementById("pull-request-panel")
   if (prPanel != null) {
     prPanel.style.zIndex = "10";
-  }  
+  }
 }
 
 function hidePullRequestPanel() {
   let prPanel = document.getElementById("pull-request-panel")
   if (prPanel != null) {
     prPanel.style.zIndex = "-10";
-  }  
+  }
 }
 
 function displayGraphPanel() {
@@ -240,12 +254,12 @@ function hideDiffPanel() {
   if (diffPanel != null) {
     diffPanel.style.width = "0";
   }
-  
+
   let graphPanel = document.getElementById("graph-panel");
   if (graphPanel != null) {
     graphPanel.style.width = "100%";
   }
-  
+
   disableDiffPanelEditOnHide();
   hideDiffPanelButtons();
 }
@@ -285,12 +299,12 @@ function displayDiffPanelButtons() {
   if (saveButton != null) {
     saveButton.style.visibility = "visible";
   }
-  
+
   let cancelButton = document.getElementById("cancel-button");
   if (cancelButton != null) {
     cancelButton.style.visibility = "visible";
   }
-  document.getElementById("open-editor-button").style.visibility = "visible"; 
+  document.getElementById("open-editor-button").style.visibility = "visible";
 }
 
 function hideDiffPanelButtons() {
@@ -298,12 +312,12 @@ function hideDiffPanelButtons() {
   if (saveButton != null) {
     saveButton.style.visibility = "hidden";
   }
-  
+
   let cancelButton = document.getElementById("cancel-button");
   if (cancelButton != null) {
     cancelButton.style.visibility = "hidden";
   }
-  document.getElementById("open-editor-button").style.visibility = "hidden"; 
+  document.getElementById("open-editor-button").style.visibility = "hidden";
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
 }
