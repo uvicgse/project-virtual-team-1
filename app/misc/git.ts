@@ -202,14 +202,16 @@ function addAndCommit() {
       stagedFiles = null;
       hideDiffPanel();
       clearStagedFilesList();
-     // clearCommitMessage();
-      //This function is commented out as it is not currently implemented
+      //These function calls are commented out as it is not currently implemented
       //It also seems to be causing issues with the graph updating commits
+      //clearCommitMessage();
       //clearSelectAllCheckbox();
+
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
       addCommand('git commit -m "' + commitMessage + '"');
+
       refreshAll(repository);
     }, function (err) {
       console.log("git.ts, line 112, could not commit, " + err);
@@ -252,7 +254,15 @@ function clearModifiedFilesList() {
   refreshColor();
 }
 
+//These functions are commented out as it is not currently implemented
+//It also seems to be causing issues with the graph updating commits
+/*function clearCommitMessage() {
+  document.getElementById('commit-message-input').value = "";
+}
 
+function clearSelectAllCheckbox() {
+  document.getElementById('select-all-checkbox').checked = false;
+}*/
 
 function getAllCommits(callback) {
   clearModifiedFilesList();
