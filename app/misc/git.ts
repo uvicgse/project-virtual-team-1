@@ -202,9 +202,10 @@ function addAndCommit() {
       stagedFiles = null;
       hideDiffPanel();
       clearStagedFilesList();
+      clearCommitMessage();
       //These function calls are commented out as it is not currently implemented
       //It also seems to be causing issues with the graph updating commits
-      //clearCommitMessage();
+      
       //clearSelectAllCheckbox();
 
       for (let i = 0; i < filesToAdd.length; i++) {
