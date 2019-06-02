@@ -303,12 +303,19 @@ function refreshList(verbose) {
                 }
               } else if (refList[i].isTag()){
                 if (verbose) { console.log(refName + ": adding tag to end of " + oid.tostrS()); }
-                // add to list of tags
-                if (oid.tostrS() in tags) {
-                  tags[oid.tostrS()].push(refList[i]);
-                } else {
-                  tags[oid.tostrS()] = [refList[i]];
-                }
+
+                // use peel() to get real commit SHA string from oid
+                refList[i].peel(Git.Object.TYPE.COMMIT)
+                  .then(ref => Git.Commit.lookup(repo, ref.id()))
+                  .then(function (commit) {
+                      // add to list of tags
+                      if (commit.sha() in tags) {
+                          tags[commit.sha()].push(refList[i]);
+                      } else {
+                          tags[commit.sha()] = [refList[i]];
+                      }
+                  });
+
               } else{
                 console.log("Unsupported reference: " + refList[i].name());
               }

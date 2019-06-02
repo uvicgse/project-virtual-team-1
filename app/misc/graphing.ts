@@ -166,7 +166,6 @@ function populateCommits(oldResult) {
                 }
             }
 
-
             makeNode(commitHistory[i], nodeColumn);
             makeAbsNode(commitHistory[i], nodeColumn);
             makeBasicNode(commitHistory[i], nodeColumn);
@@ -425,7 +424,6 @@ function makeBasicNode(c, column: number) {
     // Initializing viewable tags in highest zoom graph level
     if (c.toString() in tags) {
         for (let i = 0; i < tags[c.toString()].length; i++) {
-            let iPlusbnameLength = i + tags[c.toString()].length;
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
@@ -525,7 +523,6 @@ function makeAbsNode(c, column: number) {
         // Initializing viewable tags in second zoom graph level
         if (c.toString() in tags) {
             for (let i = 0; i < tags[c.toString()].length; i++) {
-                let iPlusbnameLength = i + tags[c.toString()].length;
                 let tagName = tags[c.toString()][i];
                 let tp = tagName.name().split("/");
                 let shortTagName = tp[tp.length - 1];
@@ -633,7 +630,6 @@ function makeNode(c, column: number) {
     // Initializing viewable tags in lowest graph level
     if (c.toString() in tags) {
         for (let i = 0; i < tags[c.toString()].length; i++) {
-            let iPlusbnameLength = i + tags[c.toString()].length;
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
