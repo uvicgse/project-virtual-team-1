@@ -18,6 +18,7 @@ let branchIds = {};
 let tagIds = {};
 let unumberPrev = 0;
 
+// In order to allow tags, branches, and nodes to have unique numerical id's
 // reference: https://stackoverflow.com/questions/8012002/create-a-unique-number-with-javascript-time
 function generateUniqueNumber() {
     var date = Date.now();
@@ -276,7 +277,6 @@ function sortBasicGraph() {
             bsNodes.update({id: branchIds[idList[i]], y: (i + 0.7) * spacingY})
         }
         if (idList[i] in tagIds) {
-          // CHANGEME
             bsNodes.update({id: tagIds[idList[i]], y: (i + 0.7) * spacingY, x: (i + 0.7) * spacingX})
         }
     }
@@ -336,7 +336,6 @@ function makeBranchColor(oldResult) {
 
 
 function makeBasicNode(c, column: number) {
-  console.log("!!! Entering basicNode"); //REMOVEME
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -362,10 +361,7 @@ function makeBasicNode(c, column: number) {
 
     if (flag) {
         id = basicNodeId++;
-        console.log("basicNode id: " + id); //REMOVEME
         tagid = id + 1;
-        console.log("basicNode tagid: " + tagid); //REMOVEME
-        console.log("basicNode id after tag: " + id); //REMOVEME
 
         let title = "Number of Commits: " + count;
         console.log(title);
@@ -398,8 +394,6 @@ function makeBasicNode(c, column: number) {
 
     if (c.toString() in bname) {
         for (let i = 0; i < bname[c.toString()].length; i++) {
-          let fullid = id + numOfCommits * (i + 1); //REMOVEME
-          console.log("---BASICNODE FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1];
@@ -428,12 +422,10 @@ function makeBasicNode(c, column: number) {
         }
     }
 
-    // Initializing viewable tags in graph mode
+    // Initializing viewable tags in highest zoom graph level
     if (c.toString() in tags) {
         for (let i = 0; i < tags[c.toString()].length; i++) {
             let iPlusbnameLength = i + tags[c.toString()].length;
-          let fullid = tagid + numOfCommits * (iPlusbnameLength + 1); //REMOVEME
-          console.log("---TAGID FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
@@ -461,11 +453,9 @@ function makeBasicNode(c, column: number) {
             tagIds[tagid] = bsnodeId;
         }
     }
-    console.log(">>>> basicNode COMPLETE"); //REMOVEME
 }
 
 function makeAbsNode(c, column: number) {
-  console.log("!!! Entering absNode"); //REMOVEME
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -489,10 +479,7 @@ function makeAbsNode(c, column: number) {
 
     if (flag) {
         let id = absNodeId++;
-        console.log("absNode id: " + id); //REMOVEME
         let tagid = id + 1;
-        console.log("absNode tagid: " + tagid); //REMOVEME
-        console.log("absNode id after tag: " + id); //REMOVEME
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
 
         abNodes.add({
@@ -509,8 +496,6 @@ function makeAbsNode(c, column: number) {
 
         if (c.toString() in bname) {
             for (let i = 0; i < bname[c.toString()].length; i++) {
-              let fullid = id + numOfCommits * (i + 1); //REMOVEME
-              console.log("---ABSNODE FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
                 let branchName = bname[c.toString()][i];
                 let bp = branchName.name().split("/");
                 let shortName = bp[bp.length - 1];
@@ -537,12 +522,10 @@ function makeAbsNode(c, column: number) {
             }
         }
 
-        // Initializing viewable tags in graph mode
+        // Initializing viewable tags in second zoom graph level
         if (c.toString() in tags) {
             for (let i = 0; i < tags[c.toString()].length; i++) {
                 let iPlusbnameLength = i + tags[c.toString()].length;
-              let fullid = tagid + numOfCommits * (iPlusbnameLength + 1); //REMOVEME
-              console.log("---TAGID FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
                 let tagName = tags[c.toString()][i];
                 let tp = tagName.name().split("/");
                 let shortTagName = tp[tp.length - 1];
@@ -583,23 +566,29 @@ function makeAbsNode(c, column: number) {
             count: 1,
         });
     }
-    console.log(">>>> absNode COMPLETE"); //REMOVEME
 }
 
 function makeNode(c, column: number) {
-    console.log("!!! Entering makeNode, NODEID: " + nodeId); //REMOVEME
     let id = nodeId++;
-    console.log("nodeId id: " + id); //REMOVEME
     let tagid = id + 1;
-    console.log("nodeId tagid: " + tagid); //REMOVEME
-    console.log("nodeId id after tagid: " + id); //REMOVEME
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
     let email = stringer.split("%")[1];
-    let title = "Author: " + name + "<br>" + "Message: " + c.message() + "<br>" + "Tags: ";// + c.tags();
+    let title = "Author: " + name + "<br>" + "Message: " + c.message() + "<br>";
+
+    // If the commit has tags, they will show with the hover text on the commit node.
+    if (c.toString() in tags) {
+      for (let i = 0; i < tags[c.toString()].length; i++) {
+        let hoverTag = tags[c.toString()][i];
+        let hoverTagSplit = hoverTag.name().split("/");
+        let hoverTagName = hoverTagSplit[hoverTagSplit.length - 1];
+        let tagHover = "Tags: " + hoverTagName + "<br>";
+        title = title + tagHover;
+      }
+    }
+
     let flag = false;
-    console.log("+++++ attempting to add makeNode node with id: " + id); //REMOVEME
     nodes.add({
         id: id,
         shape: "circularImage",
@@ -614,8 +603,6 @@ function makeNode(c, column: number) {
 
     if (c.toString() in bname) {
         for (let i = 0; i < bname[c.toString()].length; i++) {
-          let fullid = id + numOfCommits * (i + 1); //REMOVEME
-          console.log("---MAKENODE FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1];
@@ -642,11 +629,11 @@ function makeNode(c, column: number) {
         }
         flag = true;
     }
+
+    // Initializing viewable tags in lowest graph level
     if (c.toString() in tags) {
         for (let i = 0; i < tags[c.toString()].length; i++) {
             let iPlusbnameLength = i + tags[c.toString()].length;
-          let fullid = tagid + numOfCommits * (iPlusbnameLength + 1); //REMOVEME
-          console.log("---TAGID FULL: " + fullid + ", numOfCommits: " + numOfCommits + ", i: " + i); //REMOVEME
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
@@ -683,7 +670,6 @@ function makeNode(c, column: number) {
         reference: reference,
         branch: flag,
     });
-    console.log(">>>> makeNode COMPLETE"); //REMOVEME
     // console.log("commit: "+ id + ", message: " + commitList[id-1]['id']); // + ", tags: " + tags[tagid]; ??
 }
 
