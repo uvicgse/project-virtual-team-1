@@ -47,7 +47,7 @@ ul{
   position: relative;
 }
 .navbar .navbar-collapse .navbar-right > li:last-child {
-  padding-left: 22px;
+  padding-left: 30px;
 }
 .navbar .nav-collapse {
   position: absolute;
@@ -737,7 +737,7 @@ div.selected-commit-diff-panel button.close-button {
 
 /*Toolbar Styles*/
 .toolbar-Container {
-  /*max-height: 75px;*/
+  max-height: 65px;
  }
 
 .toolbar-Icons {
