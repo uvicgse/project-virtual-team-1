@@ -59,16 +59,15 @@ function checkSignedIn() {
 }
 
 function credentialsEntered() {
-    console.log("opening hamburger menu");
     // for hamburger menu
-    if (!continuedWithoutSignIn) {
-        // if not logged in, display login
+    if (continuedWithoutSignIn) {
+        // not logged in, hide 'sign out' button
         console.log("user is not logged in");
-        //document.getElementById("hamsignout").style.display = "block";
-        document.getElementById("hamsignin").style.display = "none";
-    } else {
         document.getElementById("hamsignout").style.display = "none";
-        //document.getElementById("hamsignin").style.display = "block";
+    } else {
+        // logged in, hide 'sign in' button
+        console.log("user is logged in");
+        document.getElementById("hamsignin").style.display = "none";
     }
 }
 
