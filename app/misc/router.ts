@@ -74,8 +74,6 @@ function switchToAddRepositoryPanelWhenNotSignedIn() {
 function switchToAddRepositoryPanel() {
   inTheApp = true
   console.log("Switching to add repo panel");
-
-  console.log("testing method")
   useRecentRepositories();
 
   hideAuthenticatePanel();
@@ -359,13 +357,13 @@ function createRecentRepositories(file) {
     }
 }
 
-function useRecentRepositories() : boolean {
+function useRecentRepositories() {
     let file = 'repos.json';
     // check if the repo.json file exists
     if (!fs.existsSync(file)) {
-        console.log('No file found');
+        console.log(file + ' does not exist');
         createRecentRepositories(file);
-        return true;
+    } else {
+        console.log(file + ' exists')
     }
-    return false;
 }
