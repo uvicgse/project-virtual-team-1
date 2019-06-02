@@ -13,6 +13,8 @@ let span;
 let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
+let fs = require('fs').promises;
+let jsonfile = require('jsonfile');
 
 function downloadRepository() {
   let fullLocalPath;
@@ -119,6 +121,9 @@ function openRepository() {
       }
     }
 
+    console.log('Saving repository path');
+    saveRecentRepositories(fullLocalPath);
+
     console.log("Trying to open repository at " + fullLocalPath);
     displayModal("Opening Local Repository...");
 
@@ -190,6 +195,57 @@ function openRepository() {
         switchToAddRepositoryPanel();
       });
     document.getElementById("dirPickerOpenLocal").value = "";
+  }
+
+  function saveRecentRepositories(repoPath) {
+      let repoFile = 'repos.json';
+      let repoList;
+      let recentRepos;
+
+      try {
+          repoList = JSON.parse(fs.readFileSync(repoFile));
+      } catch (err) {
+          console.log('Cannot read ' + repoFile);
+      }
+
+      console.log('Updating recent repos');
+      repoList = {
+          recentRepos: updateRecentRepos(repoList.recentRepos, repoPath);
+      }
+
+      try {
+        jsonfile.writeFileSync(repoFile, repoList);
+      } catch (err) {
+        console.log(err);
+      }
+
+      console.log('list: ' + repoList.recentRepos);
+      console.log('length: ' + repoList.recentRepos.length);
+  }
+
+  function updateRecentRepos(recentRepos, repoToAdd) {
+      let maxRepos = 5;
+
+      if (recentRepos === undefined) {
+          let newList = [repoToAdd];
+          return newList;
+      }
+
+      for (let i = 0; i < recentRepos.length; i++) {
+          if (recentRepos[i] === repoToAdd) {
+              recentRepos.splice(i, 1);
+          }
+      }
+
+      console.log('Adding ' + ' to repo');
+      recentRepos.push(repoToAdd);
+
+      if (recentRepos.length > maxRepos) {
+          console.log('Removing head of list')
+          recentRepos.splice(0, 1);
+      }
+
+      return recentRepos;
   }
 
   function createLocalRepository() {
