@@ -732,9 +732,25 @@ function resetCommit(name: string) {
     });
 }
 
+/**
+ * Stashes all changes (note that only tracked files are stashed.)
+ */
 function stashChanges() {
-    // to be implemented
-    console.log("stashing changes");
+  console.log("stashing changes");
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      // TODO: is the signature important?
+      // TODO: ask for a stash message
+      // TODO: what are the flags for?
+      Git.Stash.save(repo, repo.defaultSignature(), "default stash message", 0)
+        .then(function(oid) {
+          console.log("change stashed with oid" + oid)
+      });
+      // TODO: Ensure the modified files list is updated.
+      //clearStagedFilesList();
+      //refreshAll(repo);
+      //displayModifiedFiles();
+    });
 }
 
 function revertCommit() {
