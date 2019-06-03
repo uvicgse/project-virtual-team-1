@@ -23,8 +23,8 @@ let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
 let refreshAllFlag = false;
-
-
+var total_commit = 0;
+var commit_diff = 0;
 
 function passReferenceCommits(){
   Git.Repository.open(repoFullPath)
@@ -212,7 +212,6 @@ function addAndCommit() {
         addCommand("git add " + filesToAdd[i]);
       }
       addCommand('git commit -m "' + commitMessage + '"');
-
       refreshAll(repository);
     }, function (err) {
       console.log("git.ts, line 112, could not commit, " + err);
@@ -410,7 +409,6 @@ function pullFromRemote() {
       console.log(err);
       updateModalText("Pull Failed : "+err.message);
     });
-
 }
 
 function pushToRemote() {
@@ -449,9 +447,42 @@ function pushToRemote() {
     });
 }
 
+//Takes the number of local commits and the number of remote commits and returns the difference
+//This will be the total number of unpushed commits
+function calcUnpushedCommits() {
+  var temp = 0;
+
+  for (var i = 0 ; i < 5; i++){
+    countLocalCommits();
+    getAllPushedCommits();
+    //console.log("you have " + commit_diff + " pushed commits");
+    //console.log("you have " + total_commit + " total commits");
+     temp = total_commit - commit_diff;
+
+  }
+  return temp;
+
+}
+
+//This calls calcUnpushedCommits() and displays the dialog box to the user
+//We have to call the function once to initialize the API call, and then again to calculate
+//This is a limitation of async functions in our version of angular and node
+function unpushedCommitsModal() {
+  var temp = 0;
+  temp = calcUnpushedCommits();
+  temp = calcUnpushedCommits();
+
+  //var temp = total_commit - commit_diff;
+  console.log("Number of un-pushed commits: " + temp);
+  updateModalText("Number of un-pushed commits: " + temp);
+}
+
+//This function has yet to be implemented
+//We are using it to display the number of unpushed commits to the user
 function commitModal() {
+  unpushedCommitsModal();
   // TODO: implement commit modal
-  displayModal("Commit inside a modal yet to be implemented");
+  //displayModal("Commit inside a modal yet to be implemented");
 }
 
 function openBranchModal() {
@@ -1015,7 +1046,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage); 
+            filePanelMessage.parentNode.removeChild(filePanelMessage);
           }
         }
 
@@ -1539,4 +1570,85 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
   else{
     displayModal("Destination directory does not exist");
   }
+}
+
+//This function gets the number of commits made on a local repo, either pushed or not
+//The value is stored in total_commit
+function countLocalCommits() {
+  var walker = null;
+
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        walker = repo.createRevWalk();
+        return repo.getHeadCommit();
+      })
+      .then(function (commit) {
+        walker.sorting(Git.Revwalk.SORT.REVERSE);
+        walker.push(commit.id());
+        walker.sorting
+        walker.pushHead();
+        return walker.getCommits(100)
+      })
+      .then(function (commits) {
+        //console.log("Local commits: " + commits.length);
+        // console.log(commits);
+        total_commit = commits.length;
+
+      })
+
+}
+
+//This function counts the total of pushed commits made on a remote repo by walking through the history
+//The number of commits are grabbed using an async function
+//The number of commits is stored in commit_diff
+function getAllPushedCommits() {
+  clearModifiedFilesList();
+  var repos;
+  var allCommits = [];
+  var aclist = [];
+  //console.log("Finding all commits");
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        repos = repo;
+        //console.log("fetching all refs");
+        // console.log( repo.getReferences(Git.Reference.TYPE.LISTALL));
+        return repo.getReferences(Git.Reference.TYPE.LISTALL)
+      })
+      .then(function (refs) {
+        var count = 0;
+        async.whilst(function () {
+          return count < refs.length;
+        },  function (cb) {
+          if (refs[count].isRemote()) {
+            refs[count].peel(Git.Object.TYPE.COMMIT)
+                .then(function (ref) {
+                  repos.getCommit(ref)
+                      .then(function (commit) {
+                        var history = commit.history(Git.Revwalk.SORT.Time);
+                        history.on("end", function (commits) {
+                          for (var i = 0; i < commits.length; i++) {
+                            if (aclist.indexOf(commits[i].toString()) < 0) {
+                              allCommits.push(commits[i]);
+                              aclist.push(commits[i].toString());
+                            }
+                          }
+                          count++;
+                          commit_diff = allCommits.length;
+                          //console.log("you have " + commit_diff + " pushed commits");
+                          // var temp = total_commit - commit_diff;
+                          // console.log("push "+ temp + " to remote origin" );
+
+                           cb();
+
+                        });
+                        history.start();
+                      })
+
+
+                });
+
+          }
+        }, );
+      });
+
 }
