@@ -302,12 +302,11 @@ function refreshList(verbose) {
                   bname[oid.tostrS()] = [refList[i]];
                 }
               } else if (refList[i].isTag()){
-                if (verbose) { console.log(refName + ": adding tag to end of " + oid.tostrS()); }
-
                 // use peel() to get real commit SHA string from oid
                 refList[i].peel(Git.Object.TYPE.COMMIT)
                   .then(ref => Git.Commit.lookup(repo, ref.id()))
                   .then(function (commit) {
+                      if (verbose) { console.log(refName + ": adding tag to end of " + commit.sha()); }
                       // add to list of tags
                       if (commit.sha() in tags) {
                           tags[commit.sha()].push(refList[i]);
