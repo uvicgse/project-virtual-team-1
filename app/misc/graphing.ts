@@ -10,6 +10,8 @@ let commitHistory = [];
 let commitList = [];
 let spacingY = 100;
 let spacingX = 80;
+let tagSpacingY = 100;
+let tagSpacingX = 300;
 let parentCount = {};
 let columns: boolean[] = [];
 let edgeDic = {};
@@ -434,13 +436,13 @@ function makeBasicNode(c, column: number) {
             let bsnodeId = generateUniqueNumber();
             bsNodes.add({
                 id: bsnodeId,
-                shape: "database",
+                shape: "ellipse",
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
                 physics: false,
                 fixed: false,
-                x: (column - 0.6 * (i + 1)) * spacingX,
-                y: (tagid - 0.3) * spacingY,
+                x: (column - 0.6 * (i + 1)) * tagSpacingX,
+                y: (id - 0.3) * tagSpacingY,
             });
 
             bsEdges.add({
@@ -533,13 +535,13 @@ function makeAbsNode(c, column: number) {
                 let bsnodeId = generateUniqueNumber();
                 abNodes.add({
                     id: bsnodeId,
-                    shape: "database",
+                    shape: "ellipse",
                     title: tagName, // hover text
                     label: shortTagName, // shown under/in shape
                     physics: false,
                     fixed: false,
-                    x: (column + 0.6 * (i + 1)) * spacingX,
-                    y: (tagid + 0.3) * spacingY,
+                    x: (column - 0.6 * (i + 1)) * tagSpacingX,
+                    y: (id - 0.3) * tagSpacingY,
                 });
 
                 abEdges.add({
@@ -640,13 +642,13 @@ function makeNode(c, column: number) {
             let bsnodeId = generateUniqueNumber();
             nodes.add({
                 id: bsnodeId,
-                shape: "database",
+                shape: "ellipse",
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
                 physics: false,
                 fixed: false,
-                x: (column + 0.6 * (i + 1)) * spacingX,
-                y: (tagid + 0.3) * spacingY,
+                x: (column - 0.6 * (i + 1)) * tagSpacingX,
+                y: (id - 0.3) * tagSpacingY,
             });
 
             edges.add({
