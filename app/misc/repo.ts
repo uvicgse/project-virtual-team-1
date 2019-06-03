@@ -207,11 +207,14 @@ function openRepository() {
           repoList = JSON.parse(checkFile.readFileSync(repoFile));
       } catch (err) {
           console.log('Cannot read ' + repoFile);
+          repoList = {
+              recentRepos: []
+          }
       }
 
       console.log('Updating recent repos');
-      repoList = {
-          recentRepos: updateRecentRepos(repoList.recentRepos, repoPath);
+      uodatedRepoList = {
+          recentRepos: updateRecentRepos(repoList.recentRepos, repoPath)
       }
 
       try {
