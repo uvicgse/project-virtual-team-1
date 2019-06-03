@@ -23,6 +23,7 @@ export class GraphPanelComponent {
     rebaseCommits(p1, p2);
   }
 
+  // Empty function. Used to replace event handlers with a noop.
   doNothing() {
     
   }

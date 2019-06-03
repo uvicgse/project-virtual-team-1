@@ -73,10 +73,10 @@
           <h4 class="modal-title">Create Tag</h4>
         </div>
         <div class="modal-body">
-          <label>Tag Name:</label><input id="inputTagName" type="text"><br>
+          <label>Tag Name:</label><input id="inputTagName" type="text" style="width: 50%;"><br>
           <label>Push Tag:</label><input id="inputPushTag" type="checkbox" ><br>
           <label>Create Lightweight Tag:</label><input id="inputPushTag" type="checkbox" (change)="lightweightTagSelected = !lightweightTagSelected"><br>
-          <label>Tag Message:</label><input id="inputTagMessage" type="text" [attr.disabled]="lightweightTagSelected ? '' : null"><br>
+          <label>Tag Message:</label><textarea id="inputTagMessage" [attr.disabled]="lightweightTagSelected ? '' : null"></textarea><br>
           <p class="clear">&nbsp;</p>
         </div>
         <div class="modal-footer">
