@@ -15,6 +15,54 @@ let previousOpen;
 let repoName : string = "";
 let jsonfile = require('jsonfile');
 
+function saveRecentRepositories(repoPath) {
+    let repoFile = 'repos.json';
+    let repoList;
+    let recentRepos;
+
+    try {
+        repoList = JSON.parse(checkFile.readFileSync(repoFile));
+    } catch (err) {
+        console.log('Cannot read ' + repoFile);
+        repoList = {
+            recentRepos: []
+        }
+    }
+
+    console.log('Updating recent repos');
+    uodatedRepoList = {
+        recentRepos: updateRecentRepos(repoList.recentRepos, repoPath)
+    }
+
+    try {
+      jsonfile.writeFileSync(repoFile, repoList);
+    } catch (err) {
+      console.log(err);
+    }
+}
+
+function updateRecentRepos(recentRepos, repoToAdd) {
+    let maxRepos = 5;
+
+    if (recentRepos === undefined) {
+        let newList = [repoToAdd];
+        return newList;
+    }
+
+    for (let i = 0; i < recentRepos.length; i++) {
+        if (recentRepos[i] === repoToAdd) {
+            recentRepos.splice(i, 1);
+        }
+    }
+    recentRepos.push(repoToAdd);
+
+    if (recentRepos.length > maxRepos) {
+        console.log('Removing head of list')
+        recentRepos.splice(0, 1);
+    }
+    return recentRepos;
+}
+
 function downloadRepository() {
   let fullLocalPath;
   // Full path is determined by either handwritten directory or selected by file browser
@@ -196,60 +244,6 @@ function openRepository() {
         switchToAddRepositoryPanel();
       });
     document.getElementById("dirPickerOpenLocal").value = "";
-  }
-
-  function saveRecentRepositories(repoPath) {
-      let repoFile = 'repos.json';
-      let repoList;
-      let recentRepos;
-
-      try {
-          repoList = JSON.parse(checkFile.readFileSync(repoFile));
-      } catch (err) {
-          console.log('Cannot read ' + repoFile);
-          repoList = {
-              recentRepos: []
-          }
-      }
-
-      console.log('Updating recent repos');
-      uodatedRepoList = {
-          recentRepos: updateRecentRepos(repoList.recentRepos, repoPath)
-      }
-
-      try {
-        jsonfile.writeFileSync(repoFile, repoList);
-      } catch (err) {
-        console.log(err);
-      }
-
-      console.log('list: ' + repoList.recentRepos);
-      console.log('length: ' + repoList.recentRepos.length);
-  }
-
-  function updateRecentRepos(recentRepos, repoToAdd) {
-      let maxRepos = 5;
-
-      if (recentRepos === undefined) {
-          let newList = [repoToAdd];
-          return newList;
-      }
-
-      for (let i = 0; i < recentRepos.length; i++) {
-          if (recentRepos[i] === repoToAdd) {
-              recentRepos.splice(i, 1);
-          }
-      }
-
-      console.log('Adding ' + ' to repo');
-      recentRepos.push(repoToAdd);
-
-      if (recentRepos.length > maxRepos) {
-          console.log('Removing head of list')
-          recentRepos.splice(0, 1);
-      }
-
-      return recentRepos;
   }
 
   function createLocalRepository() {
