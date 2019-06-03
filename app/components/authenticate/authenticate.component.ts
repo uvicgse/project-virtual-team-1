@@ -7,7 +7,10 @@ import { Component, OnInit, } from "@angular/core";
 
 export class AuthenticateComponent implements OnInit {
   ngOnInit(): any {
-   
+    // useSavedCredentials returns true if there is a saved credential and uses it.
+    if (useSavedCredentials()){
+      console.log('Logging in With Saved Token');
+    } 
   }
 
   switchToMainPanel(): void {
@@ -34,5 +37,4 @@ export class AuthenticateComponent implements OnInit {
   authenticateGithub(): void {
     authenticateUser(switchToAddRepositoryPanel);
   }
-
 }
