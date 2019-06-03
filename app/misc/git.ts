@@ -732,49 +732,43 @@ function resetCommit(name: string) {
     });
 }
 
+function clearStashMsgErrorText() {
+  // @ts-ignore
+  document.getElementById("stashMsgErrorText").innerText = "";
+  // @ts-ignore
+  document.getElementById("stash-msg-name-input").value = "";
+}
+
+/**
+ * show a dialog to get the stash message
+ */
+function showStashModal() {
+  $('#stash-msg-modal').modal('show');
+}
+
 /**
  * Stashes all changes (note that only tracked files are stashed.)
  */
 function stashChanges() {
-  let stashMessage = "default message";
-
-  const prompt = require('electron-prompt');
-  prompt({
-      title: 'Stash Message',
-      label: 'Enter stash message:',
-      value: '',
-      inputAttrs: {
-          type: 'url'
-      }
-  })
-  .then((r) => {
-      if(r === null) {
-          stashMessage = "" // user cancelled
-          console.log(stashMessage);
-      } else {
-          stashMessage = r
-          console.log(stashMessage);
-      }
-  })
-  .catch(console.error);
-
+  let stashMessage = document.getElementById("stash-msg-name-input").value
 
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
-      // TODO: is the signature important?
-      // TODO: ask for a stash message
-<<<<<<< Updated upstream
       // TODO: allow the user to select various options (include untracked, include ignored, etc.)
-      Git.Stash.save(repo, repo.defaultSignature(), "default stash message", Git.Stash.FLAGS.DEFAULT)
-=======
-      // TODO: what are the flags for? https://www.nodegit.org/api/stash/#FLAGS
-      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, 0)
->>>>>>> Stashed changes
+      // TODO: output the git commands to the terminal.
+      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
         .then(function(oid) {
           console.log("change stashed with oid" + oid)
-      });
-      // All the modified files have been stashed, so update the list of stage/unstaged files
-      clearModifiedFilesList();
+      })
+      .done(function() {
+        // get rid of the modal
+        $('#stash-msg-modal').modal('hide');
+        // All the modified files have been stashed, so update the list of stage/unstaged files
+        clearModifiedFilesList();        
+      });  
+    }, function(err) {
+      // handle any errors
+      console.log("stash error!" + err)
     });
 }
 
