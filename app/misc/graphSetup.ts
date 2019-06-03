@@ -229,6 +229,8 @@ function drawGraph() {
                     });
                     contextMenu.finish().toggle();
                     contextMenu.focus();
+
+                    selectedCommit = contextNode.commitSha;
                 }
             }
         });

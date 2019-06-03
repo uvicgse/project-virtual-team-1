@@ -616,6 +616,60 @@ function mergeLocalBranches(element) {
     });
 }
 
+// Creates a tag in the current repository and updates the 'Create Tag' window based on if it succeeds or fails.
+// Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
+function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
+  let repo;
+  let tagOid
+  Git.Repository.open(repoFullPath)
+    .then(function(repoParam) {
+      repo = repoParam;
+    })
+    .then(function() {
+      return repo.getCommit(commitSha);
+    })
+    .then(function(commit){
+      //The '0' parameter indicates that we are creating the tag without the '--force' option, so tags will not be overwritten
+      if (message == undefined) {
+        return Git.Tag.createLightweight(repo, tagName, commit, 0);
+      } else {
+        return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
+      }
+    })
+    .then(function(tagOidParam){
+      tagOid = tagOidParam
+      $("#createTagModal").modal('hide');
+    })
+    .then(function(){
+      if (pushTag) {
+        console.log("Pushing tag: " + tagName);
+        repo.getRemotes()
+          .then(function (remotes) {
+            return repo.getRemote(remotes[0]);
+          })
+          .then(function(remote){
+            return remote.push(
+              ["refs/tags/" + tagName + ":refs/tags/" + tagName],
+              {
+                callbacks: {
+                  credentials: function () {
+                    return cred;
+                  }
+                }
+              }
+            );
+          }).then(function(){
+            console.log("Successfully pushed tag: " + tagName);
+          });
+      }
+    })
+    .catch(function(msg){
+      let errorMessage = "Error: " + msg.message;
+      console.log(errorMessage);
+      $("#createTagError")[0].innerHTML = errorMessage;
+    });
+}
+
 function mergeCommits(from) {
   let repos;
   let index;

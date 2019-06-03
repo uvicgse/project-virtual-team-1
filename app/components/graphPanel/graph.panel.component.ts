@@ -6,6 +6,7 @@ import { Component } from "@angular/core";
 })
 
 export class GraphPanelComponent {
+  lightweightTagSelected: boolean = false;
 
   constructor() {
     $(window).resize(this.disableContextMenu);
@@ -35,5 +36,31 @@ export class GraphPanelComponent {
     let modal = $("#createTagModal");
     modal.modal("show");
     this.disableContextMenu();
+  }
+
+  clickSubmitCreateTag(){
+    let tagName = $("#inputTagName")[0].value;
+    let pushTag = $("#inputPushTag")[0].checked;
+
+    let tagMessage; // If tagMessage is undefined then we create a lightweight tag
+    if (!this.lightweightTagSelected) {
+      tagMessage = $("#inputTagMessage")[0].value;
+    }
+    
+    createTag(tagName, getSelectedCommit(), pushTag, tagMessage);
+  }
+
+  clearCreateTagModal() {
+    let inputTagName = $("#inputTagName")[0];
+    inputTagName.value = inputTagName.defaultValue;
+
+    let inputTagMessage = $("#inputTagMessage")[0];
+    inputTagMessage.value = inputTagMessage.defaultValue;
+
+    let inputPushTag = $("#inputPushTag")[0];
+    inputPushTag.checked = inputPushTag.defaultChecked;
+
+    let createTagError = $("#createTagError")[0];
+    createTagError.innerHTML = "";
   }
 }

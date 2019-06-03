@@ -15,6 +15,7 @@ let columns: boolean[] = [];
 let edgeDic = {};
 let numOfCommits = 0;
 let branchIds = {};
+let selectedCommit: string;
 
 enum NodeType{Basic, Abstract, Node, Branch, Tag}
 
@@ -499,7 +500,8 @@ function makeNode(c, column: number) {
         x: (column - 1) * spacingX,
         y: (id - 1) * spacingY,
         author: c.author(),
-        nodeType: NodeType.Node
+        nodeType: NodeType.Node,
+        commitSha: c.sha()
     });
 
     if (c.toString() in bname) {
@@ -574,4 +576,8 @@ function reCenter() {
     };
 
     network.focus(commitList[commitList.length - 1]["id"], moveOptions);
+}
+
+function getSelectedCommit() {
+    return selectedCommit;
 }

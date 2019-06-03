@@ -1087,3 +1087,11 @@ body .pull-request-panel {
   width: 20%; 
   text-align: left; 
 }
+
+.modal-error {
+  float: left;
+  position: relative;
+  color: red;
+  font-size: larger;
+  max-width: 70%;
+}
