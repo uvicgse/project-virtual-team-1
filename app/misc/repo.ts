@@ -13,6 +13,8 @@ let span;
 let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
+import { calcUnpushedCommits,unpushedCommitsModal }  from '/Users/adebayoogunmuyiwa/Desktop/Desktop/demo/project-virtual-team-1/app/misc/git'
+
 
 function downloadRepository() {
   let fullLocalPath;
@@ -182,6 +184,10 @@ function openRepository() {
       document.getElementById('spinner').style.display = 'block';
       refreshAll(repository);
       console.log("Repo successfully opened");
+      // unpushedCommitsModal();
+      // unpushedCommitsModal();
+
+      //updateModalText("Number of un-pushed commits: " + calcUnpushedCommits());
       updateModalText("Repository successfully opened");
     },
       function (err) {

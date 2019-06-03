@@ -6,9 +6,10 @@ const Menu = electron.Menu;
 const BrowserWindow = electron.BrowserWindow;
 const { globalShortcut } = require('electron');
 
+
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
-
+require('electron-debug')({showDevTools: true, enabled: true});
 
 // prevent window being garbage collected
 let mainWindow;
