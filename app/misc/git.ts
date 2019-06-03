@@ -741,15 +741,13 @@ function stashChanges() {
     .then(function (repo) {
       // TODO: is the signature important?
       // TODO: ask for a stash message
-      // TODO: what are the flags for?
-      Git.Stash.save(repo, repo.defaultSignature(), "default stash message", 0)
+      // TODO: allow the user to select various options (include untracked, include ignored, etc.)
+      Git.Stash.save(repo, repo.defaultSignature(), "default stash message", Git.Stash.FLAGS.DEFAULT)
         .then(function(oid) {
           console.log("change stashed with oid" + oid)
       });
-      // TODO: Ensure the modified files list is updated.
-      //clearStagedFilesList();
-      //refreshAll(repo);
-      //displayModifiedFiles();
+      // All the modified files have been stashed, so update the list of stage/unstaged files
+      clearModifiedFilesList();
     });
 }
 
