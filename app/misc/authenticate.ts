@@ -87,9 +87,6 @@ function ModalSignIn(callback) {
 
 
 function loginWithSaved(callback) {
-    document.getElementById("username").value = '';
-    document.getElementById("password").value = ''; //get decrypted username n password  
-
   // Get the saved access token from the file system
   var accessToken = getToken();
   // Store the token in memory
