@@ -348,6 +348,8 @@ function useSavedCredentials() : boolean {
   return false;
 }
 
+// Issue 6
+// Create repos.json file is it does not exist
 function createRecentRepositories(file) {
     console.log('Creating recent repositories file: ' + file);
     try {
@@ -357,9 +359,11 @@ function createRecentRepositories(file) {
     }
 }
 
+// Issue 6
+// Check if repos.json exists
 function useRecentRepositories() {
     let file = 'repos.json';
-    // check if the repo.json file exists
+    
     if (!fs.existsSync(file)) {
         console.log(file + ' does not exist');
         createRecentRepositories(file);

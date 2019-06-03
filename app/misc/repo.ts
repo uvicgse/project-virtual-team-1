@@ -15,6 +15,8 @@ let previousOpen;
 let repoName : string = "";
 let jsonfile = require('jsonfile');
 
+// Issue 6
+// Retrieve repos from repos.json
 function getRecentRepositories() {
     let repoFile = 'repos.json';
     let repoList;
@@ -31,6 +33,8 @@ function getRecentRepositories() {
     return repoList.recentRepos;
 }
 
+// Issue 6
+// Save repo entry to repos.json
 function saveRecentRepositories(repoPath) {
     let repoFile = 'repos.json';
     let repoList;
@@ -57,6 +61,8 @@ function saveRecentRepositories(repoPath) {
     }
 }
 
+// Issue 6
+// Update recent repo list
 function updateRecentRepos(recentRepos, repoToAdd) {
     let maxRepos = 5;
 
@@ -67,6 +73,8 @@ function updateRecentRepos(recentRepos, repoToAdd) {
 
     for (let i = 0; i < recentRepos.length; i++) {
         if (recentRepos[i] === repoToAdd) {
+            // using splice as suggested by:
+            // https://stackoverflow.com/questions/15292278/how-do-i-remove-an-array-item-in-typescript
             recentRepos.splice(i, 1);
         }
     }
