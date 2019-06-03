@@ -523,6 +523,7 @@ function refreshList(verbose) {
     let a = document.createElement("a");
     a.setAttribute("href", "#");
     a.setAttribute("class", "list-group-item");
+    a.setAttribute("id", name);
     a.setAttribute("onclick", onclick + ";event.stopPropagation()");
     li.setAttribute("role", "presentation");
     a.appendChild(document.createTextNode(name));
@@ -682,7 +683,7 @@ function refreshList(verbose) {
       localPath = document.getElementById("dirPickerSaveNew").files[0].webkitRelativePath;
       fullLocalPath = document.getElementById("dirPickerSaveNew").files[0].path;
 
-      // display the new folder location on repoSave text field 
+      // display the new folder location on repoSave text field
       updateRepoSaveText(fullLocalPath);
     }
   }
@@ -739,8 +740,8 @@ function refreshList(verbose) {
       prPanel.style.width = "60px";
       prListContainer.style.display = "none";
 
-      /* 
-        Calulates space leftover for the body panel after 
+      /*
+        Calulates space leftover for the body panel after
         accounting for the space taken up by the side panel.
       */
       bodyPanel.style.width = "calc(80% - 60px)";

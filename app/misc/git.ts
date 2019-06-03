@@ -498,7 +498,6 @@ function createBranch() {
 // search for tags
 function searchTag() {
   searchTag = document.getElementById("tag-name").value;
-  console.log(document.getElementById("tag-name").value)
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repo.getCurrentBranch()
@@ -509,10 +508,7 @@ function searchTag() {
           refList.sort();
           bname = {};
           tags = {};
-          // clearBranchAndTagElement();
           for (let i = 0; i < refList.length; i++) {
-
-            console.log(refList);
 
             // strip name for readability
             let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
@@ -539,7 +535,7 @@ function searchTag() {
                   tags[oid.tostrS()] = [refList[i]];
                 }
               }
-            }, function (err) {
+            }, function (err) { 
               console.log("Could not find referenced branch ..." + err);
             });
 
@@ -552,19 +548,13 @@ function searchTag() {
               localBranches.push(refName);
               displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
             } else if (refList[i].isTag()){
-              console.log(refName)
-              if refName == searchString {
-                displayTag(refName, "tag-item-list", "");
-              } else {
-                console.log("Not a match")
+              if refName != searchTag {
+                document.getElementById(refName).remove();
               }
-            } else{
-              console.log("Unsupported reference: " + refList[i].name());
             }
-          }
 
-          // update lastRefList
-          lastRefList = refList.slice();
+            // update lastRefList
+            lastRefList = refList.slice();
         })
     });
 }
@@ -884,7 +874,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage);
+            filePanelMessage.parentNode.Child(filePanelMessage);
           }
         }
 
