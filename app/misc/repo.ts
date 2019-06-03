@@ -296,6 +296,9 @@ function openRepository() {
           //console.log("repo.ts, line 131, cannot open repository: "+err); // TODO show error on screen
         });
     }
+
+    // save file to repos
+    saveRecentRepositories(fullLocalPath);
   }
 
   function addBranchestoNode(thisB: string) {
