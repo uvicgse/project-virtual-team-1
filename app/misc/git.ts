@@ -758,10 +758,12 @@ function stashChanges() {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       // TODO: allow the user to select various options (include untracked, include ignored, etc.)
-      // TODO: output the git commands to the terminal.
+      addCommand("git stash save \"" + stashMessage + "\"")
       Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
         .then(function(oid) {
           console.log("change stashed with oid" + oid);
+      }).catch(function(err) {
+        updateModalText("Stash error: " + err.message);
       })
       .done(function() {
         // get rid of the modal

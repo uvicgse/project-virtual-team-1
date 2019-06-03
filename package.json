@@ -45,8 +45,6 @@
     "diff2html": "^2.7.0",
     "electron-debug": "1.0.0",
     "electron-oauth2": "^3.0.0",
-    "electron-osx-prompt": "^1.4.1",
-    "electron-prompt": "^1.3.1",
     "font-awesome": "4.7.0",
     "fs-sync": "1.0.3",
     "github-avatar-url": "1.0.0",
