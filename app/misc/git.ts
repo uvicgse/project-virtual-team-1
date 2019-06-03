@@ -1,5 +1,7 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
+import {Injectable} from "@angular/core";
+'use strict';
 
 let $ = require("jquery");
 let Git = require("nodegit");
@@ -19,8 +21,9 @@ let commitHistory = [];
 let commitToRevert = 0;
 let commitHead = 0;
 let commitID = 0;
-var total_commit = 0;
-var commit_diff = 0;
+let total_commit = 0;
+let commit_diff = 0;
+
 
 function passReferenceCommits(){
   Git.Repository.open(repoFullPath)
@@ -422,10 +425,11 @@ function pushToRemote() {
 
 //Takes the number of local commits and the number of remote commits and returns the difference
 //This will be the total number of unpushed commits
-function calcUnpushedCommits() {
-  var calc = 0
+@Injectable()
+export function calcUnpushedCommits() {
+  var calc = 0;
 
-  for (var i = 0 ; i < 5; i++){
+  for (let i = 0 ; i < 5; i++){
     countLocalCommits();
     getAllPushedCommits();
     //console.log("you have " + commit_diff + " pushed commits");
@@ -437,13 +441,16 @@ function calcUnpushedCommits() {
 
 }
 
+
 //This calls calcUnpushedCommits() and displays the dialog box to the user
 //We have to call the function once to initialize the API call, and then again to calculate
 //This is a limitation of async functions in our version of angular and node
-function unpushedCommitsModal() {
+@Injectable()
+export function unpushedCommitsModal() {
   var calc = 0;
 
   //call once to initialize the API call
+  calc = calcUnpushedCommits();
   calc = calcUnpushedCommits();
   //call again to output the correct answer
   //temp = calcUnpushedCommits();
@@ -1336,7 +1343,8 @@ function fetchFromOrigin() {
 
 //This function gets the number of commits made on a local repo, either pushed or not
 //The value is stored in total_commit
-function countLocalCommits() {
+@Injectable()
+export function countLocalCommits() {
   var walker = null;
 
   Git.Repository.open(repoFullPath)
@@ -1363,7 +1371,8 @@ function countLocalCommits() {
 //This function counts the total of pushed commits made on a remote repo by walking through the history
 //The number of commits are grabbed using an async function 
 //The number of commits is stored in commit_diff
-function getAllPushedCommits() {
+@Injectable()
+export function getAllPushedCommits() {
   clearModifiedFilesList();
   var repos;
   var allCommits = [];
