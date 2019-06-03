@@ -504,3 +504,7 @@ function displayIssues() {
           });
       }
     }
+
+function getUsername(){
+  return githubName;
+}
