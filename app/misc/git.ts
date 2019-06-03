@@ -441,7 +441,6 @@ export function calcUnpushedCommits() {
 
 }
 
-
 //This calls calcUnpushedCommits() and displays the dialog box to the user
 //We have to call the function once to initialize the API call, and then again to calculate
 //This is a limitation of async functions in our version of angular and node
@@ -450,13 +449,11 @@ export function unpushedCommitsModal() {
   var calc = 0;
   calc = calcUnpushedCommits();
   
-
   console.log("Number of un-pushed commits: " + calc);
   updateModalText("Number of un-pushed commits: " + calc);
 }
 
 //This function has yet to be implemented
-//We are using it to display the number of unpushed commits to the user
 function commitModal() {
   // TODO: implement commit modal
   displayModal("Commit inside a modal yet to be implemented");
@@ -1351,7 +1348,7 @@ export function countLocalCommits() {
         walker.push(commit.id());
         walker.sorting
         walker.pushHead();
-        return walker.getCommits(100)
+        return walker.getCommits(1000)
       })
       .then(function (commits) {
         //console.log("Local commits: " + commits.length);
