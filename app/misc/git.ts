@@ -477,11 +477,7 @@ export function unpushedCommitsModal() {
 
   //call once to initialize the API call
   calc = calcUnpushedCommits();
-  calc = calcUnpushedCommits();
-  //call again to output the correct answer
-  //temp = calcUnpushedCommits();
 
-  //var temp = total_commit - commit_diff;
   console.log("Number of un-pushed commits: " + calc);
   updateModalText("Number of un-pushed commits: " + calc);
 }
@@ -489,9 +485,8 @@ export function unpushedCommitsModal() {
 //This function has yet to be implemented
 //We are using it to display the number of unpushed commits to the user
 function commitModal() {
-  unpushedCommitsModal();
   // TODO: implement commit modal
-  //displayModal("Commit inside a modal yet to be implemented");
+  displayModal("Commit inside a modal yet to be implemented");
 }
 
 function openBranchModal() {
