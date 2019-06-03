@@ -95,7 +95,9 @@ function switchToAddRepositoryPanel() {
 }
 
 function hideSignInButton():void{
-  document.getElementById("Button_Sign_in").style.display = "none";
+  if (!getToken()) {
+    document.getElementById("Button_Sign_in").style.display = "none";
+  }
   if(previousWindow!="repoPanel"){
     switchToMainPanel();
   }
