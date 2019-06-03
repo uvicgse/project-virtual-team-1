@@ -662,6 +662,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
     })
     .then(function(){
       refreshAll(repo)
+      updateModalText("Successfully created tag " + tagName + ".")
     })
     .catch(function(msg){
       let errorMessage = "Error: " + msg.message;
