@@ -1,4 +1,4 @@
-let fs = require('fs').promises;
+let fs = require('fs');
 let cred;
 let blue = "#39c0ba";
 let gray = "#5b6969";
