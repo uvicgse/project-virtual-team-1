@@ -1,13 +1,16 @@
 <div class="graph-panel" id="graph-panel">
   <div class="network" id="my-network">
   </div>
+
+  <!-- Context menu for operations within the commit network -->
   <div id="networkContext" class="context-menu" tabindex="-1" (blur)="disableContextMenu()">
-      <ul class="dropdown-menu">
-        <li>
-          <a (mousedown)="doNothing()" (click)="setCreateTagModal();showCreateTagModal()">Create Tag</a>
-        </li>
-      </ul>
-    </div>
+    <ul class="dropdown-menu">
+      <li>
+        <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create Tag</a>
+      </li>
+    </ul>
+  </div>
+
   <div class="modal fade" id="mergeModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -65,6 +68,8 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div>
+
+  <!--Modal for creating a new tag -->
   <div class="modal fade" id="createTagModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

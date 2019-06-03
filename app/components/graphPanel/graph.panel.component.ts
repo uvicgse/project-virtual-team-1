@@ -9,7 +9,7 @@ export class GraphPanelComponent {
   lightweightTagSelected: boolean = false;
 
   constructor() {
-    $(window).resize(this.disableContextMenu);
+    $(window).resize(this.disableContextMenu); // Handler for closing context menu when the window resizes
   }
 
   mergeBranches(): void {
@@ -28,17 +28,22 @@ export class GraphPanelComponent {
     
   }
 
+  // Disables the context menu in the graphed network
   disableContextMenu() {
     let contextMenu = $("#networkContext");
     contextMenu.hide();
   }
 
+  // Shows the modal for creating a new tag  
   showCreateTagModal() {
+    this.setCreateTagModal();
+
     let modal = $("#createTagModal");
     modal.modal("show");
     this.disableContextMenu();
   }
 
+  // Handler for a click on the create tag button in the create tag modal.
   clickSubmitCreateTag(){
     let tagName = $("#inputTagName")[0].value;
     let pushTag = $("#inputPushTag")[0].checked;
@@ -51,6 +56,7 @@ export class GraphPanelComponent {
     createTag(tagName, getSelectedCommit(), pushTag, tagMessage);
   }
 
+  // Initializes  the create tag modal. Should be called before displaying the modal.
   setCreateTagModal() {
     let inputTagName = $("#inputTagName")[0];
     inputTagName.value = inputTagName.defaultValue;
@@ -65,7 +71,5 @@ export class GraphPanelComponent {
 
     let createTagError = $("#createTagError")[0];
     createTagError.innerHTML = "";
-
-
   }
 }

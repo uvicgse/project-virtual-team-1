@@ -638,6 +638,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
     .then(function(tagOid){
       $("#createTagModal").modal('hide');
       
+      // Push the tag if desired
       if (pushTag) {
         console.log("Pushing tag: " + tagName);
         return repo.getRemotes()
@@ -661,8 +662,9 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
       }
     })
     .then(function(){
-      refreshAll(repo)
+      //Refresh the repository to display the new changes in the graph
       updateModalText("Successfully created tag " + tagName + ".")
+      refreshAll(repo)
     })
     .catch(function(msg){
       let errorMessage = "Error: " + msg.message;

@@ -206,6 +206,7 @@ function drawGraph() {
             }
         }, false);
 
+        // Add finished animation finished handler to network
         network.on("animationFinished", function () {
             if (fromNode !== null && secP !== null) {
                 let toNode = network.getNodeAt(secP);
@@ -218,6 +219,7 @@ function drawGraph() {
             secP = null;
         });
 
+        // Add context menu handler to network
         network.on('oncontext', function (properties) {
             if (flag === 'node') { // Only show context menu at the lowest zoom level
                 let contextNode = nodes.get(network.getNodeAt(properties.pointer.DOM));
@@ -235,6 +237,7 @@ function drawGraph() {
             }
         });
 
+        // Add click handler to network
         network.on('click', function (properties) {
             if (properties.nodes.length > 0) {
                 let clicknode = properties.nodes[0];
@@ -267,11 +270,13 @@ function drawGraph() {
             }
         })
         
+        // Clicking on the network disables the context menu
         network.on("click", function (properties) {
             let contextMenu = $("#networkContext")
             contextMenu.hide()
         });
 
+        // Dragging on the network disables the context menu
         network.on("dragStart", function (properties) {
             let contextMenu = $("#networkContext")
             contextMenu.hide()

@@ -17,6 +17,14 @@ let numOfCommits = 0;
 let branchIds = {};
 let selectedCommit: string;
 
+/* 
+Types of nodes in the network.
+    Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
+    Abstract = Commit node in the second zoom level . Represents a collection of commits
+    Node = Commit node in the lowest zoom level (3rd level). Represents a a single commit
+    Branch = Represents a branch reference. Is linked to a single commit node
+    Tag = Represents a tag reference. Is linked to a single commit node
+*/
 enum NodeType{Basic, Abstract, Node, Branch, Tag}
 
 function processGraph(commits: nodegit.Commit[]) {
