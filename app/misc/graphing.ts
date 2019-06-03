@@ -437,6 +437,7 @@ function makeBasicNode(c, column: number) {
             bsNodes.add({
                 id: bsnodeId,
                 shape: "ellipse",
+                // color: "teal",
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
                 physics: false,
@@ -536,6 +537,7 @@ function makeAbsNode(c, column: number) {
                 abNodes.add({
                     id: bsnodeId,
                     shape: "ellipse",
+                    // color: "teal",
                     title: tagName, // hover text
                     label: shortTagName, // shown under/in shape
                     physics: false,
@@ -643,6 +645,7 @@ function makeNode(c, column: number) {
             nodes.add({
                 id: bsnodeId,
                 shape: "ellipse",
+                // color: "teal",
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
                 physics: false,
