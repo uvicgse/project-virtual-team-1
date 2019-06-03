@@ -1,3 +1,4 @@
+import { calcUnpushedCommits,unpushedCommitsModal }  from '/Users/adebayoogunmuyiwa/Desktop/Desktop/demo/project-virtual-team-1/app/misc/git'
 let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
@@ -264,6 +265,10 @@ function openRepository() {
       document.getElementById('spinner').style.display = 'block';
       refreshAll(repository);
       console.log("Repo successfully opened");
+      // unpushedCommitsModal();
+      // unpushedCommitsModal();
+
+      //updateModalText("Number of un-pushed commits: " + calcUnpushedCommits());
       updateModalText("Repository successfully opened");
     },
       function (err) {
@@ -440,7 +445,7 @@ function refreshReferences(verbose, force) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
     lastRefList = [];
-    
+
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
