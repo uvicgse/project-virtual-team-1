@@ -736,13 +736,40 @@ function resetCommit(name: string) {
  * Stashes all changes (note that only tracked files are stashed.)
  */
 function stashChanges() {
-  console.log("stashing changes");
+  let stashMessage = "default message";
+
+  const prompt = require('electron-prompt');
+  prompt({
+      title: 'Stash Message',
+      label: 'Enter stash message:',
+      value: '',
+      inputAttrs: {
+          type: 'url'
+      }
+  })
+  .then((r) => {
+      if(r === null) {
+          stashMessage = "" // user cancelled
+          console.log(stashMessage);
+      } else {
+          stashMessage = r
+          console.log(stashMessage);
+      }
+  })
+  .catch(console.error);
+
+
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       // TODO: is the signature important?
       // TODO: ask for a stash message
+<<<<<<< Updated upstream
       // TODO: allow the user to select various options (include untracked, include ignored, etc.)
       Git.Stash.save(repo, repo.defaultSignature(), "default stash message", Git.Stash.FLAGS.DEFAULT)
+=======
+      // TODO: what are the flags for? https://www.nodegit.org/api/stash/#FLAGS
+      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, 0)
+>>>>>>> Stashed changes
         .then(function(oid) {
           console.log("change stashed with oid" + oid)
       });
