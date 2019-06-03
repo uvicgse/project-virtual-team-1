@@ -13,7 +13,6 @@ let span;
 let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
-let fs = require('fs').promises;
 let jsonfile = require('jsonfile');
 
 function downloadRepository() {
@@ -38,6 +37,8 @@ function downloadRepository() {
     switchToAddRepositoryPanel();
   } else {
     downloadFunc(cloneURL, fullLocalPath);
+    // save to recent repos
+    saveRecentRepositories(fullLocalPath);
   }
 }
 
@@ -203,7 +204,7 @@ function openRepository() {
       let recentRepos;
 
       try {
-          repoList = JSON.parse(fs.readFileSync(repoFile));
+          repoList = JSON.parse(checkFile.readFileSync(repoFile));
       } catch (err) {
           console.log('Cannot read ' + repoFile);
       }
