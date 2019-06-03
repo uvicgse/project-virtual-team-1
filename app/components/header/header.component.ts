@@ -48,51 +48,7 @@ export class HeaderComponent   {
   }
 
   authenticateGithub(): void {
-    // copy the header's "remember me" checkbox value over to the homepage's "remember me"checkbox
-    if (document.getElementById("headerRememberLogin").checked = true) {
-      document.getElementById("rememberLogin").checked = true;
-    }
     authenticateUser(switchToAddRepositoryPanel);
-  }
-
-  /*
-    If the password is empty, made the input field for the password red and show a icon that shows that the password 
-    field is empty.
-  */
-  emptyPassword(): void {
-    document.getElementById('Password1').classList.add("error");
-    document.getElementById('password-error-icon').style.visibility = 'visible';
-  }
-
-  /*
-    If the username is empty, made the input field for the username red and show a icon that shows that the username 
-    field is empty.
-  */
-  emptyUsername(): void {
-    document.getElementById('Email1').classList.add('error');
-    document.getElementById('username-error-icon').style.visibility = 'visible';
-  }
-
-  /*
-    If the username is not empty and the input field has been made red, change it back to normal and get
-    rid of the warning icon.
-  */
-  notEmptyUsername(): void {
-    if (document.getElementById('Email1').classList.contains('error')) {
-      document.getElementById('Email1').classList.remove('error');
-      document.getElementById('username-error-icon').style.visibility = 'hidden';
-    }
-  }
-
-  /*
-    If the password is not empty and the input field has been made red, change it back to normal and get
-    rid of the warning icon.
-  */
-  notEmptyPassword(): void {
-    if (document.getElementById('Password1').classList.contains('error')) {
-      document.getElementById('Password1').classList.remove('error');
-      document.getElementById('password-error-icon').style.visibility = 'hidden';
-    }
   }
 
   showBranchList(): void {
