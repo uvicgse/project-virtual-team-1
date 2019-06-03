@@ -42,13 +42,6 @@ export class AuthenticateComponent implements OnInit {
     authenticateUser(switchToAddRepositoryPanel);
   }
 
-  createNewAccount(): void {
-    window.open("https://github.com/join?", "_blank");
-  }
-  
-  openGitHubPasswordResetPage() : void {
-    window.open("https://github.com/password_reset", "_blank");
-  }
 }
 
 /*

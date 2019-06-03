@@ -38,6 +38,8 @@ const OauthConfig = {
 };
 
 const windowParams = {
+  width: 500,
+  height: 700,
   alwaysOnTop: true,
   autoHideMenuBar: true,
   webPreferences: {
@@ -140,10 +142,7 @@ function authenticateUser(callback) {
     .then(token => {
 
       // Save access token to filesystem
-      let rememberLogin: any = (<HTMLInputElement>document.getElementById("rememberLogin"));
-      if (rememberLogin.checked == true) {
-        encryptAccessToken(token['access_token']);
-      }
+      encryptAccessToken(token['access_token']);
 
       // Store Encrypted Access Token in Memory
       encryptTemp(token['accessToken']);
