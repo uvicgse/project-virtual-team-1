@@ -211,5 +211,6 @@ typings/
 # User Settings
 data.json
 .settings/
+repos.json
 
 # End of https://www.gitignore.io/api/angular,webstorm,visualstudiocode,node
