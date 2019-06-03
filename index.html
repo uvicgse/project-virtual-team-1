@@ -98,7 +98,13 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(function() {
     displayModifiedFiles();
   }, 3000);
+
+  // monitor changes on branch list and tag list, 1 check per second
+  setInterval(function () {
+    refreshList(false);
+  }, 1000);
 }, false);
+
 
 $('#repo-modal').on('hidden.bs.modal', function (e) {
   console.log(e+"Disabling clone button");
