@@ -1,4 +1,3 @@
-let cs = require('color-scheme');
 let before = 'default';
 
 function changeColor(color) {

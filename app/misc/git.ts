@@ -274,10 +274,7 @@ function getAllCommits(callback) {
       let count = 0;
       console.log("getting " + refs.length + " refs");
       async.whilst(
-        function () {
-          return count < refs.length;
-        },
-
+        function test(cb) { cb(null, count < refs.length) },
         function (cb) {
           if (!refs[count].isRemote()) {
             console.log("referenced branch exists on remote repository");
