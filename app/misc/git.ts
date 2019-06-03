@@ -758,11 +758,13 @@ function stashChanges() {
       // TODO: output the git commands to the terminal.
       Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
         .then(function(oid) {
-          console.log("change stashed with oid" + oid)
+          console.log("change stashed with oid" + oid);
       })
       .done(function() {
         // get rid of the modal
         $('#stash-msg-modal').modal('hide');
+        // reset the modal's message
+        clearStashMsgErrorText();
         // All the modified files have been stashed, so update the list of stage/unstaged files
         clearModifiedFilesList();        
       });  
