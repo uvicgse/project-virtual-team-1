@@ -469,13 +469,8 @@ function calcUnpushedCommits() {
 //This is a limitation of async functions in our version of angular and node
 function unpushedCommitsModal() {
   var calc = 0;
-
-  //call once to initialize the API call
   calc = calcUnpushedCommits();
-  //call again to output the correct answer
-  //temp = calcUnpushedCommits();
-
-  //var temp = total_commit - commit_diff;
+  
   console.log("Number of un-pushed commits: " + calc);
   updateModalText("Number of un-pushed commits: " + calc);
 }
