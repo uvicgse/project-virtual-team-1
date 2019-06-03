@@ -423,17 +423,17 @@ function pushToRemote() {
 //Takes the number of local commits and the number of remote commits and returns the difference
 //This will be the total number of unpushed commits
 function calcUnpushedCommits() {
-  var temp = 0;
-  
+  var calc = 0
+
   for (var i = 0 ; i < 5; i++){
     countLocalCommits();
     getAllPushedCommits();
     //console.log("you have " + commit_diff + " pushed commits");
     //console.log("you have " + total_commit + " total commits");
-     temp = total_commit - commit_diff;
+     calc = total_commit - commit_diff;
 
   }
-  return temp;
+  return calc;
 
 }
 
@@ -441,13 +441,16 @@ function calcUnpushedCommits() {
 //We have to call the function once to initialize the API call, and then again to calculate
 //This is a limitation of async functions in our version of angular and node
 function unpushedCommitsModal() {
-  var temp = 0;
-  temp = calcUnpushedCommits();
-  temp = calcUnpushedCommits();
+  var calc = 0;
+
+  //call once to initialize the API call
+  calc = calcUnpushedCommits();
+  //call again to output the correct answer
+  //temp = calcUnpushedCommits();
 
   //var temp = total_commit - commit_diff;
-  console.log("Number of un-pushed commits: " + temp);
-  updateModalText("Number of un-pushed commits: " + temp);
+  console.log("Number of un-pushed commits: " + calc);
+  updateModalText("Number of un-pushed commits: " + calc);
 }
 
 //This function has yet to be implemented
