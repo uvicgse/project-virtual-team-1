@@ -36,7 +36,10 @@
           <p>Location of existing repository</p>
         </div>
         <div class="right">
-          <input type="text" name="repositoryLocal" class = "path-textbox" id="repoOpen"/>
+          <input type="text" name="repositoryLocal" class = "path-textbox" id="repoOpen" list="repos"/>
+          <datalist id="repos">
+            <option *ngFor="let repo of getRepos()">{{repo}}</option>
+          </datalist>
           <button class="button-open" (click)="selectDirectory()">Open</button>
           <input type="file" id="dirPickerOpenLocal" name="dirList" (change)="openRepository()" style="display: none;" webkitdirectory />
         </div>

@@ -42,6 +42,10 @@ export class AddRepositoryComponent {
     }
   }
 
+  getRepos() {
+    return getRecentRepositories();
+  }
+
   addRepository(): void {
     downloadRepository();
   }
