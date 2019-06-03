@@ -483,7 +483,6 @@ export function unpushedCommitsModal() {
 }
 
 //This function has yet to be implemented
-//We are using it to display the number of unpushed commits to the user
 function commitModal() {
   // TODO: implement commit modal
   displayModal("Commit inside a modal yet to be implemented");
@@ -1592,7 +1591,7 @@ export function countLocalCommits() {
         walker.push(commit.id());
         walker.sorting
         walker.pushHead();
-        return walker.getCommits(100)
+        return walker.getCommits(1000)
       })
       .then(function (commits) {
         //console.log("Local commits: " + commits.length);
