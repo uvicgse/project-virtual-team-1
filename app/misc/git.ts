@@ -57,7 +57,7 @@ function sortedListOfCommits(commits){
       }
     }
   }
-  
+
 }
 
 function cloneFromRemote() {
@@ -281,7 +281,7 @@ function getAllCommits(callback) {
         function (cb) {
           if (!refs[count].isRemote()) {
             console.log("referenced branch exists on remote repository");
-            refs[count].peel(Git.Object.TYPE.COMMIT) 
+            refs[count].peel(Git.Object.TYPE.COMMIT)
             .then(function(ref) {
               repos.getCommit(ref)
               .then(function (commit) {
@@ -377,7 +377,7 @@ function pullFromRemote() {
       if (conflicsExist) {
         let conflictedFiles = tid.split("Conflicts:")[1];
         refreshAll(repository);
-       
+
         window.alert("Conflicts exists! Please check the following files:" + conflictedFiles +
          "\n Solve conflicts before you commit again!");
       } else {
@@ -496,6 +496,80 @@ function createBranch() {
         });
     clearBranchErrorText();
   }
+}
+
+// search for tags
+function searchTag() {
+  searchTag = document.getElementById("tag-name").value;
+  console.log(document.getElementById("tag-name").value)
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getCurrentBranch()
+        .then(function () {
+          // grab the list of references - these could be branches or tags
+          return repo.getReferences(Git.Reference.TYPE.LISTALL);
+        }).then(function (refList) {
+          refList.sort();
+          bname = {};
+          tags = {};
+          // clearBranchAndTagElement();
+          for (let i = 0; i < refList.length; i++) {
+
+            console.log(refList);
+
+            // strip name for readability
+            let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+            Git.Reference.nameToId(repo, refList[i].name()).then(function (oid) {
+
+              if (refList[i].isRemote()) {
+                // for remote branches add oid and branch name to remote branches map
+                remoteName[refName] = oid;
+
+              // add to branch list
+              } else if (refList[i].isBranch()){
+                if (oid.tostrS() in bname) {
+                  bname[oid.tostrS()].push(refList[i]);
+                } else {
+                  bname[oid.tostrS()] = [refList[i]];
+                }
+
+              // add to tag list
+              } else if (refList[i].isTag()){
+                console.log(tags)
+                if (oid.tostrS() in tags) {
+                  tags[oid.tostrS()].push(refList[i]);
+                } else {
+                  tags[oid.tostrS()] = [refList[i]];
+                }
+              }
+            }, function (err) {
+              console.log("Could not find referenced branch ..." + err);
+            });
+
+            // display branch list and tag list
+            if (refList[i].isRemote()) {
+              if (localBranches.indexOf(refName) < 0) {
+                displayBranch(refName, "branch-item-list", "checkoutRemoteBranch(this)");
+              }
+            } else if (refList[i].isBranch()){
+              localBranches.push(refName);
+              displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
+            } else if (refList[i].isTag()){
+              console.log(refName)
+              if refName == searchString {
+                displayTag(refName, "tag-item-list", "");
+              } else {
+                console.log("Not a match")
+              }
+            } else{
+              console.log("Unsupported reference: " + refList[i].name());
+            }
+          }
+
+          // update lastRefList
+          lastRefList = refList.slice();
+        })
+    });
 }
 
 function clearBranchErrorText() {
@@ -740,7 +814,7 @@ function revertCommit() {
     sortedListOfCommits(Commits);
      console.log("Commits; "+ commitHistory[0]);
     })
-    
+
     Git.Repository.open(repoFullPath)
     .then(function(repo){
       repos = repo;
@@ -757,7 +831,7 @@ function revertCommit() {
     if(commitHistory[index].parents().length > 1) {
       revertOptions.mainline = 1;
     }
-    
+
     revertOptions.mergeInMenu = 1;
     return Git.Revert.revert(repos, commitHistory[index],revertOptions)
     .then(function(number) {
@@ -818,7 +892,7 @@ function displayModifiedFiles() {
         }
 
         modifiedFiles.forEach(displayModifiedFile);
-        
+
         removeNonExistingFiles();
         refreshColor();
 
@@ -1263,7 +1337,7 @@ function cleanRepo() {
 }
 
 /**
- * This method is called when the sync button is pressed, and causes the fetch-modal 
+ * This method is called when the sync button is pressed, and causes the fetch-modal
  * to appear on the screen.
  */
 function requestLinkModal() {
@@ -1271,7 +1345,7 @@ function requestLinkModal() {
 }
 
 /**
- * This method is called when a valid URL is given via the fetch-modal, and runs the 
+ * This method is called when a valid URL is given via the fetch-modal, and runs the
  * series of git commands which fetch and merge from an upstream repository.
  */
 function fetchFromOrigin() {
