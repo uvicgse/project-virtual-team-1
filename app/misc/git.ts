@@ -326,7 +326,7 @@ function PullBuffer() {
 
 function pullFromRemote() {
   let repository;
-  let branch = document.getElementById("branch-name").innerText;
+  let branch = document.getElementById("name-selected").innerText;
   if (modifiedFiles.length > 0) {
     updateModalText("Please commit before pulling from remote!");
   }
@@ -388,7 +388,7 @@ function pullFromRemote() {
 }
 
 function pushToRemote() {
-  let branch = document.getElementById("branch-name").innerText;
+  let branch = document.getElementById("name-selected").innerText;
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       console.log("Pushing changes to remote")
@@ -429,7 +429,7 @@ function openBranchModal() {
   $('#branch-modal').modal('show');
 
   // Shows current branch inside the branch mdoal
-  let currentBranch = document.getElementById("branch-name").innerText;
+  let currentBranch = document.getElementById("name-selected").innerText;
   if (currentBranch === undefined || currentBranch == 'branch') {
     document.getElementById("currentBranchText").innerText = "Current Branch: ";
   } else {
