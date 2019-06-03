@@ -732,6 +732,9 @@ function resetCommit(name: string) {
     });
 }
 
+/**
+ * Clears the fields from the stash message modal.
+ */
 function clearStashMsgErrorText() {
   // @ts-ignore
   document.getElementById("stashMsgErrorText").innerText = "";
