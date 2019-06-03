@@ -47,6 +47,14 @@ export class HeaderComponent   {
     redirectToHomePage();
   }
 
+  authenticateGithub(): void {
+    // copy the header's "remember me" checkbox value over to the homepage's "remember me"checkbox
+    if (document.getElementById("headerRememberLogin").checked = true) {
+      document.getElementById("rememberLogin").checked = true;
+    }
+    authenticateUser(switchToAddRepositoryPanel);
+  }
+
   /*
     If the password is empty, made the input field for the password red and show a icon that shows that the password 
     field is empty.
