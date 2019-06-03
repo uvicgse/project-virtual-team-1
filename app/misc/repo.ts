@@ -15,6 +15,22 @@ let previousOpen;
 let repoName : string = "";
 let jsonfile = require('jsonfile');
 
+function getRecentRepositories() {
+    let repoFile = 'repos.json';
+    let repoList;
+
+    try {
+        repoList = JSON.parse(checkFile.readFileSync(repoFile));
+    } catch (err) {
+        console.log('Cannot read ' + repoFile);
+        repoList = {
+            recentRepos: []
+        }
+    }
+    console.log("Collecting recently used repositories: " + repoList.recentRepos);
+    return repoList.recentRepos;
+}
+
 function saveRecentRepositories(repoPath) {
     let repoFile = 'repos.json';
     let repoList;
