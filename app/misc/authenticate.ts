@@ -140,6 +140,9 @@ function authenticateUser(callback) {
   // Opens Oauth Window and Retrieves Token
   githubOAuth.getAccessToken({})
     .then(token => {
+      // Make sure token was received succesfully
+      if(!token)
+        return;
 
       // Save access token to filesystem
       encryptAccessToken(token['access_token']);
