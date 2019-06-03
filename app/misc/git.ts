@@ -620,7 +620,6 @@ function mergeLocalBranches(element) {
 // Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
 function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
   let repo;
-  let tagOid
   Git.Repository.open(repoFullPath)
     .then(function(repoParam) {
       repo = repoParam;
@@ -636,14 +635,12 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
         return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
       }
     })
-    .then(function(tagOidParam){
-      tagOid = tagOidParam
+    .then(function(tagOid){
       $("#createTagModal").modal('hide');
-    })
-    .then(function(){
+      
       if (pushTag) {
         console.log("Pushing tag: " + tagName);
-        repo.getRemotes()
+        return repo.getRemotes()
           .then(function (remotes) {
             return repo.getRemote(remotes[0]);
           })

@@ -50,7 +50,7 @@ export class GraphPanelComponent {
     createTag(tagName, getSelectedCommit(), pushTag, tagMessage);
   }
 
-  clearCreateTagModal() {
+  setCreateTagModal() {
     let inputTagName = $("#inputTagName")[0];
     inputTagName.value = inputTagName.defaultValue;
 
@@ -59,8 +59,12 @@ export class GraphPanelComponent {
 
     let inputPushTag = $("#inputPushTag")[0];
     inputPushTag.checked = inputPushTag.defaultChecked;
+    inputPushTag.disabled = signed ? false : true;
+    inputPushTag.title = signed ? "" : "Must be signed in to push tags"
 
     let createTagError = $("#createTagError")[0];
     createTagError.innerHTML = "";
+
+
   }
 }
