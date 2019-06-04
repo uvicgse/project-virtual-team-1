@@ -36,7 +36,7 @@ function getAccessToken(){
   if (encryptAccessToken === undefined)
     return null;
   else {
-    var decryptedAccessTokenBytes = CryptoJS.AES.decrypt(encryptedUsername.toString(), os.hostname());
+    var decryptedAccessTokenBytes = CryptoJS.AES.decrypt(encryptedToken.toString(), os.hostname());
     return decryptedAccessTokenBytes.toString(CryptoJS.enc.Utf8);
   }
 }
