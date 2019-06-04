@@ -55,7 +55,7 @@ function downloadFunc(cloneURL, fullLocalPath) {
           return 1;
         },
         credentials: function () {
-          return Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+          return Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
         },
         transferProgress: function (data) {
           let bytesRatio = data.receivedObjects() / data.totalObjects();
@@ -154,7 +154,7 @@ function openRepository() {
             url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
             type: "GET",
             beforeSend: function (xhr) {
-              xhr.setRequestHeader('Authorization', ' token ' + getUsernameTemp());
+              xhr.setRequestHeader('Authorization', ' token ' + getTokenTemp());
             },
             headers: {
               'Accept': 'application/vnd.github.v3+json'

@@ -38,8 +38,6 @@ const OauthConfig = {
 };
 
 const windowParams = {
-  width: 500,
-  height: 700,
   alwaysOnTop: true,
   autoHideMenuBar: true,
   webPreferences: {
@@ -88,7 +86,7 @@ function ModalSignIn(callback) {
 // previously we were trying to use same object again and again which was cauing issues
 function getCredentials(){
   //Note: might need to update with Oauth
-  return Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+  return Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
 }
 
 
@@ -110,7 +108,7 @@ function searchRepoName() {
   ul.innerHTML = ''; // clears the dropdown menu which shows all the repos
 
   // Gets users name and password
-  cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+  cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
 
   var ghme = client.me();
   ghme.repos(function (err, data, head) {
@@ -167,7 +165,7 @@ function authenticateUser(callback) {
 
 function getUserInfo(callback) {
 
-  cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+  cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
 
   var ghme = client.me();
 
@@ -453,7 +451,7 @@ function createIssue() {
   githubName = document.getElementById("githubname").innerHTML
   if (repoName != "repository" && theArray != null) {
       encryptTemp(document.getElementById("username").value, document.getElementById("password").value);
-      cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+      cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
       client = github.client({
         id: OauthConfig.clientId,
         secret: OauthConfig.clientSecret,
@@ -491,7 +489,7 @@ function displayIssues() {
           // Gets users name and password
           encryptTemp(document.getElementById("username").value, document.getElementById("password").value);
 
-          cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
+          cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
 
           client = github.client({
             id: OauthConfig.clientId,
