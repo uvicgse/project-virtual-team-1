@@ -45,6 +45,9 @@ export class GraphPanelComponent {
 
   // Handler for a click on the create tag button in the create tag modal.
   clickSubmitCreateTag(){
+    // Disable the submit button because the tag creation may take time, so we dont want multiple clicks
+    $("#createTagModalCreateButton")[0].disabled = true;
+
     let tagName = $("#inputTagName")[0].value;
     let pushTag = $("#inputPushTag")[0].checked;
 
@@ -58,6 +61,8 @@ export class GraphPanelComponent {
 
   // Initializes  the create tag modal. Should be called before displaying the modal.
   setCreateTagModal() {
+    $("#createTagModalCreateButton")[0].disabled = false;
+
     let inputTagName = $("#inputTagName")[0];
     inputTagName.value = inputTagName.defaultValue;
 

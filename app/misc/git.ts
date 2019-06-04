@@ -634,9 +634,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
         return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
       }
     })
-    .then(function(tagOid){
-      $("#createTagModal").modal('hide');
-      
+    .then(function(tagOid){      
       // Push the tag if desired
       if (pushTag) {
         console.log("Pushing tag: " + tagName);
@@ -662,6 +660,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
     })
     .then(function(){
       //Refresh the repository to display the new changes in the graph
+      $("#createTagModal").modal('hide');
       updateModalText("Successfully created tag " + tagName + ".")
       refreshAll(repo)
     })
@@ -669,6 +668,9 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
       let errorMessage = "Error: " + msg.message;
       console.log(errorMessage);
       $("#createTagError")[0].innerHTML = errorMessage;
+
+      // Re-enable the submit button
+      $("#createTagModalCreateButton")[0].disabled = false;
     });
 }
 
