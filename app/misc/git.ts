@@ -204,9 +204,6 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-      //This function call is commented out as it is not currently implemented
-      //It also seems to be causing issues with the graph updating commits
-      //clearSelectAllCheckbox();
 
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
@@ -258,12 +255,6 @@ function clearModifiedFilesList() {
 function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
 }
-
-//This function is commented out as it is not currently implemented
-//It also seems to be causing issues with the graph updating commits
-/*function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
-}*/
 
 function getAllCommits(callback) {
   clearModifiedFilesList();
