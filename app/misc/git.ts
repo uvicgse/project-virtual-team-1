@@ -650,7 +650,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
               {
                 callbacks: {
                   credentials: function () {
-                    return cred;
+                    return getCredentials();
                   }
                 }
               }
