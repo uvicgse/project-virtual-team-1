@@ -104,7 +104,7 @@ function searchRepoName() {
   ul.innerHTML = ''; // clears the dropdown menu which shows all the repos
 
   // Gets users name and password
-  cred = Git.Cred.userpassPlaintextNew('', '');
+  cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
 
   var ghme = client.me();
   ghme.repos(function (err, data, head) {
@@ -161,7 +161,7 @@ function authenticateUser(callback) {
 
 function getUserInfo(callback) {
 
-  cred = Git.Cred.userpassPlaintextNew('', '');
+  cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
 
   var ghme = client.me();
 
@@ -447,7 +447,7 @@ function createIssue() {
   githubName = document.getElementById("githubname").innerHTML
   if (repoName != "repository" && theArray != null) {
       encryptTemp(document.getElementById("username").value, document.getElementById("password").value);
-      cred = Git.Cred.userpassPlaintextNew('', '');
+      cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
       client = github.client({
         id: OauthConfig.clientId,
         secret: OauthConfig.clientSecret,
@@ -485,7 +485,7 @@ function displayIssues() {
           // Gets users name and password
           encryptTemp(document.getElementById("username").value, document.getElementById("password").value);
 
-          cred = Git.Cred.userpassPlaintextNew('', '');
+          cred = Git.Cred.userpassPlaintextNew(getUsernameTemp(), getPasswordTemp());
 
           client = github.client({
             id: OauthConfig.clientId,

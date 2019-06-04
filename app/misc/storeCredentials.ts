@@ -55,21 +55,27 @@ function getTokenTemp() {
 }
 
 function getUsernameTemp() {
-  if (encryptedUsername === undefined){ // the user has not logged in, return null
-    return null;
-  }else {
-    var decryptedUsernameBytes = CryptoJS.AES.decrypt(encryptedUsername.toString(), os.hostname());
-    return decryptedUsernameBytes.toString(CryptoJS.enc.Utf8);
-  }
+  // if (encryptedUsername === undefined){ // the user has not logged in, return null
+  //   return null;
+  // }else {
+  //   var decryptedUsernameBytes = CryptoJS.AES.decrypt(encryptedUsername.toString(), os.hostname());
+  //   return decryptedUsernameBytes.toString(CryptoJS.enc.Utf8);
+  // }
+
+  // When using GitHub OAuth, the token is used as the username for Git operations
+  return getTokenTemp();
 }
 
 function getPasswordTemp() {
-  if(encryptedPassword === undefined){ //the user did not login, return null
-    return null;
-  }else {
-    var decryptedPasswordBytes = CryptoJS.AES.decrypt(encryptedPassword.toString(), os.hostname());
-    return decryptedPasswordBytes.toString(CryptoJS.enc.Utf8);
-  }
+  // if(encryptedPassword === undefined){ //the user did not login, return null
+  //   return null;
+  // }else {
+  //   var decryptedPasswordBytes = CryptoJS.AES.decrypt(encryptedPassword.toString(), os.hostname());
+  //   return decryptedPasswordBytes.toString(CryptoJS.enc.Utf8);
+  // }
+
+  // When using GitHub OAuth, the password for Git operations is always the following string
+  return "x-oauth-basic";  
 }
 
 function writetoJSON(encryptedUsername, encryptedPassword) {
