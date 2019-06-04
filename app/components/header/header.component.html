@@ -37,9 +37,8 @@
                   </span>
                 </div>
                 <div id="tag-button" class="input-group menuitem" [ngClass]="{'hidden' : branchSelectedInRefDropdown}">
-                  <input type="text" id="tag-name" class="form-control" placeholder="Search a tag">
+                  <input type="text" id="tag-name" class="form-control" oninput="searchTag()" placeholder="Search a tag">
                   <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" onclick="searchTag()">OK</button>
                   </span>
                 </div>
               </div>

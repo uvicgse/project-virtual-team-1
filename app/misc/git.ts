@@ -511,15 +511,16 @@ function searchTag() {
             let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
 
             if (refList[i].isTag()){
-              if (refName != document.getElementById("tag-name").value) {
-                document.getElementById(refName).setAttribute("style","display:none");
-              } else {
+              if (refName.indexOf( document.getElementById("tag-name").value ) > -1) {
                 document.getElementById(refName).setAttribute("style","display:block");
+              } else {
+                document.getElementById(refName).setAttribute("style","display:none");
               }
             }
             lastRefList = refList.slice(); // update lastRefList
+          }
         }
-      })
+      )
     }
   );
 }
