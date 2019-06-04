@@ -502,7 +502,8 @@ export class PullRequestPanelComponent {
       url: url,
       type: "GET",
       beforeSend: function (xhr) {
-        xhr.setRequestHeader('Authorization', make_base_auth(getUsername(), getPassword()));
+        xhr.setRequestHeader('Authorization', ' token ' + getUsernameTemp());
+
       },
       headers: {
         'Accept': 'application/vnd.github.v3+json'
@@ -527,7 +528,7 @@ export class PullRequestPanelComponent {
       url: url,
       type: "POST",
       beforeSend: function (xhr) {
-        xhr.setRequestHeader('Authorization', make_base_auth(getUsername(), getPassword()));
+        xhr.setRequestHeader('Authorization', ' token ' + getUsernameTemp());
       },
       headers: {
         'Accept': 'application/vnd.github.v3+json'

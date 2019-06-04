@@ -154,7 +154,7 @@ function openRepository() {
             url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
             type: "GET",
             beforeSend: function (xhr) {
-              xhr.setRequestHeader('Authorization', make_base_auth(getUsername(), getPassword()));
+              xhr.setRequestHeader('Authorization', ' token ' + getUsernameTemp());
             },
             headers: {
               'Accept': 'application/vnd.github.v3+json'
