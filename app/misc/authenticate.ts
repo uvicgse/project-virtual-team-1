@@ -135,7 +135,7 @@ function searchRepoName() {
 
 function authenticateUser(callback) {
   // Opens Oauth Window and Retrieves Token
-  githubOAuth.getAccessToken({})
+  githubOAuth.getAccessToken({scope: loginScopes})
     .then(token => {
       // Make sure token was received succesfully
       if(!token)
