@@ -1,13 +1,16 @@
 <div class="graph-panel" id="graph-panel">
   <div class="network" id="my-network">
   </div>
-  <ul class="dropdown-menu" role="menu" id="branchOptions">
-    <li><a tabindex="0" href="#">Checkout this branch</a></li>
-    <li class="dropdown-submenu">
-      <a tabindex="0" href="#">Merge from</a>
-      <ul class="dropdown-menu" role="menu" id="otherBranches"></ul>
-    </li>
-  </ul>
+
+  <!-- Context menu for operations within the commit network -->
+  <div id="networkContext" class="context-menu" tabindex="-1" (blur)="disableContextMenu()">
+    <ul class="dropdown-menu">
+      <li>
+        <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create Tag</a>
+      </li>
+    </ul>
+  </div>
+
   <div class="modal fade" id="mergeModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -60,6 +63,30 @@
         </div>
         <div class="modal-footer">
           <button id="authorModalProfileButton" type="button" class="btn btn-primary" data-dismiss="modal">View Github Profile</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+  <!--Modal for creating a new tag -->
+  <div class="modal fade" id="createTagModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Create Tag</h4>
+        </div>
+        <div class="modal-body">
+          <label>Tag Name:</label><input id="inputTagName" type="text" style="width: 50%;"><br>
+          <label>Push Tag:</label><input id="inputPushTag" type="checkbox" ><br>
+          <label>Create Lightweight Tag:</label><input id="inputPushTag" type="checkbox" (change)="lightweightTagSelected = !lightweightTagSelected"><br>
+          <label>Tag Message:</label><textarea id="inputTagMessage" [attr.disabled]="lightweightTagSelected ? '' : null"></textarea><br>
+          <p class="clear">&nbsp;</p>
+        </div>
+        <div class="modal-footer">
+          <div id="createTagError" class="modal-error"></div>
+          <button id="createTagModalCreateButton" type="button" class="btn btn-primary" (click)="clickSubmitCreateTag()">Create</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div><!-- /.modal-content -->

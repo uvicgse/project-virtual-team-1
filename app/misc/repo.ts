@@ -373,7 +373,7 @@ function refreshList(verbose) {
         }
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         // TODO: add a condition here to switch between tag and branch name string
-        document.getElementById("branch-name").innerHTML = 'Branch: ' + branch + '<span class="caret"></span>';
+          document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
         //Default values will be set for the branch labels
@@ -386,7 +386,7 @@ function refreshList(verbose) {
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         //default label set to master
         // TODO: add a condition here to switch between tag and branch name string
-        document.getElementById("branch-name").innerHTML = 'Branch: ' + "master" + '<span class="caret"></span>';
+        document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
   }
 
