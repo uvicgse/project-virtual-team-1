@@ -25,3 +25,19 @@ function getToken() {
   );
   return decryptedTokenBytes.toString(CryptoJS.enc.Utf8);
 }
+
+/**
+ * Checks if a token exists in the data.json file.
+ * getToken() returns an empty string if the token was saved during the same session,
+ * so this function is a workaround for that.
+ */
+function tokenExists() {
+
+  if(!encryptedToken)
+    return false;
+
+  if (encryptedToken == '')
+    return false;
+  else 
+    return true;
+}
