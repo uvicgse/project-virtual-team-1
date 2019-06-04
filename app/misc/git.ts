@@ -615,6 +615,65 @@ function mergeLocalBranches(element) {
     });
 }
 
+// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails. 
+// Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
+function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
+  let repo;
+  Git.Repository.open(repoFullPath)
+    .then(function(repoParam) {
+      repo = repoParam;
+    })
+    .then(function() {
+      return repo.getCommit(commitSha);
+    })
+    .then(function(commit){
+      //The '0' parameter indicates that we are creating the tag without the '--force' option, so tags will not be overwritten
+      if (message == undefined) {
+        return Git.Tag.createLightweight(repo, tagName, commit, 0);
+      } else {
+        return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
+      }
+    })
+    .then(function(tagOid){      
+      // Push the tag if desired
+      if (pushTag) {
+        console.log("Pushing tag: " + tagName);
+        return repo.getRemotes()
+          .then(function (remotes) {
+            return repo.getRemote(remotes[0]);
+          })
+          .then(function(remote){
+            return remote.push(
+              ["refs/tags/" + tagName + ":refs/tags/" + tagName],
+              {
+                callbacks: {
+                  credentials: function () {
+                    return getCredentials();
+                  }
+                }
+              }
+            );
+          }).then(function(){
+            console.log("Successfully pushed tag: " + tagName);
+          });
+      }
+    })
+    .then(function(){
+      //Refresh the repository to display the new changes in the graph
+      $("#createTagModal").modal('hide');
+      updateModalText("Successfully created tag " + tagName + ".")
+      refreshAll(repo)
+    })
+    .catch(function(msg){
+      let errorMessage = "Error: " + msg.message;
+      console.log(errorMessage);
+      $("#createTagError")[0].innerHTML = errorMessage;
+
+      // Re-enable the submit button
+      $("#createTagModalCreateButton")[0].disabled = false;
+    });
+}
+
 function mergeCommits(from) {
   let repos;
   let index;
