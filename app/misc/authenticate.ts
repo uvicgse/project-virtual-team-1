@@ -23,8 +23,8 @@ var signed = 0;
 var changes = 0;
 let signedAfter = false;
 let loginScopes = [
+  "user",
   "repo",
-  "user"
 ];
 
 // Configuration of Oauth Application Variables
