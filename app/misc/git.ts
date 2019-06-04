@@ -497,7 +497,6 @@ function createBranch() {
 
 // search for tags
 function searchTag() {
-  searchTag = document.getElementById("tag-name").value;
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repo.getCurrentBranch()
@@ -512,51 +511,38 @@ function searchTag() {
 
             // strip name for readability
             let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
-            Git.Reference.nameToId(repo, refList[i].name()).then(function (oid) {
 
-              if (refList[i].isRemote()) {
-                // for remote branches add oid and branch name to remote branches map
-                remoteName[refName] = oid;
-
-              // add to branch list
-              } else if (refList[i].isBranch()){
-                if (oid.tostrS() in bname) {
-                  bname[oid.tostrS()].push(refList[i]);
-                } else {
-                  bname[oid.tostrS()] = [refList[i]];
-                }
-
-              // add to tag list
-              } else if (refList[i].isTag()){
-                console.log(tags)
-                if (oid.tostrS() in tags) {
-                  tags[oid.tostrS()].push(refList[i]);
-                } else {
-                  tags[oid.tostrS()] = [refList[i]];
-                }
-              }
-            }, function (err) { 
-              console.log("Could not find referenced branch ..." + err);
-            });
-
-            // display branch list and tag list
-            if (refList[i].isRemote()) {
-              if (localBranches.indexOf(refName) < 0) {
-                displayBranch(refName, "branch-item-list", "checkoutRemoteBranch(this)");
-              }
-            } else if (refList[i].isBranch()){
-              localBranches.push(refName);
-              displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
-            } else if (refList[i].isTag()){
-              if refName != searchTag {
-                document.getElementById(refName).remove();
+            if (refList[i].isTag()){
+              if (refName != document.getElementById("tag-name").value) {
+                document.getElementById(refName).setAttribute("style","display:none");
+              } else {
+                document.getElementById(refName).setAttribute("style","display:block");
               }
             }
 
-            // update lastRefList
-            lastRefList = refList.slice();
+            lastRefList = refList.slice(); // update lastRefList
         })
     });
+}
+
+function displayTag(name, id, onclick) {
+  let tagList = document.getElementById(id);
+  let li = document.createElement("li");
+  let a = document.createElement("a");
+  a.setAttribute("href", "#");
+  a.setAttribute("class", "list-group-item");
+  a.setAttribute("id", name);
+  a.setAttribute("onclick", onclick + ";event.stopPropagation()");
+  li.setAttribute("role", "presentation");
+  a.appendChild(document.createTextNode(name));
+  a.innerHTML = name;
+  li.appendChild(a);
+
+  if (id === "tag-item-list") {
+    // TODO: tagging support - add delete button here
+  }
+
+  tagList.appendChild(li);
 }
 
 function clearBranchErrorText() {
