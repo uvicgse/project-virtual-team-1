@@ -505,8 +505,6 @@ function searchTag() {
           return repo.getReferences(Git.Reference.TYPE.LISTALL);
         }).then(function (refList) {
           refList.sort();
-          bname = {};
-          tags = {};
           for (let i = 0; i < refList.length; i++) {
 
             // strip name for readability
@@ -519,31 +517,13 @@ function searchTag() {
                 document.getElementById(refName).setAttribute("style","display:block");
               }
             }
-
             lastRefList = refList.slice(); // update lastRefList
-        })
-    });
+        }
+      })
+    }
+  );
 }
 
-function displayTag(name, id, onclick) {
-  let tagList = document.getElementById(id);
-  let li = document.createElement("li");
-  let a = document.createElement("a");
-  a.setAttribute("href", "#");
-  a.setAttribute("class", "list-group-item");
-  a.setAttribute("id", name);
-  a.setAttribute("onclick", onclick + ";event.stopPropagation()");
-  li.setAttribute("role", "presentation");
-  a.appendChild(document.createTextNode(name));
-  a.innerHTML = name;
-  li.appendChild(a);
-
-  if (id === "tag-item-list") {
-    // TODO: tagging support - add delete button here
-  }
-
-  tagList.appendChild(li);
-}
 
 function clearBranchErrorText() {
   // @ts-ignore
