@@ -100,10 +100,15 @@
         <li class="toolbar-Icons" onclick="revertCommit()">
             <a href="#"><img src="./assets/Revert.svg" height="40" width="48" class="add-repository-button" title="Revert"></a>
             <span class="toolbar-Text">Revert</span>
-          </li>
+        </li>
+
+        <!--Stash-->
+        <li class="toolbar-Icons" onclick="showStashModal()">
+            <a href="#"><img src="./assets/stash.png" height="40" width="48" class="add-repository-button" title="Stash"></a>
+            <span class="toolbar-Text">Stash</span>
+        </li>
       </ul>
 
-      
       <ul class="navbar-nav navbar-right hidden-xs">
         <li>
           <label id="githubname" style="color:white"></label>
@@ -405,4 +410,31 @@
       </div>
     </div>
   </div>
+</div>
+
+<!--Modal for adding stash message -->
+<div id="stash-msg-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <!---->
+    <div class="modal-content" id="rep-modal">
+      <div class="modal-header stashMsgModalHeader">
+        <h4 class="modal-title stashMsgModalTitle stashMsgModalComponents" >Create new stash message</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" onclick="clearStashMsgErrorText()" class="stashMsgModalComponents">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!--Stash Message Text-->
+        <h5 type="text" id="stashMsgText" class="stashMsgModalComponents"> Stash Message: </h5>
+        <br>
+        <input type="text" id="stash-msg-name-input" class="form-control stashMsgModalComponents" placeholder="Stash Message">
+        <br>
+        <div class="modal-body stashMsgModalError stashMsgModalComponents" id="stashMsgErrorText"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="stashButton" onclick="stashChanges()">Stash!</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
 </div>

@@ -57,7 +57,7 @@ function sortedListOfCommits(commits){
       }
     }
   }
-  
+
 }
 
 function cloneFromRemote() {
@@ -278,7 +278,7 @@ function getAllCommits(callback) {
         function (cb) {
           if (!refs[count].isRemote()) {
             console.log("referenced branch exists on remote repository");
-            refs[count].peel(Git.Object.TYPE.COMMIT) 
+            refs[count].peel(Git.Object.TYPE.COMMIT)
             .then(function(ref) {
               repos.getCommit(ref)
               .then(function (commit) {
@@ -368,7 +368,7 @@ function pullFromRemote() {
       if (conflicsExist) {
         let conflictedFiles = tid.split("Conflicts:")[1];
         refreshAll(repository);
-       
+
         window.alert("Conflicts exists! Please check the following files:" + conflictedFiles +
          "\n Solve conflicts before you commit again!");
       } else {
@@ -731,6 +731,53 @@ function resetCommit(name: string) {
     });
 }
 
+/**
+ * Clears the fields from the stash message modal.
+ */
+function clearStashMsgErrorText() {
+  // @ts-ignore
+  document.getElementById("stashMsgErrorText").innerText = "";
+  // @ts-ignore
+  document.getElementById("stash-msg-name-input").value = "";
+}
+
+/**
+ * show a dialog to get the stash message
+ */
+function showStashModal() {
+  $('#stash-msg-modal').modal('show');
+}
+
+/**
+ * Stashes all changes (note that only tracked files are stashed.)
+ */
+function stashChanges() {
+  let stashMessage = document.getElementById("stash-msg-name-input").value
+
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      // TODO: allow the user to select various options (include untracked, include ignored, etc.)
+      addCommand("git stash save \"" + stashMessage + "\"")
+      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
+        .then(function(oid) {
+          console.log("change stashed with oid" + oid);
+      }).catch(function(err) {
+        updateModalText("Stash error: " + err.message);
+      })
+      .done(function() {
+        // get rid of the modal
+        $('#stash-msg-modal').modal('hide');
+        // reset the modal's message
+        clearStashMsgErrorText();
+        // All the modified files have been stashed, so update the list of stage/unstaged files
+        clearModifiedFilesList();        
+      });  
+    }, function(err) {
+      // handle any errors
+      console.log("stash error!" + err)
+    });
+}
+
 function revertCommit() {
 
   let repos;
@@ -739,7 +786,7 @@ function revertCommit() {
     sortedListOfCommits(Commits);
      console.log("Commits; "+ commitHistory[0]);
     })
-    
+
     Git.Repository.open(repoFullPath)
     .then(function(repo){
       repos = repo;
@@ -756,7 +803,7 @@ function revertCommit() {
     if(commitHistory[index].parents().length > 1) {
       revertOptions.mainline = 1;
     }
-    
+
     revertOptions.mergeInMenu = 1;
     return Git.Revert.revert(repos, commitHistory[index],revertOptions)
     .then(function(number) {
@@ -817,7 +864,7 @@ function displayModifiedFiles() {
         }
 
         modifiedFiles.forEach(displayModifiedFile);
-        
+
         removeNonExistingFiles();
         refreshColor();
 
@@ -1262,7 +1309,7 @@ function cleanRepo() {
 }
 
 /**
- * This method is called when the sync button is pressed, and causes the fetch-modal 
+ * This method is called when the sync button is pressed, and causes the fetch-modal
  * to appear on the screen.
  */
 function requestLinkModal() {
@@ -1270,7 +1317,7 @@ function requestLinkModal() {
 }
 
 /**
- * This method is called when a valid URL is given via the fetch-modal, and runs the 
+ * This method is called when a valid URL is given via the fetch-modal, and runs the
  * series of git commands which fetch and merge from an upstream repository.
  */
 function fetchFromOrigin() {
