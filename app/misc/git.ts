@@ -432,8 +432,6 @@ export function calcUnpushedCommits() {
   for (let i = 0 ; i < 5; i++){
     countLocalCommits();
     getAllPushedCommits();
-    //console.log("you have " + commit_diff + " pushed commits");
-    //console.log("you have " + total_commit + " total commits");
      calc = total_commit - commit_diff;
 
   }
@@ -1351,8 +1349,6 @@ export function countLocalCommits() {
         return walker.getCommits(1000)
       })
       .then(function (commits) {
-        //console.log("Local commits: " + commits.length);
-        // console.log(commits);
         total_commit = commits.length;
 
       })
@@ -1368,12 +1364,10 @@ export function getAllPushedCommits() {
   var repos;
   var allCommits = [];
   var aclist = [];
-  //console.log("Finding all commits");
+
   Git.Repository.open(repoFullPath)
       .then(function (repo) {
         repos = repo;
-        //console.log("fetching all refs");
-        // console.log( repo.getReferences(Git.Reference.TYPE.LISTALL));
         return repo.getReferences(Git.Reference.TYPE.LISTALL)
       })
       .then(function (refs) {
@@ -1396,9 +1390,6 @@ export function getAllPushedCommits() {
                           }
                           count++;
                           commit_diff = allCommits.length;
-                          //console.log("you have " + commit_diff + " pushed commits");
-                          // var temp = total_commit - commit_diff;
-                          // console.log("push "+ temp + " to remote origin" );
 
                            cb();
 
