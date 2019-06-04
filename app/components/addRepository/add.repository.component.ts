@@ -42,6 +42,7 @@ export class AddRepositoryComponent {
     }
   }
 
+  // Allows retrieval of recent repository list in array form for display
   getRepos() {
     return getRecentRepositories();
   }
