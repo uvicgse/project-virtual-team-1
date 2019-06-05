@@ -1,3 +1,4 @@
+
 let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
@@ -98,12 +99,9 @@ function downloadRepository() {
     // if the user entered a file location to save to
     // set that as the path
     fullLocalPath = document.getElementById("repoSave").value;
-
   } else {
-
     fullLocalPath = document.getElementById("dirPickerSaveNew").files[0].path;
-    console.log(repoFullPath)
-
+    console.log(repoFullPath);
   }
 
   let cloneURL = document.getElementById("repoClone").value;

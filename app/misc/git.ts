@@ -30,10 +30,10 @@ export let commit_diff ;
 
 
 function passReferenceCommits(){
-    Git.Repository.open(repoFullPath)
-        .then(function(commits){
-            sortedListOfCommits(commits);
-        })
+  Git.Repository.open(repoFullPath)
+  .then(function(commits){
+    sortedListOfCommits(commits);
+  })
 }
 
 function sortedListOfCommits(commits){
