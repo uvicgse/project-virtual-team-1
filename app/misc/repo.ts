@@ -1,4 +1,3 @@
-import { calcUnpushedCommits,unpushedCommitsModal }  from '/Users/adebayoogunmuyiwa/Desktop/Desktop/demo/project-virtual-team-1/app/misc/git'
 let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;

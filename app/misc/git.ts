@@ -1,10 +1,8 @@
 import * as nodegit from "git";
-import NodeGit, { Status } from "nodegit";
-import * as simplegit from 'simple-git/promise';
+import NodeGit, { Graph, Status } from "nodegit";
 import {Injectable} from "@angular/core";
 import {callbackify} from "util";
 'use strict';
-
 
 let $ = require("jquery");
 let Git = require("nodegit");
@@ -455,20 +453,18 @@ function pushToRemote() {
 //Takes the number of local commits and the number of remote commits and returns the difference
 //This will be the total number of unpushed commits
 @Injectable()
-export function calcUnpushedCommits() {
-  var calc = 0;
+// export function calcUnpushedCommits() {
+//   var calc = 0;
+//   for(var i = 0; i<5; i++ ){
+//     countLocalCommits();
+//     getAllPushedCommits();
+//      calc = total_commit - commit_diff;
+//
+//   }
+//   return calc;
+//
+// }
 
-  for (let i = 0 ; i < 5; i++){
-    countLocalCommits();
-    getAllPushedCommits();
-    //console.log("you have " + commit_diff + " pushed commits");
-    //console.log("you have " + total_commit + " total commits");
-     calc = total_commit - commit_diff;
-
-  }
-  return calc;
-
-}
 
 //This function has yet to be implemented
 function commitModal() {
@@ -1507,7 +1503,7 @@ function cleanRepo() {
 }
 
 /**
- * This method is called when the sync button is pressed, and causes the fetch-modal 
+ * This method is called when the sync button is pressed, and causes the fetch-modal
  * to appear on the screen.
  */
 function requestLinkModal() {
@@ -1515,7 +1511,7 @@ function requestLinkModal() {
 }
 
 /**
- * This method is called when a valid URL is given via the fetch-modal, and runs the 
+ * This method is called when a valid URL is given via the fetch-modal, and runs the
  * series of git commands which fetch and merge from an upstream repository.
  */
 function fetchFromOrigin() {
@@ -1545,22 +1541,41 @@ function fetchFromOrigin() {
 /**
  * This method implements Git Move to rename or move a given file within a repository using the simple-git library
  */
-
 function moveFile(filesource:string, filedestination:string, skipFileExistTest:boolean = false) {
-  console.log("Moving " + filesource + " in (" + repoFullPath + ") to " + filedestination);
-  addCommand("git mv " + filesource + " " + filedestination);
+    console.log("Moving " + filesource + " in (" + repoFullPath + ") to " + filedestination);
+    addCommand("git mv " + filesource + " " + filedestination);
 
-  // test if file destination already exists or if test is to be skipped
-  if(fs.existsSync(filedestination) || skipFileExistTest){
-    let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
-    sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
+    // test if file destination already exists or if test is to be skipped
+    if (fs.existsSync(filedestination) || skipFileExistTest) {
+        let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
+        sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
             .mv(filesource, filedestination)  //perform GIT MV operation
             .then(() => console.log('move completed'))
             .catch((err) => displayModal('move failed: ' + err));
-  }
-  else{
-    displayModal("Destination directory does not exist");
-  }
+    } else {
+        displayModal("Destination directory does not exist");
+    }
+}
+
+//This function gets the number of commits made on a local repo, either pushed or not
+//The value is stored in total_commit
+@Injectable()
+export function countLocalCommits(callback ){
+      var walker = null;
+
+       Git.Repository.open(repoFullPath).then(function (repo) {
+        walker = repo.createRevWalk();
+        return repo.getHeadCommit().then(function (commit) {
+          walker.sorting(Git.Revwalk.SORT.REVERSE);
+          walker.push(commit.id());
+          walker.sorting
+          walker.pushHead();
+          return walker.getCommits(1000).then(function (commits) {
+             total_commit = commits.length;
+             return callback(total_commit);
+          })
+        })
+      })
 }
 
 //This function counts the total of pushed commits made on a remote repo by walking through the history
