@@ -29,8 +29,11 @@ function getRecentRepositories() {
             recentRepos: []
         }
     }
-    console.log("Collecting recently used repositories: " + repoList.recentRepos);
-    return repoList.recentRepos;
+
+    // reverse for more understandable view
+    displayList = repoList.recentRepos.reverse();
+    console.log("Collecting recently used repositories: " + displayList);
+    return displayList;
 }
 
 // Issue 6
