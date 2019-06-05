@@ -50,12 +50,12 @@ function saveRecentRepositories(repoPath) {
     }
 
     console.log('Updating recent repos');
-    uodatedRepoList = {
+    updatedRepoList = {
         recentRepos: updateRecentRepos(repoList.recentRepos, repoPath)
     }
 
     try {
-      jsonfile.writeFileSync(repoFile, repoList);
+      jsonfile.writeFileSync(repoFile, updatedRepoList);
     } catch (err) {
       console.log(err);
     }
