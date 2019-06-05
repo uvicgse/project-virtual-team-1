@@ -36,29 +36,32 @@
           <p>Location of existing repository</p>
         </div>
         <div class="right">
-          <input type="text" name="repositoryLocal" class = "path-textbox" id="repoOpen"/>
+          <input type="text" name="repositoryLocal" class = "path-textbox" id="repoOpen" list="repos"/>
+          <datalist id="repos">
+            <option *ngFor="let repo of getRepos()">{{repo}}</option>
+          </datalist>
           <button class="button-open" (click)="selectDirectory()">Open</button>
           <input type="file" id="dirPickerOpenLocal" name="dirList" (change)="openRepository()" style="display: none;" webkitdirectory />
         </div>
       </div>
     </div>
-    
+
     <div id="create-local-repository">
 	      <div class="title">
 	        <h1>Create a local repository</h1>
 	      </div>
-	
+
 	      <div class="block">
 	        <div class="left">
 	          <p>Location of folder</p>
 	        </div>
-	
+
 	        <div class="right">
 	          <input type="text" name="folderLocal" class = "path-textbox" id="repoCreate"/>
 	          <button class="button-open" (click)="selectLocalRepoDirectory()">Create</button>
 	          <input type="file" id="dirPickerCreateLocal" name="localDir" (change)="createLocalRepository()" style="display: none;" webkitdirectory />
 	        </div>
-	
+
 	    </div>
   </div>
 </div>

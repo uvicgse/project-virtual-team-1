@@ -22,6 +22,7 @@ let commitID = 0;
 
 
 
+
 function passReferenceCommits(){
   Git.Repository.open(repoFullPath)
   .then(function(commits){
@@ -203,11 +204,12 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-      clearSelectAllCheckbox();
+
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
       addCommand('git commit -m "' + commitMessage + '"');
+
       refreshAll(repository);
     }, function (err) {
       console.log("git.ts, line 112, could not commit, " + err);
@@ -252,10 +254,6 @@ function clearModifiedFilesList() {
 
 function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
-}
-
-function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
 }
 
 function getAllCommits(callback) {
@@ -337,33 +335,27 @@ function pullFromRemote() {
       return repository.fetchAll({
         callbacks: {
           credentials: function () {
-            return cred;
+            return getCredentials();
           },
           certificateCheck: function () {
             return 1;
           }
         }
       });
-    })
     // Now that we're finished fetching, go ahead and merge our local branch
     // with the new one
-    .then(function () {
+    }).then(function () {
       return Git.Reference.nameToId(repository, "refs/remotes/origin/" + branch);
-    })
-    .then(function (oid) {
+    }).then(function (oid) {
       console.log("Looking up commit with id " + oid + " in all repositories");
       return Git.AnnotatedCommit.lookup(repository, oid);
-    }, function (err) {
-      console.log("fetching all remgit.ts, line 251, cannot find repository with old id" + err);
-    })
-    .then(function (annotated) {
+    }).then(function (annotated) {
       console.log("merging " + annotated + "with local forcefully");
       Git.Merge.merge(repository, annotated, null, {
         checkoutStrategy: Git.Checkout.STRATEGY.FORCE,
       });
       theirCommit = annotated;
-    })
-    .then(function () {
+    }).then(function () {
       let conflicsExist = false;
       let tid = "";
       if (readFile.exists(repoFullPath + "/.git/MERGE_MSG")) {
@@ -381,7 +373,13 @@ function pullFromRemote() {
         updateModalText("Successfully pulled from remote branch " + branch + ", and your repo is up to date now!");
         refreshAll(repository);
       }
-    });
+      //anywhere during the above process if there is a error the following catch will catch and report it 
+      //and stop the process then and there. 
+    }).catch(function(err) {
+      console.log(err);
+      updateModalText("Pull Failed : "+err.message);
+    }); 
+    
 }
 
 function pushToRemote() {
@@ -390,29 +388,32 @@ function pushToRemote() {
     .then(function (repo) {
       console.log("Pushing changes to remote")
       displayModal("Pushing changes to remote...");
+      console.log("Branch name: " + branch);
       addCommand("git push -u origin " + branch);
       repo.getRemotes()
-        .then(function (remotes) {
-          repo.getRemote(remotes[0])
-            .then(function (remote) {
-              return remote.push(
+      .then(function (remotes) {
+        repo.getRemote(remotes[0])
+        .then(function (remote) {
+          return remote.push(
                 ["refs/heads/" + branch + ":refs/heads/" + branch],
                 {
                   callbacks: {
                     credentials: function () {
-                      return cred;
+                      return getCredentials();
                     }
                   }
                 }
               );
-            })
-            .then(function () {
-              CommitButNoPush = 0;
-              window.onbeforeunload = Confirmed;
-              console.log("Push successful");
-              updateModalText("Push successful");
-              refreshAll(repo);
-            });
+        }).then(function() {
+          CommitButNoPush = 0;
+          window.onbeforeunload = Confirmed;
+          console.log("Push successful");
+          updateModalText("Push successful");
+          refreshAll(repo);
+        }).catch(function(err) {
+          console.log(err);
+          updateModalText("Push Failed : "+err.message);
+          });            
         });
     });
 }
@@ -586,7 +587,7 @@ function deleteRemoteBranch() {
               {
                 callbacks: { // pass in user credentials as a parameter
                   credentials: function () {
-                    return cred;
+                    return getCredentials();
                   }
                 }
               }).then(function () {
@@ -640,6 +641,65 @@ function mergeLocalBranches(element) {
       console.log(text);
       updateModalText(text);
       refreshAll(repos);
+    });
+}
+
+// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails. 
+// Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
+function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
+  let repo;
+  Git.Repository.open(repoFullPath)
+    .then(function(repoParam) {
+      repo = repoParam;
+    })
+    .then(function() {
+      return repo.getCommit(commitSha);
+    })
+    .then(function(commit){
+      //The '0' parameter indicates that we are creating the tag without the '--force' option, so tags will not be overwritten
+      if (message == undefined) {
+        return Git.Tag.createLightweight(repo, tagName, commit, 0);
+      } else {
+        return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
+      }
+    })
+    .then(function(tagOid){      
+      // Push the tag if desired
+      if (pushTag) {
+        console.log("Pushing tag: " + tagName);
+        return repo.getRemotes()
+          .then(function (remotes) {
+            return repo.getRemote(remotes[0]);
+          })
+          .then(function(remote){
+            return remote.push(
+              ["refs/tags/" + tagName + ":refs/tags/" + tagName],
+              {
+                callbacks: {
+                  credentials: function () {
+                    return getCredentials();
+                  }
+                }
+              }
+            );
+          }).then(function(){
+            console.log("Successfully pushed tag: " + tagName);
+          });
+      }
+    })
+    .then(function(){
+      //Refresh the repository to display the new changes in the graph
+      $("#createTagModal").modal('hide');
+      updateModalText("Successfully created tag " + tagName + ".")
+      refreshAll(repo)
+    })
+    .catch(function(msg){
+      let errorMessage = "Error: " + msg.message;
+      console.log(errorMessage);
+      $("#createTagError")[0].innerHTML = errorMessage;
+
+      // Re-enable the submit button
+      $("#createTagModalCreateButton")[0].disabled = false;
     });
 }
 
@@ -756,6 +816,53 @@ function resetCommit(name: string) {
       refreshAll(repos);
     }, function (err) {
       updateModalText(err);
+    });
+}
+
+/**
+ * Clears the fields from the stash message modal.
+ */
+function clearStashMsgErrorText() {
+  // @ts-ignore
+  document.getElementById("stashMsgErrorText").innerText = "";
+  // @ts-ignore
+  document.getElementById("stash-msg-name-input").value = "";
+}
+
+/**
+ * show a dialog to get the stash message
+ */
+function showStashModal() {
+  $('#stash-msg-modal').modal('show');
+}
+
+/**
+ * Stashes all changes (note that only tracked files are stashed.)
+ */
+function stashChanges() {
+  let stashMessage = document.getElementById("stash-msg-name-input").value
+
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      // TODO: allow the user to select various options (include untracked, include ignored, etc.)
+      addCommand("git stash save \"" + stashMessage + "\"")
+      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
+        .then(function(oid) {
+          console.log("change stashed with oid" + oid);
+      }).catch(function(err) {
+        updateModalText("Stash error: " + err.message);
+      })
+      .done(function() {
+        // get rid of the modal
+        $('#stash-msg-modal').modal('hide');
+        // reset the modal's message
+        clearStashMsgErrorText();
+        // All the modified files have been stashed, so update the list of stage/unstaged files
+        clearModifiedFilesList();        
+      });  
+    }, function(err) {
+      // handle any errors
+      console.log("stash error!" + err)
     });
 }
 
@@ -1324,3 +1431,7 @@ function fetchFromOrigin() {
     displayModal("No Path Found.")
   }
 }
+
+
+
+

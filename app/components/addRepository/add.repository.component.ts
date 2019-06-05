@@ -6,14 +6,12 @@ import { Component } from "@angular/core";
 })
 
 export class AddRepositoryComponent {
-
-
   selectClone(): void {
     if (document.getElementById("repoClone").value == null || document.getElementById("repoClone").value == "") {
       window.alert("Please enter the URL of the repository you wish to clone");
     } else if (document.getElementById("repoSave").value == null || document.getElementById("repoSave").value == "") {
       updateLocalPath();
-    
+
     } else {
       // If directory is specified, continue as normal
       this.addRepository();
@@ -42,6 +40,11 @@ export class AddRepositoryComponent {
     }else {
       this.createLocalRepository();
     }
+  }
+
+  // Allows retrieval of recent repository list in array form for display
+  getRepos() {
+    return getRecentRepositories();
   }
 
   addRepository(): void {

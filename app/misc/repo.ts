@@ -14,6 +14,82 @@ let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
 let lastRefList = [];
+let jsonfile = require('jsonfile');
+
+// Issue 6
+// Retrieve repos from repos.json
+function getRecentRepositories() {
+    let repoFile = 'repos.json';
+    let repoList;
+
+    try {
+        repoList = JSON.parse(checkFile.readFileSync(repoFile));
+    } catch (err) {
+        console.log('Cannot read ' + repoFile);
+        repoList = {
+            recentRepos: []
+        }
+    }
+
+    // reverse for more understandable view
+    displayList = repoList.recentRepos.reverse();
+    console.log("Collecting recently used repositories: " + displayList);
+    return displayList;
+}
+
+// Issue 6
+// Save repo entry to repos.json
+function saveRecentRepositories(repoPath) {
+    let repoFile = 'repos.json';
+    let repoList;
+    let recentRepos;
+
+    try {
+        repoList = JSON.parse(checkFile.readFileSync(repoFile));
+    } catch (err) {
+        console.log('Cannot read ' + repoFile);
+        repoList = {
+            recentRepos: []
+        }
+    }
+
+    console.log('Updating recent repos');
+    updatedRepoList = {
+        recentRepos: updateRecentRepos(repoList.recentRepos, repoPath)
+    }
+
+    try {
+      jsonfile.writeFileSync(repoFile, updatedRepoList);
+    } catch (err) {
+      console.log(err);
+    }
+}
+
+// Issue 6
+// Update recent repo list
+function updateRecentRepos(recentRepos, repoToAdd) {
+    let maxRepos = 5;
+
+    if (recentRepos === undefined) {
+        let newList = [repoToAdd];
+        return newList;
+    }
+
+    for (let i = 0; i < recentRepos.length; i++) {
+        if (recentRepos[i] === repoToAdd) {
+            // using splice as suggested by:
+            // https://stackoverflow.com/questions/15292278/how-do-i-remove-an-array-item-in-typescript
+            recentRepos.splice(i, 1);
+        }
+    }
+    recentRepos.push(repoToAdd);
+
+    if (recentRepos.length > maxRepos) {
+        console.log('Removing head of list')
+        recentRepos.splice(0, 1);
+    }
+    return recentRepos;
+}
 
 function downloadRepository() {
   let fullLocalPath;
@@ -37,6 +113,8 @@ function downloadRepository() {
     switchToAddRepositoryPanel();
   } else {
     downloadFunc(cloneURL, fullLocalPath);
+    // save to recent repos
+    saveRecentRepositories(fullLocalPath);
   }
 }
 
@@ -119,6 +197,9 @@ function openRepository() {
         fullLocalPath = require("path").join(__dirname, localPath);
       }
     }
+
+    console.log('Saving repository path');
+    saveRecentRepositories(fullLocalPath);
 
     console.log("Trying to open repository at " + fullLocalPath);
     displayModal("Opening Local Repository...");
@@ -240,6 +321,9 @@ function openRepository() {
           //console.log("repo.ts, line 131, cannot open repository: "+err); // TODO show error on screen
         });
     }
+
+    // save file to repos
+    saveRecentRepositories(fullLocalPath);
   }
 
   function addBranchestoNode(thisB: string) {
@@ -302,13 +386,19 @@ function refreshList(verbose) {
                   bname[oid.tostrS()] = [refList[i]];
                 }
               } else if (refList[i].isTag()){
-                if (verbose) { console.log(refName + ": adding tag to end of " + oid.tostrS()); }
-                // add to list of tags
-                if (oid.tostrS() in tags) {
-                  tags[oid.tostrS()].push(refList[i]);
-                } else {
-                  tags[oid.tostrS()] = [refList[i]];
-                }
+                // use peel() to get real commit SHA string from oid
+                refList[i].peel(Git.Object.TYPE.COMMIT)
+                  .then(ref => Git.Commit.lookup(repo, ref.id()))
+                  .then(function (commit) {
+                      if (verbose) { console.log(refName + ": adding tag to end of " + commit.sha()); }
+                      // add to list of tags
+                      if (commit.sha() in tags) {
+                          tags[commit.sha()].push(refList[i]);
+                      } else {
+                          tags[commit.sha()] = [refList[i]];
+                      }
+                  });
+
               } else{
                 console.log("Unsupported reference: " + refList[i].name());
               }
@@ -384,6 +474,7 @@ function refreshList(verbose) {
       });
   }
 
+  // Displaying branches in a dropdown menu
   function getAllBranches() {
     let repos;
     Git.Repository.open(repoFullPath)
@@ -453,6 +544,7 @@ function refreshList(verbose) {
     })
   }
 
+// Adding features to branch dropdown menu
   function displayBranch(name, id, onclick) {
     let ul = document.getElementById(id);
     let li = document.createElement("li");
@@ -517,6 +609,7 @@ function refreshList(verbose) {
     ul.appendChild(li);
   }
 
+// Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
     let tagList = document.getElementById(id);
     let li = document.createElement("li");
