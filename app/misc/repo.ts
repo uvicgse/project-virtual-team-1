@@ -616,6 +616,7 @@ function refreshList(verbose) {
     let a = document.createElement("a");
     a.setAttribute("href", "#");
     a.setAttribute("class", "list-group-item");
+    a.setAttribute("id", name);
     a.setAttribute("onclick", onclick + ";event.stopPropagation()");
     li.setAttribute("role", "presentation");
     a.appendChild(document.createTextNode(name));

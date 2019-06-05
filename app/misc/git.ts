@@ -496,6 +496,36 @@ function createBranch() {
   }
 }
 
+// search for tags
+function searchTag() {
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getCurrentBranch()
+        .then(function () {
+          // grab the list of references - these could be branches or tags
+          return repo.getReferences(Git.Reference.TYPE.LISTALL);
+        }).then(function (refList) {
+          for (let i = 0; i < refList.length; i++) {
+
+            // strip name for readability
+            let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+            if (refList[i].isTag()){
+              if (refName.indexOf( document.getElementById("tag-name").value ) > -1) {
+                var attribute = "display:block";
+              } else {
+                var attribute = "display:none";
+              }
+              document.getElementById(refName).setAttribute("style", attribute);
+            }
+          }
+        }
+      )
+    }
+  );
+}
+
+
 function clearBranchErrorText() {
   // @ts-ignore
   document.getElementById("branchErrorText").innerText = "";
@@ -917,7 +947,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage);
+            filePanelMessage.parentNode.removeChild(filePanelMessage); 
           }
         }
 
