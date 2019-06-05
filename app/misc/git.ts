@@ -22,6 +22,7 @@ let commitID = 0;
 
 
 
+
 function passReferenceCommits(){
   Git.Repository.open(repoFullPath)
   .then(function(commits){
@@ -203,11 +204,12 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-      clearSelectAllCheckbox();
+
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
       addCommand('git commit -m "' + commitMessage + '"');
+
       refreshAll(repository);
     }, function (err) {
       console.log("git.ts, line 112, could not commit, " + err);
@@ -252,10 +254,6 @@ function clearModifiedFilesList() {
 
 function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
-}
-
-function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
 }
 
 function getAllCommits(callback) {
@@ -390,6 +388,7 @@ function pushToRemote() {
     .then(function (repo) {
       console.log("Pushing changes to remote")
       displayModal("Pushing changes to remote...");
+      console.log("Branch name: " + branch);
       addCommand("git push -u origin " + branch);
       repo.getRemotes()
       .then(function (remotes) {
@@ -1402,3 +1401,7 @@ function fetchFromOrigin() {
     displayModal("No Path Found.")
   }
 }
+
+
+
+
