@@ -1,6 +1,7 @@
 import * as nodegit from "git";
-import NodeGit, { Status } from "nodegit";
+import NodeGit, { Graph, Status } from "nodegit";
 import {Injectable} from "@angular/core";
+import {callbackify} from "util";
 'use strict';
 
 let $ = require("jquery");
@@ -21,8 +22,8 @@ let commitHistory = [];
 let commitToRevert = 0;
 let commitHead = 0;
 let commitID = 0;
-let total_commit = 0;
-let commit_diff = 0;
+export let total_commit ;
+export let commit_diff ;
 
 
 function passReferenceCommits(){
@@ -60,7 +61,7 @@ function sortedListOfCommits(commits){
       }
     }
   }
-  
+
 }
 
 function cloneFromRemote() {
@@ -284,7 +285,7 @@ function getAllCommits(callback) {
         function (cb) {
           if (!refs[count].isRemote()) {
             console.log("referenced branch exists on remote repository");
-            refs[count].peel(Git.Object.TYPE.COMMIT) 
+            refs[count].peel(Git.Object.TYPE.COMMIT)
             .then(function(ref) {
               repos.getCommit(ref)
               .then(function (commit) {
@@ -380,7 +381,7 @@ function pullFromRemote() {
       if (conflicsExist) {
         let conflictedFiles = tid.split("Conflicts:")[1];
         refreshAll(repository);
-       
+
         window.alert("Conflicts exists! Please check the following files:" + conflictedFiles +
          "\n Solve conflicts before you commit again!");
       } else {
@@ -426,30 +427,18 @@ function pushToRemote() {
 //Takes the number of local commits and the number of remote commits and returns the difference
 //This will be the total number of unpushed commits
 @Injectable()
-export function calcUnpushedCommits() {
-  var calc = 0;
+// export function calcUnpushedCommits() {
+//   var calc = 0;
+//   for(var i = 0; i<5; i++ ){
+//     countLocalCommits();
+//     getAllPushedCommits();
+//      calc = total_commit - commit_diff;
+//
+//   }
+//   return calc;
+//
+// }
 
-  for (let i = 0 ; i < 5; i++){
-    countLocalCommits();
-    getAllPushedCommits();
-     calc = total_commit - commit_diff;
-
-  }
-  return calc;
-
-}
-
-//This calls calcUnpushedCommits() and displays the dialog box to the user
-//We have to call the function once to initialize the API call, and then again to calculate
-//This is a limitation of async functions in our version of angular and node
-@Injectable()
-export function unpushedCommitsModal() {
-  var calc = 0;
-  calc = calcUnpushedCommits();
-  
-  console.log("Number of un-pushed commits: " + calc);
-  updateModalText("Number of un-pushed commits: " + calc);
-}
 
 //This function has yet to be implemented
 function commitModal() {
@@ -772,7 +761,7 @@ function revertCommit() {
     sortedListOfCommits(Commits);
      console.log("Commits; "+ commitHistory[0]);
     })
-    
+
     Git.Repository.open(repoFullPath)
     .then(function(repo){
       repos = repo;
@@ -789,7 +778,7 @@ function revertCommit() {
     if(commitHistory[index].parents().length > 1) {
       revertOptions.mainline = 1;
     }
-    
+
     revertOptions.mergeInMenu = 1;
     return Git.Revert.revert(repos, commitHistory[index],revertOptions)
     .then(function(number) {
@@ -850,7 +839,7 @@ function displayModifiedFiles() {
         }
 
         modifiedFiles.forEach(displayModifiedFile);
-        
+
         removeNonExistingFiles();
         refreshColor();
 
@@ -1295,7 +1284,7 @@ function cleanRepo() {
 }
 
 /**
- * This method is called when the sync button is pressed, and causes the fetch-modal 
+ * This method is called when the sync button is pressed, and causes the fetch-modal
  * to appear on the screen.
  */
 function requestLinkModal() {
@@ -1303,7 +1292,7 @@ function requestLinkModal() {
 }
 
 /**
- * This method is called when a valid URL is given via the fetch-modal, and runs the 
+ * This method is called when a valid URL is given via the fetch-modal, and runs the
  * series of git commands which fetch and merge from an upstream repository.
  */
 function fetchFromOrigin() {
@@ -1333,33 +1322,37 @@ function fetchFromOrigin() {
 //This function gets the number of commits made on a local repo, either pushed or not
 //The value is stored in total_commit
 @Injectable()
-export function countLocalCommits() {
-  var walker = null;
+export function countLocalCommits(callback ){
+      var walker = null;
 
-  Git.Repository.open(repoFullPath)
-      .then(function (repo) {
+       Git.Repository.open(repoFullPath).then(function (repo) {
         walker = repo.createRevWalk();
-        return repo.getHeadCommit();
+        return repo.getHeadCommit().then(function (commit) {
+          walker.sorting(Git.Revwalk.SORT.REVERSE);
+          walker.push(commit.id());
+          walker.sorting
+          walker.pushHead();
+          return walker.getCommits(1000).then(function (commits) {
+             total_commit = commits.length;
+             return callback(total_commit);
+          })
+        })
       })
-      .then(function (commit) {
-        walker.sorting(Git.Revwalk.SORT.REVERSE);
-        walker.push(commit.id());
-        walker.sorting
-        walker.pushHead();
-        return walker.getCommits(1000)
-      })
-      .then(function (commits) {
-        total_commit = commits.length;
 
-      })
+
+
+
 
 }
 
+
+
+
 //This function counts the total of pushed commits made on a remote repo by walking through the history
-//The number of commits are grabbed using an async function 
+//The number of commits are grabbed using an async function
 //The number of commits is stored in commit_diff
 @Injectable()
-export function getAllPushedCommits() {
+export function getAllPushedCommits(callback) {
   clearModifiedFilesList();
   var repos;
   var allCommits = [];
@@ -1390,7 +1383,7 @@ export function getAllPushedCommits() {
                           }
                           count++;
                           commit_diff = allCommits.length;
-
+                          return callback(commit_diff);
                            cb();
 
                         });
@@ -1405,3 +1398,36 @@ export function getAllPushedCommits() {
       });
 
 }
+
+
+
+//This calls calcUnpushedCommits() and displays the dialog box to the user
+//We have to call the function once to initialize the API call, and then again to calculate
+//This is a limitation of async functions in our version of angular and node
+// @Injectable()
+// export function unpushedCommitsModal() {
+//   var countLocalCommits_value =0;
+//
+//   countLocalCommits(function (response) {
+//       if(typeof total_commit === "undefined" ){
+//         countLocalCommits(response);
+//
+//         //updateModalText("Number of un-pushed commits: " +(total_commit - commit_diff));
+//
+//       }
+//       else {
+//         getAllPushedCommits(function (response_2) {
+//           if (typeof commit_diff === "undefined") {
+//             getAllPushedCommits(response_2);
+//           } else {
+//             console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
+//             updateModalText("Number of un-pushed commits: " + (total_commit - commit_diff));
+//           }
+//         })
+//
+//       }
+//
+//     })
+//
+// }
+

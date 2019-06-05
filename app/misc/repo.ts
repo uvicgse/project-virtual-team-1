@@ -1,3 +1,5 @@
+import {getAllPushedCommits} from "/Users/adebayoogunmuyiwa/Desktop/Desktop/demo/project-virtual-team-1/app/misc/git";
+
 let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
@@ -13,6 +15,8 @@ let span;
 let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
+
+import {countLocalCommits,total_commit,commit_diff} from "/Users/adebayoogunmuyiwa/Desktop/Desktop/demo/project-virtual-team-1/app/misc/git"
 
 
 function downloadRepository() {
@@ -121,7 +125,8 @@ function openRepository() {
     }
 
     console.log("Trying to open repository at " + fullLocalPath);
-    displayModal("Opening Local Repository...");
+   // displayModal("Opening Local Repository...");
+
 
     Git.Repository.open(fullLocalPath).then(function (repository) {
       repoFullPath = fullLocalPath;
@@ -181,9 +186,30 @@ function openRepository() {
 
       }
       document.getElementById('spinner').style.display = 'block';
+
       refreshAll(repository);
+      //This calls the countLocalCommits and getAllPushedCommits functions in git.ts
+      //we make sure each function variables are updated before we use it to calcualte the unpushed commits
+
+          countLocalCommits(function (response) {
+            if(typeof total_commit === "undefined" ){
+              countLocalCommits(response);
+            }
+            else {
+              getAllPushedCommits(function (response_2) {
+                if (typeof commit_diff === "undefined") {
+                  getAllPushedCommits(response_2);
+                } else {
+                  console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
+                  updateModalText("Number of un-pushed commits: " + (total_commit - commit_diff));
+                }
+              })
+
+            }
+
+          })
       console.log("Repo successfully opened");
-      updateModalText("Repository successfully opened");
+
     },
       function (err) {
         updateModalText("No repository found. Select a folder with a repository.");
@@ -230,7 +256,9 @@ function openRepository() {
         repoLocalPath = localPath;
         refreshAll(repository);
         //console.log("Repo successfully created");
-        updateModalText("Repository successfully created");
+       // updateModalText("Repository successfully created");
+        unpushedCommitsModal();
+
         document.getElementById("repoCreate").value = "";
         document.getElementById("dirPickerCreateLocal").value = null;
         switchToMainPanel();

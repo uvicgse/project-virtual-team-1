@@ -8,8 +8,8 @@ const { globalShortcut } = require('electron');
 
 
 // adds debug features like hotkeys for triggering dev tools and reload
-require('electron-debug')();
-
+const debug = require('electron-debug');
+debug();
 // prevent window being garbage collected
 let mainWindow;
 let popupWindow;
