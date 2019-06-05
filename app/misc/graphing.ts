@@ -475,6 +475,7 @@ function makeAbsNode(c, column: number) {
     let email = stringer.split("%")[1];
     let flag = true;
     let count = 1;
+    let nodeId;
     if (c.parents().length === 1) {
         let cp = c.parents()[0].toString();
         for (let i = 0; i < abstractList.length; i++) {
@@ -484,9 +485,40 @@ function makeAbsNode(c, column: number) {
                 abstractList[i]['count'] += 1;
                 count = abstractList[i]['count'];
                 abstractList[i]['sha'].push(c.toString());
-                abNodes.update({id: i+1, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
+                nodeId = i+1;
+                abNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
                 break;
             }
+        }
+    }
+
+    // Initializing viewable tags in second zoom graph level
+    if (c.toString() in tags) {
+        for (let i = 0; i < tags[c.toString()].length; i++) {
+            let tagName = tags[c.toString()][i];
+            let tp = tagName.name().split("/");
+            let shortTagName = tp[tp.length - 1];
+            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            if (tagName.isHead()) {
+                shortTagName = "*" + shortTagName;
+            }
+            let bsnodeId = generateUniqueNumber();
+            abNodes.add({
+                id: bsnodeId,
+                shape: "ellipse",
+                // color: "teal",
+                title: tagName, // hover text
+                label: shortTagName, // shown under/in shape
+                physics: false,
+                fixed: false,
+                x: (column - 0.6 * (i + 1)) * tagSpacingX,
+                y: (nodeId - 0.3) * tagSpacingY,
+            });
+
+            abEdges.add({
+                from: bsnodeId,
+                to: nodeId
+            });
         }
     }
 
@@ -528,36 +560,6 @@ function makeAbsNode(c, column: number) {
                     x: (column - 0.6 * (i + 1)) * spacingX,
                     y: (id - 0.3) * spacingY,
                     nodeType: NodeType.Branch
-                });
-
-                abEdges.add({
-                    from: bsnodeId,
-                    to: id
-                });
-            }
-        }
-
-        // Initializing viewable tags in second zoom graph level
-        if (c.toString() in tags) {
-            for (let i = 0; i < tags[c.toString()].length; i++) {
-                let tagName = tags[c.toString()][i];
-                let tp = tagName.name().split("/");
-                let shortTagName = tp[tp.length - 1];
-                console.log(shortTagName + " tag: " + tagName.isHead().toString());
-                if (tagName.isHead()) {
-                    shortTagName = "*" + shortTagName;
-                }
-                let bsnodeId = generateUniqueNumber();
-                abNodes.add({
-                    id: bsnodeId,
-                    shape: "ellipse",
-                    // color: "teal",
-                    title: tagName, // hover text
-                    label: shortTagName, // shown under/in shape
-                    physics: false,
-                    fixed: false,
-                    x: (column - 0.6 * (i + 1)) * tagSpacingX,
-                    y: (id - 0.3) * tagSpacingY,
                 });
 
                 abEdges.add({
