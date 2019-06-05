@@ -15,6 +15,17 @@ let columns: boolean[] = [];
 let edgeDic = {};
 let numOfCommits = 0;
 let branchIds = {};
+let selectedCommit: string;
+
+/* 
+Types of nodes in the network.
+    Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
+    Abstract = Commit node in the second zoom level . Represents a collection of commits
+    Node = Commit node in the lowest zoom level (3rd level). Represents a a single commit
+    Branch = Represents a branch reference. Is linked to a single commit node
+    Tag = Represents a tag reference. Is linked to a single commit node
+*/
+enum NodeType{Basic, Abstract, Node, Branch, Tag}
 
 function processGraph(commits: nodegit.Commit[]) {
     var promise = new Promise(function(resolve,reject){
@@ -346,7 +357,8 @@ function makeBasicNode(c, column: number) {
             fixed: false,
             x: (column - 1) * spacingX,
             y: (id - 1) * spacingY,
-            author: c.author()
+            author: c.author(),
+            nodeType: NodeType.Basic
         });
 
         let shaList = [];
@@ -382,6 +394,7 @@ function makeBasicNode(c, column: number) {
                 fixed: false,
                 x: (column - 0.6 * (i + 1)) * spacingX,
                 y: (id - 0.3) * spacingY,
+                nodeType: NodeType.Branch
             });
 
             bsEdges.add({
@@ -429,7 +442,8 @@ function makeAbsNode(c, column: number) {
             fixed: false,
             x: (column - 1) * spacingX,
             y: (id - 1) * spacingY,
-            author: c.author()
+            author: c.author(),
+            nodeType: NodeType.Abstract
         });
 
         if (c.toString() in bname) {
@@ -450,6 +464,7 @@ function makeAbsNode(c, column: number) {
                     fixed: false,
                     x: (column - 0.6 * (i + 1)) * spacingX,
                     y: (id - 0.3) * spacingY,
+                    nodeType: NodeType.Branch
                 });
 
                 abEdges.add({
@@ -492,7 +507,9 @@ function makeNode(c, column: number) {
         fixed: false,
         x: (column - 1) * spacingX,
         y: (id - 1) * spacingY,
-        author: c.author()
+        author: c.author(),
+        nodeType: NodeType.Node,
+        commitSha: c.sha()
     });
 
     if (c.toString() in bname) {
@@ -513,6 +530,7 @@ function makeNode(c, column: number) {
                 fixed: false,
                 x: (column - 0.6 * (i + 1)) * spacingX,
                 y: (id - 0.3) * spacingY,
+                nodeType: NodeType.Branch
             });
 
             edges.add({
@@ -566,4 +584,8 @@ function reCenter() {
     };
 
     network.focus(commitList[commitList.length - 1]["id"], moveOptions);
+}
+
+function getSelectedCommit() {
+    return selectedCommit;
 }

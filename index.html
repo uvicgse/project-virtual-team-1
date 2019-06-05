@@ -29,7 +29,6 @@
     <link href="node_modules/vis/dist/vis.min.css" rel="stylesheet" type="text/css">
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="node_modules/core-js/client/shim.min.js"></script>
     <script src="node_modules/zone.js/dist/zone.js"></script>
     <script src="node_modules/reflect-metadata/Reflect.js"></script>
     <script src="node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.js"></script>
@@ -98,7 +97,13 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(function() {
     displayModifiedFiles();
   }, 3000);
+
+  // monitor changes on branch list and tag list, 1 check per second
+  setInterval(function () {
+    refreshList(false);
+  }, 1000);
 }, false);
+
 
 $('#repo-modal').on('hidden.bs.modal', function (e) {
   console.log(e+"Disabling clone button");

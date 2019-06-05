@@ -47,7 +47,7 @@ ul{
   position: relative;
 }
 .navbar .navbar-collapse .navbar-right > li:last-child {
-  padding-left: 22px;
+  padding-left: 30px;
 }
 .navbar .nav-collapse {
   position: absolute;
@@ -197,6 +197,7 @@ body .navbar .dropdown-menu .select-menu-list {
   position: relative;
   overflow-y: scroll;
   max-height: 50vh;
+  outline: none;
 }
 
 body .navbar .dropdown-menu .select-menu-list .list-group-item {
@@ -217,8 +218,8 @@ body .navbar .dropdown-menu .select-menu-list .list-group-item:hover {
 }
 
 #visual-git-logo{
-  width: 150px; 
-  height: 150px; 
+  width: 150px;
+  height: 150px;
 }
 
 /*body .navbar .repo-name {
@@ -306,6 +307,7 @@ body .file-panel .staging-buttons {
   border-radius: 10px;
   border: 0;
   padding: 0 15px;
+  white-space: nowrap;
   background-color: #39c0ba;
   color: #fff;
 }
@@ -530,6 +532,7 @@ body .footer .commit-panel .commit-button-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
 }
 
 body .footer .commit-panel .commit-button-wrapper .commit-button {
@@ -544,6 +547,7 @@ body .footer .commit-panel .commit-button-wrapper .commit-button {
   padding: 0 15px;
   background-color: #39c0ba;
   color: #fff;
+  white-space: nowrap;
 }
 
 body .footer .commit-panel .commit-button:hover {
@@ -561,7 +565,7 @@ body .footer .terminal{
 
 body .footer{
   display: flex;
-  flex-flow: row wrap; 
+  flex-flow: row wrap;
 }
 
 .file-created {
@@ -627,7 +631,7 @@ div.editor-header button.close-button, div.editor-header button.open-button, but
   color: #fff;
 }
 
-div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover { 
+div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover {
   opacity: 0.8;
 }
 
@@ -734,7 +738,7 @@ div.selected-commit-diff-panel button.close-button {
 
 /*Toolbar Styles*/
 .toolbar-Container {
-  /*max-height: 75px;*/
+  max-height: 65px;
  }
 
 .toolbar-Icons {
@@ -747,7 +751,7 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .toolbar-Icons:hover {
-  
+
   text-align: center;
   cursor: pointer;
   padding: 10px;
@@ -822,7 +826,7 @@ div.wiki-header button.close-button, div.wiki-header button.open-button {
 
 #open-editor-button {
   float: right;
-  margin-right: 10px; 
+  margin-right: 10px;
   visibility: hidden;
 }
 
@@ -1072,6 +1076,26 @@ body .pull-request-panel {
   margin: auto;
   width: 90%;
 }
-/*
- End of pull request css.
-*/
+
+.context-menu{
+  position: absolute;
+  display: none;
+}
+
+.context-menu .dropdown-menu{
+  display: list-item;
+}
+
+.modal-body label { 
+  display: inline-block; 
+  width: 20%; 
+  text-align: left; 
+}
+
+.modal-error {
+  float: left;
+  position: relative;
+  color: red;
+  font-size: larger;
+  max-width: 70%;
+}
