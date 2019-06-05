@@ -107,6 +107,18 @@
             <a href="#"><img src="./assets/stash.png" height="40" width="48" class="add-repository-button" title="Stash"></a>
             <span class="toolbar-Text">Stash</span>
         </li>
+
+        <!--Add Upstream Remote Respository-->
+        <li class="toolbar-Icons" onclick="addRemoteModal()">
+            <a href="#"><img src="./assets/addremote.png" height="40" width="48" class="add-repository-button" title="Add Remote"></a>
+            <span class="toolbar-Text">Remote</span>
+        </li>
+
+        <!--Sync-->
+        <li class="toolbar-Icons" onclick="syncFromFork()">
+            <a href="#"><img src="./assets/sync.png" height="40" width="48" class="add-repository-button" title="Sync"></a>
+            <span class="toolbar-Text">Sync</span>
+        </li>
       </ul>
 
       <ul class="navbar-nav navbar-right hidden-xs">
@@ -452,4 +464,27 @@
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
+</div>
+
+<!--Modal for adding remote upstream repository-->
+<div id="add-remote-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content" style=" width: 602px !important">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Info</h4>
+      </div>
+      <div class="modal-body" id="modal-text-box">
+        Please provide the HTTP path to the original repository:
+        <input type="text" id="origin-path" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="addRemoteRepo()">Confirm</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>

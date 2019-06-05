@@ -1317,6 +1317,29 @@ function requestLinkModal() {
 }
 
 /**
+ * after the remote button is pressedo ws the modal for adding the remote repo
+ */
+function addRemoteModal() {
+  $('#add-remote-modal').modal('show');
+}
+
+/**
+ * not done
+ * nodegit reference: https://www.nodegit.org/api/remote/
+ */
+function saveRemoteRepo() {
+  $('#add-remote-modal').modal('show');
+  let upstreamRepoPath = document.getElementById("origin-path").value;
+  addCommand("git remote add upstream " + upstreamRepoPath);
+  var addRemote = Git.Remote.setUrl(repoFullPath, "origin", upstreamRepoPath);
+  if addRemote {
+    console.log("success");
+  } else {
+    console.log("error in adding remote repository")
+  }
+}
+
+/**
  * This method is called when a valid URL is given via the fetch-modal, and runs the
  * series of git commands which fetch and merge from an upstream repository.
  */
@@ -1330,7 +1353,7 @@ function fetchFromOrigin() {
         displayModal("Beginning Synchronisation...");
         addCommand("git remote add upstream " + upstreamRepoPath);
         addCommand("git fetch upstream");
-        addCommand("git merge upstrean/master");
+        addCommand("git merge upstream/master");
         console.log("fetch successful")
         updateModalText("Synchronisation Successful");
         refreshAll(repo);
