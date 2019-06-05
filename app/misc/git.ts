@@ -504,7 +504,6 @@ function searchTag() {
           // grab the list of references - these could be branches or tags
           return repo.getReferences(Git.Reference.TYPE.LISTALL);
         }).then(function (refList) {
-          refList.sort();
           for (let i = 0; i < refList.length; i++) {
 
             // strip name for readability
@@ -512,12 +511,12 @@ function searchTag() {
 
             if (refList[i].isTag()){
               if (refName.indexOf( document.getElementById("tag-name").value ) > -1) {
-                document.getElementById(refName).setAttribute("style","display:block");
+                var attribute = "display:block";
               } else {
-                document.getElementById(refName).setAttribute("style","display:none");
+                var attribute = "display:none";
               }
+              document.getElementById(refName).setAttribute("style", attribute);
             }
-            lastRefList = refList.slice(); // update lastRefList
           }
         }
       )
@@ -841,7 +840,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.Child(filePanelMessage);
+            filePanelMessage.parentNode.removeChild(filePanelMessage); 
           }
         }
 
