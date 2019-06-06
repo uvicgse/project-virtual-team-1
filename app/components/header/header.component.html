@@ -430,7 +430,6 @@
 <!--Modal for adding stash message -->
 <div id="stash-msg-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
-    <!---->
     <div class="modal-content" id="rep-modal">
       <div class="modal-header stashMsgModalHeader">
         <h4 class="modal-title stashMsgModalTitle stashMsgModalComponents" >Create new stash message</h4>
@@ -445,6 +444,9 @@
         <input type="text" id="stash-msg-name-input" class="form-control stashMsgModalComponents" placeholder="Stash Message">
         <br>
         <div class="modal-body stashMsgModalError stashMsgModalComponents" id="stashMsgErrorText"></div>
+        <!-- Allow the user to select to stash untracked files-->
+        <!-- Checkbox to allow the user to stash untracked files -->
+        <input type="checkbox" id="untracked-files-checkbox" class="form-control stashMsgModalComponents">Include Untracked Files<br>
       </div>
 
       <div class="modal-footer">
