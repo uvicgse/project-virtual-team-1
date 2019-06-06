@@ -808,6 +808,21 @@ function showStashModal() {
   $('#stash-msg-modal').modal('show');
 }
 
+function handleStashError(err) {
+  // handle any errors
+  console.log("stash error!" + err)
+  updateModalText("Stash error: " + err.message);
+}
+
+function doneStash() {
+  // get rid of the modal
+  $('#stash-msg-modal').modal('hide');
+  // reset the modal's message
+  clearStashMsgErrorText();
+  // All the modified files have been stashed, so update the list of stage/unstaged files
+  clearModifiedFilesList();
+}
+
 /**
  * Stashes all changes (note that only tracked files are stashed.)
  */
@@ -842,19 +857,18 @@ function stashChanges() {
 
       Git.Stash.save(repo, repo.defaultSignature(), stashMessage, flags)
         .then(function(oid) {
+          // error for testing purposes
+          //throw new Error('test error2');
           console.log("change stashed with oid" + oid);
+      }).catch(function(err) {
+        handleStashError(err)
+      }).done(function() {
+        doneStash()
       });
     }).catch(function(err) {
-      // handle any errors
-      console.log("stash error!" + err)
-      updateModalText("Stash error: " + err.message);
+      handleStashError(err)
     }).done(function() {
-      // get rid of the modal
-      $('#stash-msg-modal').modal('hide');
-      // reset the modal's message
-      clearStashMsgErrorText();
-      // All the modified files have been stashed, so update the list of stage/unstaged files
-      clearModifiedFilesList();
+      doneStash()
     });
 
 }
