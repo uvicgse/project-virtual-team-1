@@ -436,7 +436,6 @@
               <span aria-hidden="true" onclick="clearStashMsgErrorText()" class="stashMsgModalComponents">&times;</span>
             </button>
         <h4 class="modal-title stashMsgModalTitle stashMsgModalComponents" >Create new stash message</h4>
-        
       </div>
       <div class="modal-body">
         <!--Stash Message Text-->
@@ -444,7 +443,10 @@
         <input type="text" id="stash-msg-name-input" class="form-control stashMsgModalComponents" placeholder="Enter Your Message">
         <!-- Allow the user to select to stash untracked files-->
         <!-- Checkbox to allow the user to stash untracked files -->
-        <label style="min-width: 100%"><input type="checkbox" id="untracked-files-checkbox" class="form-control stashMsgModalComponents" value="">Include Untracked Files</label>
+        <div class="UntrackedFiles">
+            <input type="checkbox" id="cbox">
+            <label style="white-space:nowrap" for="iuf">Include Untracked Files</label>
+        </div>
         <div class="modal-body stashMsgModalError stashMsgModalComponents" id="stashMsgErrorText"></div>
       </div>
 
