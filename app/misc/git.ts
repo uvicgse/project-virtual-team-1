@@ -834,27 +834,29 @@ function stashChanges() {
         cmdStr = cmdStr + " \"" + stashMessage + "\""
       }
 
+      // this line is to test error handling
+      //throw new Error('test error');
+
       // show the command to the user
       addCommand(cmdStr);
 
       Git.Stash.save(repo, repo.defaultSignature(), stashMessage, flags)
         .then(function(oid) {
           console.log("change stashed with oid" + oid);
-      }).catch(function(err) {
-        updateModalText("Stash error: " + err.message);
-      })
-      .done(function() {
-        // get rid of the modal
-        $('#stash-msg-modal').modal('hide');
-        // reset the modal's message
-        clearStashMsgErrorText();
-        // All the modified files have been stashed, so update the list of stage/unstaged files
-        clearModifiedFilesList();
       });
-    }, function(err) {
+    }).catch(function(err) {
       // handle any errors
       console.log("stash error!" + err)
+      updateModalText("Stash error: " + err.message);
+    }).done(function() {
+      // get rid of the modal
+      $('#stash-msg-modal').modal('hide');
+      // reset the modal's message
+      clearStashMsgErrorText();
+      // All the modified files have been stashed, so update the list of stage/unstaged files
+      clearModifiedFilesList();
     });
+
 }
 
 function revertCommit() {
