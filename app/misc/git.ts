@@ -22,6 +22,7 @@ let commitID = 0;
 
 
 
+
 function passReferenceCommits(){
   Git.Repository.open(repoFullPath)
   .then(function(commits){
@@ -203,11 +204,12 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-      clearSelectAllCheckbox();
+
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
       addCommand('git commit -m "' + commitMessage + '"');
+
       refreshAll(repository);
     }, function (err) {
       console.log("git.ts, line 112, could not commit, " + err);
@@ -252,10 +254,6 @@ function clearModifiedFilesList() {
 
 function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
-}
-
-function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
 }
 
 function getAllCommits(callback) {
@@ -390,6 +388,7 @@ function pushToRemote() {
     .then(function (repo) {
       console.log("Pushing changes to remote")
       displayModal("Pushing changes to remote...");
+      console.log("Branch name: " + branch);
       addCommand("git push -u origin " + branch);
       repo.getRemotes()
       .then(function (remotes) {
@@ -496,6 +495,36 @@ function createBranch() {
     clearBranchErrorText();
   }
 }
+
+// search for tags
+function searchTag() {
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getCurrentBranch()
+        .then(function () {
+          // grab the list of references - these could be branches or tags
+          return repo.getReferences(Git.Reference.TYPE.LISTALL);
+        }).then(function (refList) {
+          for (let i = 0; i < refList.length; i++) {
+
+            // strip name for readability
+            let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+            if (refList[i].isTag()){
+              if (refName.indexOf( document.getElementById("tag-name").value ) > -1) {
+                var attribute = "display:block";
+              } else {
+                var attribute = "display:none";
+              }
+              document.getElementById(refName).setAttribute("style", attribute);
+            }
+          }
+        }
+      )
+    }
+  );
+}
+
 
 function clearBranchErrorText() {
   // @ts-ignore
@@ -612,6 +641,65 @@ function mergeLocalBranches(element) {
       console.log(text);
       updateModalText(text);
       refreshAll(repos);
+    });
+}
+
+// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails. 
+// Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
+function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
+  let repo;
+  Git.Repository.open(repoFullPath)
+    .then(function(repoParam) {
+      repo = repoParam;
+    })
+    .then(function() {
+      return repo.getCommit(commitSha);
+    })
+    .then(function(commit){
+      //The '0' parameter indicates that we are creating the tag without the '--force' option, so tags will not be overwritten
+      if (message == undefined) {
+        return Git.Tag.createLightweight(repo, tagName, commit, 0);
+      } else {
+        return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
+      }
+    })
+    .then(function(tagOid){      
+      // Push the tag if desired
+      if (pushTag) {
+        console.log("Pushing tag: " + tagName);
+        return repo.getRemotes()
+          .then(function (remotes) {
+            return repo.getRemote(remotes[0]);
+          })
+          .then(function(remote){
+            return remote.push(
+              ["refs/tags/" + tagName + ":refs/tags/" + tagName],
+              {
+                callbacks: {
+                  credentials: function () {
+                    return getCredentials();
+                  }
+                }
+              }
+            );
+          }).then(function(){
+            console.log("Successfully pushed tag: " + tagName);
+          });
+      }
+    })
+    .then(function(){
+      //Refresh the repository to display the new changes in the graph
+      $("#createTagModal").modal('hide');
+      updateModalText("Successfully created tag " + tagName + ".")
+      refreshAll(repo)
+    })
+    .catch(function(msg){
+      let errorMessage = "Error: " + msg.message;
+      console.log(errorMessage);
+      $("#createTagError")[0].innerHTML = errorMessage;
+
+      // Re-enable the submit button
+      $("#createTagModalCreateButton")[0].disabled = false;
     });
 }
 
@@ -859,7 +947,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage);
+            filePanelMessage.parentNode.removeChild(filePanelMessage); 
           }
         }
 
@@ -1343,3 +1431,7 @@ function fetchFromOrigin() {
     displayModal("No Path Found.")
   }
 }
+
+
+
+
