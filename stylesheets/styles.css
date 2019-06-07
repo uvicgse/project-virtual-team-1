@@ -316,6 +316,29 @@ body .file-panel .staging-buttons:hover {
   opacity: 0.8;
 }
 
+body .file-panel .show-stash-list-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 30px;
+  border-radius: 10px;
+  border: 0;
+  padding: 0 15px;
+  white-space: nowrap;
+  background-color: #39c0ba;
+  color: #fff;
+}
+
+ body .file-panel .show-stash-list-button:hover {
+  opacity: 0.8;
+}
+
+body .file-panel .files-stashed .stashed-files-message {
+    padding: 20px;
+}
+
 body .file-panel .commit-panel .commit-button:hover {
   opacity: 0.8;
 }
