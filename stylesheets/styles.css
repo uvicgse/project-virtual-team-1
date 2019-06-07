@@ -1086,10 +1086,10 @@ body .pull-request-panel {
   display: list-item;
 }
 
-.modal-body label { 
-  display: inline-block; 
-  width: 20%; 
-  text-align: left; 
+.modal-body label {
+  display: inline-block;
+  width: 20%;
+  text-align: left;
 }
 
 .modal-error {
@@ -1098,4 +1098,9 @@ body .pull-request-panel {
   color: red;
   font-size: larger;
   max-width: 70%;
+}
+
+.checkbox-label {
+  white-space: nowrap;
+  font-weight: normal
 }
