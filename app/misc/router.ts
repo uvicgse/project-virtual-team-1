@@ -97,7 +97,7 @@ function switchToAddRepositoryPanel() {
 
 function hideSignInButton():void{
 
-  if (tokenExists()) {
+  if (getAccessToken()) {
     document.getElementById("Button_Sign_in").style.display = "none";
   }
   if(previousWindow!="repoPanel"){

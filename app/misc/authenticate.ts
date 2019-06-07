@@ -158,6 +158,9 @@ function authenticateUser(callback) {
       // Initialize github client with token from Oauth
       client = github.client(token['access_token']);
 
+      // When user differs sign in, the sign in button must be hidden
+      hideSignInButton();
+
       // Trigger next step in login process
       getUserInfo(callback);
 
