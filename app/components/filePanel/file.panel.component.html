@@ -1,10 +1,9 @@
 <div class="file-panel" id="file-panel">
-
+  <!-- UNSTAGED FILES -->
   <div class="modified-files-header" id="modified-files-header">
     <h4 style="color: white" id="unstaged-files-heading">Unstaged Files</h4>
     <button class="staging-buttons" id="stage-all">Stage All</button>
   </div>
-
   <div class="files-changed" id="files-changed">
     <p class="modified-files-message" id="modified-files-message">Your modified files will appear here</p>
     <div class="file" *ngFor="let file of files">
@@ -12,24 +11,29 @@
     </div>
   </div>
   <hr>
+  
+  <!-- STAGED FILES -->
   <div class="staged-files-header" id="staged-files-header">
     <h4 style="color: white" id="staged-files-heading">Staged Files</h4>
     <button class="staging-buttons" id="unstage-all">Unstage All</button>
   </div>
-
   <div class="files-staged" id="files-staged">
     <p class="modified-files-message" id="staged-files-message">Your staged files will appear here</p>
     <div class="file" *ngFor="let file of files">
       <p>{{file}}</p>
     </div>
   </div>
+  <hr>
 
-<!-- This will be used for issue #87; showing a list of stashed changes.
+  <!-- STASH LIST -->
+  <div class="stash-list-header" id="stash-list-header">
+    <h4 style="color: white" id="stash-list-heading">Stashed Files</h4>
+    <button class="show-stash-list-button" id="show-stash-list">Stash List</button>
+  </div>
   <div class="files-stashed" id="files-stashed">
     <p class="stashed-files-message" id="stashed-files-message">Your stashed files will appear here</p>
     <div class="file" *ngFor="let file of files">
       <p>{{file}}</p>
     </div>
   </div>
--->
 </div>
