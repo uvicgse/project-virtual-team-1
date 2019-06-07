@@ -49,7 +49,6 @@ export class HeaderComponent   {
 
   authenticateGithub(): void {
     authenticateUser(switchToAddRepositoryPanel);
-    hideSignInButton();
   }
 
   showBranchList(): void {
