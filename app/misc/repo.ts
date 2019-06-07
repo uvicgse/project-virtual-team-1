@@ -144,7 +144,7 @@ function openRepository() {
   }
 
   console.log("Trying to open repository at " + fullLocalPath);
-  // displayModal("Opening Local Repository...");
+   displayModal("Opening Local Repository...");
 
   Git.Repository.open(fullLocalPath).then(
       function(repository) {
@@ -229,17 +229,8 @@ function openRepository() {
           }
         }
         document.getElementById("spinner").style.display = "block";
-        displayModal("Opening Local Repository...");
-        // This calls the countLocalCommits and getAllPushedCommits functions in git.ts
-        // we make sure each function variables are updated before we use it to calculate the unpushed commits
-        countLocalCommits(function(response) {
-                if (typeof total_commit === "undefined") {
-                  countLocalCommits(response);
-                }
-                else {
-                  updateModalText("Total number of commits: " + ( total_commit)+" check info for number of unpushed commits");
-                }
-        });
+        updateModalText("Repository successfully opened");
+
         refreshAll(repository);
 
 
@@ -343,7 +334,6 @@ function refreshAll(repository) {
   let branch;
   bname = {};
   tags = {};
-  unpushedCommitsModal();
 
 
 
