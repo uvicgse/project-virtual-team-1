@@ -502,7 +502,7 @@ export class PullRequestPanelComponent {
       url: url,
       type: "GET",
       beforeSend: function (xhr) {
-        xhr.setRequestHeader('Authorization', ' token ' + getTokenTemp());
+        xhr.setRequestHeader('Authorization', ' token ' + getAccessToken());
 
       },
       headers: {
@@ -528,7 +528,7 @@ export class PullRequestPanelComponent {
       url: url,
       type: "POST",
       beforeSend: function (xhr) {
-        xhr.setRequestHeader('Authorization', ' token ' + getTokenTemp());
+        xhr.setRequestHeader('Authorization', ' token ' + getAccessToken());
       },
       headers: {
         'Accept': 'application/vnd.github.v3+json'

@@ -86,17 +86,24 @@ function ModalSignIn(callback) {
 // previously we were trying to use same object again and again which was cauing issues
 function getCredentials(){
   //Note: might need to update with Oauth
-  return Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
+  return Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
 }
 
 
 function loginWithSaved(callback) {
   // Get the saved access token from the file system
   var accessToken = getToken();
+
   // Store the token in memory
   encryptTemp(accessToken);
+
   // Set the client for future use
   client = github.client(accessToken);
+
+  // If the client fails to be initialized, a new access token is required...
+  if (!client.token)
+    return;
+
   // Trigger next step in login process
   getUserInfo(callback);
   
@@ -108,7 +115,7 @@ function searchRepoName() {
   ul.innerHTML = ''; // clears the dropdown menu which shows all the repos
 
   // Gets users name and password
-  cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
+  cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
 
   var ghme = client.me();
   ghme.repos(function (err, data, head) {
@@ -148,12 +155,9 @@ function authenticateUser(callback) {
       // Save access token to filesystem
       encryptAccessToken(token['access_token']);
 
-      // Store Encrypted Access Token in Memory
-      encryptTemp(token['accessToken']);
-
       // Initialize github client with token from Oauth
       client = github.client(token['access_token']);
-      
+
       // Trigger next step in login process
       getUserInfo(callback);
 
@@ -165,7 +169,7 @@ function authenticateUser(callback) {
 
 function getUserInfo(callback) {
 
-  cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
+  cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
 
   var ghme = client.me();
 
@@ -450,8 +454,7 @@ function createIssue() {
   repoName = document.getElementById("repo-name").innerHTML
   githubName = document.getElementById("githubname").innerHTML
   if (repoName != "repository" && theArray != null) {
-      encryptTemp(document.getElementById("username").value, document.getElementById("password").value);
-      cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
+      cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
       client = github.client({
         id: OauthConfig.clientId,
         secret: OauthConfig.clientSecret,
@@ -486,10 +489,8 @@ function displayIssues() {
 
           ul.innerHTML = ''; // clears the dropdown menu which shows all the issues
 
-          // Gets users name and password
-          encryptTemp(document.getElementById("username").value, document.getElementById("password").value);
-
-          cred = Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
+          // Create credentials off of Oauth token
+          cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
 
           client = github.client({
             id: OauthConfig.clientId,

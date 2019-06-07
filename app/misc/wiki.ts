@@ -150,7 +150,7 @@ function updateWiki() {
             return repository.fetchAll({
                 callbacks: {
                     credentials: function () {
-                        return Git.Cred.userpassPlaintextNew(getTokenTemp(), getPasswordTemp());
+                        return Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
                     },
                     certificateCheck: function () {
                         return 1;
