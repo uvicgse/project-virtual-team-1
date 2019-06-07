@@ -1094,12 +1094,15 @@ function displayModifiedFiles() {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
             let fileName = document.createElement("p");
-            fileName.innerHTML = file.filePath
+            fileName.innerHTML = file.filePath;
             // Get the filename being edited and displays on top of the window
             if (doc.style.width === '0px' || doc.style.width === '') {
               displayDiffPanel();
-
-              document.getElementById("diff-panel-body")!.innerHTML = "";
+              // Insert elements to allow for rename and move functionality
+              document.getElementById("currentFilename").innerHTML = file.filePath;
+              document.getElementById("renameFilename").setAttribute("value",file.filePath);
+              document.getElementById("currentFolderPath").innerHTML = repoFullPath;
+              document.getElementById("moveFileToFolder").setAttribute("value",repoFullPath);
               document.getElementById("diff-panel-body").appendChild(fileName);
               if (fileElement.className === "file file-created") {
                 // set the selected file
@@ -1432,6 +1435,29 @@ function fetchFromOrigin() {
   }
 }
 
+/**
+ * This method implements Git Move to rename or move a given file within a repository
+ */
 
-
-
+function moveFile(filesource:string, filedestination:string) {
+  console.log("Moving "+ filesource + " in (" + repoFullPath + " to " + filedestination);
+  if (fs.existsSync(repoFullPath + "/" + filesource){
+    if (filedestination != null) {
+      Git.Repository.open(repoFullPath)
+          .then(function (repo) {
+            displayModal("Beginning Move...");
+            addCommand("git mv " + filesource + " " + filedestination);
+            updateModalText("Move Successful");
+            refreshAll(repo);
+          }, function (err) {
+            displayModal("Please select a valid repository");
+          });
+    }
+    else {
+      displayModal ("File Destination Not Found.");
+    }
+  }
+  else {
+    displayModal("Source File Not Found.");
+  }
+}
