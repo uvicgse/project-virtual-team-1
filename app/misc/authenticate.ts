@@ -7,6 +7,7 @@ let $ = require("jquery");
 
 // Oauth Import
 let electronOauth2 = require('electron-oauth2');
+let { BrowserWindow } = require('electron').remote;
 
 let Git = require("nodegit");
 let github = require("octonode");
@@ -329,23 +330,16 @@ function cloneRepo() {
 }
 
 function signInOrOut() {
-  let doc = document.getElementById("avatar");
-  if(doc.innerHTML === "Sign In"){
-    doc.innerHTML = "";
-  }
-  else if(doc.innerHTML === ""){
-      doc.innerHTML = "Sign In";
-  }
+  // Initialize a window for the user to logout of github
+  let window = new BrowserWindow(windowParams);
+  window.loadURL('https://github.com/logout');
 
-  if (doc.innerHTML === "Sign out") {
-    $("#avatar").removeAttr("data-toggle");
+  // Delete data.json
+  deleteToken();
 
-    if (changes == 1 || CommitButNoPush == 1) {
-      $("#modalW2").modal();
-    } else {
-      redirectToHomePage();
-    }
-  }
+  // Redirect the user back to the login page
+  redirectToHomePage();
+
 }
 
 function redirectToHomePage() {
