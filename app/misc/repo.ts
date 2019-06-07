@@ -16,14 +16,6 @@ let previousOpen;
 let repoName: string = "";
 
 
-
-
-import {
-  countLocalCommits,unpushedCommitsModal,
-  total_commit,
-} from "/Users/adebayoogunmuyiwa/Desktop/Desktop/demo/project-virtual-team-1/app/misc/git";
-
-
 function downloadRepository() {
   let fullLocalPath;
   // Full path is determined by either handwritten directory or selected by file browser

@@ -1321,6 +1321,8 @@ export function countLocalCommits(callback ){
             walker.push(commit.id());
             walker.sorting
             walker.pushHead();
+            //Looks for commits up to 1000 commits max
+            //This number is set to limit affecting system resources
             return walker.getCommits(1000).then(function (commits) {
                 total_commit = commits.length;
                 return callback(total_commit);

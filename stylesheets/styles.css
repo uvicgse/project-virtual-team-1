@@ -982,6 +982,7 @@ body .pull-request-panel {
   height: 100%;
   overflow: hidden;
   width: 60px;
+  text-align: center;
 }
 
 .right-pr-nav i img {
