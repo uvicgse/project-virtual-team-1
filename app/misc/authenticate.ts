@@ -329,16 +329,20 @@ function cloneRepo() {
   switchToMainPanel();
 }
 
-function signInOrOut() {
+function signOut() {
   // Initialize a window for the user to logout of github
   let window = new BrowserWindow(windowParams);
   window.loadURL('https://github.com/logout');
+  window.show();
 
-  // Delete data.json
-  deleteToken();
+  // When the user closes the window...
+  window.on('closed', () => {
+    // Remove the data.json file
+    deleteToken();
+    // Redirect the user back to the login page
+    redirectToHomePage();
 
-  // Redirect the user back to the login page
-  redirectToHomePage();
+  });
 
 }
 
