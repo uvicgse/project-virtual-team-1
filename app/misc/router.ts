@@ -294,6 +294,9 @@ function displayDiffPanelButtons() {
     cancelButton.style.visibility = "visible";
   }
   document.getElementById("open-editor-button").style.visibility = "visible";
+  document.getElementById("move-file-button").style.visibility = "visible";
+  document.getElementById("rename-file-button").style.visibility = "visible";
+
 }
 
 function hideDiffPanelButtons() {
@@ -307,6 +310,9 @@ function hideDiffPanelButtons() {
     cancelButton.style.visibility = "hidden";
   }
   document.getElementById("open-editor-button").style.visibility = "hidden";
+  document.getElementById("rename-file-button").style.visibility = "hidden";
+  document.getElementById("move-file-button").style.visibility = "hidden";
+
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
 }

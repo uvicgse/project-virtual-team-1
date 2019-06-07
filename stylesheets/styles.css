@@ -619,7 +619,7 @@ body .footer{
   border-top: none;
 }
 
-div.editor-header button.close-button, div.editor-header button.open-button, button.open-editor-button {
+div.editor-header button.close-button, div.editor-header button.open-button, button.open-editor-button,button.move-file-button,button.rename-file-button {
   display: inline;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -631,7 +631,7 @@ div.editor-header button.close-button, div.editor-header button.open-button, but
   color: #fff;
 }
 
-div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover {
+div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover,button.rename-file-button:hover,button.move-file-button:hover {
   opacity: 0.8;
 }
 
