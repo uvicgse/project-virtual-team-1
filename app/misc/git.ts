@@ -4,6 +4,7 @@ import {Injectable} from "@angular/core";
 import {callbackify} from "util";
 'use strict';
 
+
 let $ = require("jquery");
 let Git = require("nodegit");
 let sGit = require('simple-git/promise');
@@ -450,20 +451,7 @@ function pushToRemote() {
     });
 }
 
-//Takes the number of local commits and the number of remote commits and returns the difference
-//This will be the total number of unpushed commits
-@Injectable()
-// export function calcUnpushedCommits() {
-//   var calc = 0;
-//   for(var i = 0; i<5; i++ ){
-//     countLocalCommits();
-//     getAllPushedCommits();
-//      calc = total_commit - commit_diff;
-//
-//   }
-//   return calc;
-//
-// }
+
 
 
 //This function has yet to be implemented
