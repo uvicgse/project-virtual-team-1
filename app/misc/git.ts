@@ -1414,9 +1414,9 @@ export function unpushedCommitsModal( ) {
           } else {
             console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
             document.getElementById("unpushed").innerHTML = total_commit - commit_diff;
-           // setTimeout(unpushedCommitsModal, 1000)
+            // setTimeout(unpushedCommitsModal, 1000)
             //updateModalText("Number of un-pushed commits: " + (total_commit - commit_diff));
-              //return callback((total_commit - commit_diff));
+            // return callback((total_commit - commit_diff));
           }
         })
 
@@ -1426,8 +1426,8 @@ export function unpushedCommitsModal( ) {
 
 }
 
-//the unpushedCommitModal function is refreshed every 6000ms
- setInterval(unpushedCommitsModal, 6000);
+//the unpushedCommitModal function is refreshed every 30000ms
+ setInterval(unpushedCommitsModal, 30000);
 
 
 
