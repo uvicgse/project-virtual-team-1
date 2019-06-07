@@ -15,8 +15,11 @@ let contributors: [any] = [0];
 let previousOpen;
 let repoName: string = "";
 
+
+
+
 import {
-  countLocalCommits,
+  countLocalCommits,unpushedCommitsModal,
   total_commit,
 } from "/Users/adebayoogunmuyiwa/Desktop/Desktop/demo/project-virtual-team-1/app/misc/git";
 
@@ -334,11 +337,15 @@ function addBranchestoNode(thisB: string) {
   }
 }
 
+
 function refreshAll(repository) {
   document.getElementById("spinner").style.display = "block";
   let branch;
   bname = {};
   tags = {};
+  unpushedCommitsModal();
+
+
 
   //Get the current branch from the repo
   repository

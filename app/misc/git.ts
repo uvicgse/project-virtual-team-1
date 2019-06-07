@@ -2,7 +2,9 @@ import * as nodegit from "git";
 import NodeGit, { Graph, Status } from "nodegit";
 import {Injectable} from "@angular/core";
 import {callbackify} from "util";
-'use strict';
+//'use strict';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 
 let $ = require("jquery");
 let Git = require("nodegit");
@@ -1407,7 +1409,7 @@ export function getAllPushedCommits(callback) {
 //We have to call the function once to initialize the API call, and then again to calculate
 //This is a limitation of async functions in our version of angular and node
 @Injectable()
-export function unpushedCommitsModal() {
+export function unpushedCommitsModal( ) {
   var countLocalCommits_value =0;
 
   countLocalCommits(function (response) {
@@ -1423,7 +1425,10 @@ export function unpushedCommitsModal() {
             getAllPushedCommits(response_2);
           } else {
             console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
-            updateModalText("Number of un-pushed commits: " + (total_commit - commit_diff));
+            document.getElementById("unpushed").innerHTML = total_commit - commit_diff;
+           // setTimeout(unpushedCommitsModal, 1000)
+            //updateModalText("Number of un-pushed commits: " + (total_commit - commit_diff));
+              //return callback((total_commit - commit_diff));
           }
         })
 
@@ -1432,6 +1437,9 @@ export function unpushedCommitsModal() {
     })
 
 }
+
+//the unpushedCommitModal function is refreshed every 6000ms
+ setInterval(unpushedCommitsModal, 6000);
 
 
 
