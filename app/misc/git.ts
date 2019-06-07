@@ -375,13 +375,13 @@ function pullFromRemote() {
         updateModalText("Successfully pulled from remote branch " + branch + ", and your repo is up to date now!");
         refreshAll(repository);
       }
-      //anywhere during the above process if there is a error the following catch will catch and report it 
-      //and stop the process then and there. 
+      //anywhere during the above process if there is a error the following catch will catch and report it
+      //and stop the process then and there.
     }).catch(function(err) {
       console.log(err);
       updateModalText("Pull Failed : "+err.message);
-    }); 
-    
+    });
+
 }
 
 function pushToRemote() {
@@ -414,7 +414,7 @@ function pushToRemote() {
         }).catch(function(err) {
           console.log(err);
           updateModalText("Push Failed : "+err.message);
-          });            
+          });
         });
     });
 }
@@ -770,8 +770,8 @@ function stashChanges() {
         // reset the modal's message
         clearStashMsgErrorText();
         // All the modified files have been stashed, so update the list of stage/unstaged files
-        clearModifiedFilesList();        
-      });  
+        clearModifiedFilesList();
+      });
     }, function(err) {
       // handle any errors
       console.log("stash error!" + err)
@@ -1336,6 +1336,32 @@ function saveRemoteRepo() {
     console.log("success");
   } else {
     console.log("error in adding remote repository")
+  }
+}
+
+/**
+* Not done
+*/
+function syncFromFork() {
+  console.log("begin fetching");
+  let upstreamRepoPath = document.getElementById("origin-path").value;
+  console.log("bcbcvbbbcbc"+upstreamRepoPath+"fgdfgdfgfdg");
+  if(upstreamRepoPath != null){
+    Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        addCommand("git remote add upstream " + upstreamRepoPath);
+        addCommand("git fetch upstream");
+        addCommand("git merge upstream/master");
+        console.log("fetch successful")
+        updateModalText("Synchronisation Successful");
+        refreshAll(repo);
+      },
+        function (err) {
+          console.log("Waiting for repo to be initialised");
+          displayModal("Please select a valid repository");
+        });
+  } else {
+    displayModal("No Path Found.")
   }
 }
 
