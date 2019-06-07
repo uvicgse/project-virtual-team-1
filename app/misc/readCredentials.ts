@@ -26,6 +26,17 @@ function getToken() {
   return decryptedTokenBytes.toString(CryptoJS.enc.Utf8);
 }
 
+// Removes the data.json file from the filesystem
+function deleteToken() {
+  file = "data.json"
+  try {
+    // Remove file
+    fs.unlinkSync(file)
+  } catch(err) {
+    console.error(err)
+  }
+}
+
 /**
  * Checks if a token exists in the data.json file.
  * getToken() returns an empty string if the token was saved during the same session,
