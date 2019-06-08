@@ -105,5 +105,6 @@ VisualGit utilises a range of libraries and frameworks, more information on them
  - [Node.js](https://nodejs.org/en/about/)
  - [Angular](https://angular.io/)
  - [nodegit](http://www.nodegit.org/)
+ - [simple-git](https://www.npmjs.com/package/simple-git)
  - [Vis.js](http://visjs.org/docs/network/)
  - [TypeScript](https://www.typescriptlang.org/)

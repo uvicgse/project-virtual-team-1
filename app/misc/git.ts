@@ -1,8 +1,10 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
+import * as simplegit from 'simple-git/promise';
 
 let $ = require("jquery");
 let Git = require("nodegit");
+let sGit = require('simple-git');
 let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
@@ -1098,7 +1100,7 @@ function displayModifiedFiles() {
             // Get the filename being edited and displays on top of the window
             if (doc.style.width === '0px' || doc.style.width === '') {
               displayDiffPanel();
-              // Insert elements to allow for rename and move functionality
+              // Insert elements that store filename and file path for file rename and move functionality
               document.getElementById("currentFilename").innerHTML = file.filePath;
               document.getElementById("renameFilename").setAttribute("value",file.filePath);
               document.getElementById("currentFolderPath").innerHTML = repoFullPath;
@@ -1436,28 +1438,12 @@ function fetchFromOrigin() {
 }
 
 /**
- * This method implements Git Move to rename or move a given file within a repository
+ * This method implements Git Move to rename or move a given file within a repository using the simple-git library
  */
 
 function moveFile(filesource:string, filedestination:string) {
-  console.log("Moving "+ filesource + " in (" + repoFullPath + " to " + filedestination);
-  if (fs.existsSync(repoFullPath + "/" + filesource){
-    if (filedestination != null) {
-      Git.Repository.open(repoFullPath)
-          .then(function (repo) {
-            displayModal("Beginning Move...");
-            addCommand("git mv " + filesource + " " + filedestination);
-            updateModalText("Move Successful");
-            refreshAll(repo);
-          }, function (err) {
-            displayModal("Please select a valid repository");
-          });
-    }
-    else {
-      displayModal ("File Destination Not Found.");
-    }
+  console.log("Moving " + filesource + " in (" + repoFullPath + " to " + filedestination);
+  addCommand("git mv " + filesource + " " + filedestination);
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.mv(filesource, filedestination);
   }
-  else {
-    displayModal("Source File Not Found.");
-  }
-}
