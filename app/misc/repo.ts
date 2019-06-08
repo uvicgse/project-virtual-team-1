@@ -609,24 +609,55 @@ function refreshList(verbose) {
     ul.appendChild(li);
   }
 
-// Adding tags to branch dropdown menu
+  function getTagByIdRegex(tag, id, html) {
+    return new RegExp("<" + tag + "[^>]*id[\\s]?=[\\s]?['\"]" + id + "['\"][\\s\\S]*?<\/" + tag + ">").exec(html);
+  }
+
+  // deleting tags
+  function deleteTag(name) {
+
+    // remove taglist item
+    var tagName = name.getAttribute("id");
+    var tagNode = document.getElementById(tagName);
+    name.parentNode.removeChild(name);
+
+    let repo;
+    Git.Repository.open(repoFullPath)
+      .then(function(repoParam) {
+        repo = repoParam;
+      })
+      .then(function(){
+        return Git.Tag.delete(repo, tagName);
+      }
+    ).catch(function(msg) {
+      let errorMessage = "Error: " + msg.message;
+    });
+  }
+
+  // Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
+
+    // create HTML element for tag list dropdown
     let tagList = document.getElementById(id);
     let li = document.createElement("li");
     let a = document.createElement("a");
+    let button = document.createElement("button");
+
+    // set HTML attributes
     a.setAttribute("href", "#");
     a.setAttribute("class", "list-group-item");
     a.setAttribute("id", name);
     a.setAttribute("onclick", onclick + ";event.stopPropagation()");
     li.setAttribute("role", "presentation");
-    a.appendChild(document.createTextNode(name));
+    button.setAttribute("class", "delete-tag-button");
+    button.setAttribute("class", "btn btn-outline-danger btn-lg");
+    button.setAttribute("type", "button");
+    button.setAttribute("onclick", "deleteTag(" + name + ")");
+
+    a.appendChild(document.createTextNode(id));
     a.innerHTML = name;
+    a.appendChild(button);
     li.appendChild(a);
-
-    if (id === "tag-item-list") {
-      // TODO: tagging support - add delete button here
-    }
-
     tagList.appendChild(li);
   }
 
