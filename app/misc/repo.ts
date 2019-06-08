@@ -429,8 +429,6 @@ function refreshList(verbose) {
   function refreshAll(repository) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
-    bname = {};
-    tags = {};
 
     //Get the current branch from the repo
     repository.getCurrentBranch()
