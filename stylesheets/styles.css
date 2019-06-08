@@ -1099,8 +1099,3 @@ body .pull-request-panel {
   font-size: larger;
   max-width: 70%;
 }
-
-.tag-list-item:hover {
-  color: red;
-  
-}
