@@ -609,10 +609,6 @@ function refreshList(verbose) {
     ul.appendChild(li);
   }
 
-  function getTagByIdRegex(tag, id, html) {
-    return new RegExp("<" + tag + "[^>]*id[\\s]?=[\\s]?['\"]" + id + "['\"][\\s\\S]*?<\/" + tag + ">").exec(html);
-  }
-
   // deleting tags
   function deleteTag(name) {
 
@@ -634,6 +630,11 @@ function refreshList(verbose) {
     });
   }
 
+  function deleteTagModal() {
+    updateModalText("Double click to delete a tag");
+    $('a').attr('onclick', '')
+  }
+
   // Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
 
@@ -641,22 +642,17 @@ function refreshList(verbose) {
     let tagList = document.getElementById(id);
     let li = document.createElement("li");
     let a = document.createElement("a");
-    let button = document.createElement("button");
 
     // set HTML attributes
     a.setAttribute("href", "#");
-    a.setAttribute("class", "list-group-item");
+    a.setAttribute("class", "list-group-item tag-list-item");
     a.setAttribute("id", name);
-    a.setAttribute("onclick", onclick + ";event.stopPropagation()");
+    a.setAttribute("onclick", onclick + ";event.stopPropagation();deleteTagModal();");
+    a.setAttribute("ondblclick", "deleteTag(" + name + ")");
     li.setAttribute("role", "presentation");
-    button.setAttribute("class", "delete-tag-button");
-    button.setAttribute("class", "btn btn-outline-danger btn-lg");
-    button.setAttribute("type", "button");
-    button.setAttribute("onclick", "deleteTag(" + name + ")");
 
     a.appendChild(document.createTextNode(id));
     a.innerHTML = name;
-    a.appendChild(button);
     li.appendChild(a);
     tagList.appendChild(li);
   }

@@ -1100,7 +1100,7 @@ body .pull-request-panel {
   max-width: 70%;
 }
 
-.delete-tag-button {
-  position: relative;
-  right: 0; 
+.tag-list-item:hover {
+  color: red;
+  
 }
