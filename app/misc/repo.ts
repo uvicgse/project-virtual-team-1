@@ -353,8 +353,9 @@ function refreshList(verbose) {
     let branch;
     bname = {};
     tags = {};
+    lastRefList = [];
 
-    //Get the current branch from the repo
+      //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
         //Get the simplified name from the branch
