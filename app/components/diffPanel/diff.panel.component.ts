@@ -24,6 +24,8 @@ export class DiffPanelComponent{
     let renameFilename = document.getElementById("renameFilename").value;
 
     moveFile(currentFilename,renameFilename);
+    $('#rename-file-modal').modal('hide');
+
   }
 
   /*
@@ -36,6 +38,7 @@ export class DiffPanelComponent{
     let moveFileToFolder = document.getElementById("moveFileToFolder").value;
 
     moveFile(currentFilename,moveFileToFolder);
+    $('#move-file-modal').modal('hide');
   }
 
 
