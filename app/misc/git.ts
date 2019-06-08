@@ -11,6 +11,7 @@ let repo, index, oid, remote, commitMessage;
 let filesToAdd = [];
 let theirCommit = null;
 let modifiedFiles;
+let stashes;
 let warnbool;
 var CommitButNoPush = 0;
 let stagedFiles: any;
@@ -864,6 +865,21 @@ function stashChanges() {
       // handle any errors
       console.log("stash error!" + err)
     });
+}
+
+function displayStashes(){
+  stashes = [];
+  
+  var stashCb = function(index, message, oid) {
+    console.log("test");
+  };
+
+  let selectedFile = "";
+
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      return Git.Stash.forEach(repo,stashCb);
+    }).then(function(){});
 }
 
 function revertCommit() {
