@@ -4,7 +4,7 @@ import * as simplegit from 'simple-git/promise';
 
 let $ = require("jquery");
 let Git = require("nodegit");
-let sGit = require('simple-git');
+let sGit = require('simple-git/promise');
 let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
@@ -1444,6 +1444,11 @@ function fetchFromOrigin() {
 function moveFile(filesource:string, filedestination:string) {
   console.log("Moving " + filesource + " in (" + repoFullPath + " to " + filedestination);
   addCommand("git mv " + filesource + " " + filedestination);
-  let sGitRepo = sGit(repoFullPath);
-  sGitRepo.mv(filesource, filedestination);
-  }
+
+  let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
+  sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
+          .mv(filesource, filedestination)  //perform GIT MV operation
+          .then(() => console.log('move completed'))
+          .catch((err) => console.error('move failed: ', err));
+}
+
