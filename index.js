@@ -10,6 +10,7 @@ const { globalShortcut } = require('electron');
 require('electron-debug')();
 
 
+
 // prevent window being garbage collected
 let mainWindow;
 let popupWindow;

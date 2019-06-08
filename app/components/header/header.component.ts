@@ -14,7 +14,7 @@ export class HeaderComponent   {
   repoBranch: string = "Repo branch";
   repository: any;
 
-  // If 'branch' is the selected tab in the dropdown of references. False means that 'tag' is the selected tab. 
+  // If 'branch' is the selected tab in the dropdown of references. False means that 'tag' is the selected tab.
   branchSelectedInRefDropdown: boolean = true;
 
   promptUserToAddRepository(): void {
@@ -48,7 +48,7 @@ export class HeaderComponent   {
   }
 
   /*
-    If the password is empty, made the input field for the password red and show a icon that shows that the password 
+    If the password is empty, made the input field for the password red and show a icon that shows that the password
     field is empty.
   */
   emptyPassword(): void {
@@ -57,7 +57,7 @@ export class HeaderComponent   {
   }
 
   /*
-    If the username is empty, made the input field for the username red and show a icon that shows that the username 
+    If the username is empty, made the input field for the username red and show a icon that shows that the username
     field is empty.
   */
   emptyUsername(): void {

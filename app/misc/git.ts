@@ -22,6 +22,7 @@ let commitID = 0;
 let lastCommitLength;
 
 
+
 function passReferenceCommits(){
   Git.Repository.open(repoFullPath)
   .then(function(commits){
@@ -203,11 +204,12 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-      clearSelectAllCheckbox();
+
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
       addCommand('git commit -m "' + commitMessage + '"');
+
       refreshAll(repository);
     }, function (err) {
       console.log("git.ts, line 112, could not commit, " + err);
@@ -252,10 +254,6 @@ function clearModifiedFilesList() {
 
 function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
-}
-
-function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
 }
 
 // checking if the length of commits is different
@@ -398,13 +396,13 @@ function pullFromRemote() {
         updateModalText("Successfully pulled from remote branch " + branch + ", and your repo is up to date now!");
         refreshAll(repository);
       }
-      //anywhere during the above process if there is a error the following catch will catch and report it 
-      //and stop the process then and there. 
+      //anywhere during the above process if there is a error the following catch will catch and report it
+      //and stop the process then and there.
     }).catch(function(err) {
       console.log(err);
       updateModalText("Pull Failed : "+err.message);
-    }); 
-    
+    });
+
 }
 
 function pushToRemote() {
@@ -413,6 +411,7 @@ function pushToRemote() {
     .then(function (repo) {
       console.log("Pushing changes to remote")
       displayModal("Pushing changes to remote...");
+      console.log("Branch name: " + branch);
       addCommand("git push -u origin " + branch);
       repo.getRemotes()
       .then(function (remotes) {
@@ -437,7 +436,7 @@ function pushToRemote() {
         }).catch(function(err) {
           console.log(err);
           updateModalText("Push Failed : "+err.message);
-          });            
+          });
         });
     });
 }
@@ -519,6 +518,36 @@ function createBranch() {
     clearBranchErrorText();
   }
 }
+
+// search for tags
+function searchTag() {
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getCurrentBranch()
+        .then(function () {
+          // grab the list of references - these could be branches or tags
+          return repo.getReferences(Git.Reference.TYPE.LISTALL);
+        }).then(function (refList) {
+          for (let i = 0; i < refList.length; i++) {
+
+            // strip name for readability
+            let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+            if (refList[i].isTag()){
+              if (refName.indexOf( document.getElementById("tag-name").value ) > -1) {
+                var attribute = "display:block";
+              } else {
+                var attribute = "display:none";
+              }
+              document.getElementById(refName).setAttribute("style", attribute);
+            }
+          }
+        }
+      )
+    }
+  );
+}
+
 
 function clearBranchErrorText() {
   // @ts-ignore
@@ -638,7 +667,7 @@ function mergeLocalBranches(element) {
     });
 }
 
-// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails. 
+// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails.
 // Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
 function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
   let repo;
@@ -657,7 +686,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
         return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
       }
     })
-    .then(function(tagOid){      
+    .then(function(tagOid){
       // Push the tag if desired
       if (pushTag) {
         console.log("Pushing tag: " + tagName);
@@ -821,6 +850,8 @@ function clearStashMsgErrorText() {
   document.getElementById("stashMsgErrorText").innerText = "";
   // @ts-ignore
   document.getElementById("stash-msg-name-input").value = "";
+  // @ts-ignore
+  document.getElementById("untracked-files-checkbox").checked = false;
 }
 
 /**
@@ -828,6 +859,21 @@ function clearStashMsgErrorText() {
  */
 function showStashModal() {
   $('#stash-msg-modal').modal('show');
+}
+
+function handleStashError(err) {
+  // handle any errors
+  console.log("stash error!" + err)
+  updateModalText("Stash error: " + err.message);
+}
+
+function doneStash() {
+  // get rid of the modal
+  $('#stash-msg-modal').modal('hide');
+  // reset the modal's message
+  clearStashMsgErrorText();
+  // All the modified files have been stashed, so update the list of stage/unstaged files
+  clearModifiedFilesList();
 }
 
 /**
@@ -839,25 +885,45 @@ function stashChanges() {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       // TODO: allow the user to select various options (include untracked, include ignored, etc.)
-      addCommand("git stash save \"" + stashMessage + "\"")
-      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
+
+      // build the command string to show the user in the terminal
+      let cmdStr = "git stash save";
+
+      // stash flags -- set to default to start
+      let flags = Git.Stash.FLAGS.DEFAULT;
+
+      if (document.getElementById("untracked-files-checkbox").checked === true) {
+        flags = flags | Git.Stash.FLAGS.INCLUDE_UNTRACKED;
+        cmdStr = cmdStr + " --include-untracked"
+      }
+
+      // if there is a message add it to the command
+      if (stashMessage.length > 0) {
+        cmdStr = cmdStr + " \"" + stashMessage + "\""
+      }
+
+      // this line is to test error handling
+      //throw new Error('test error');
+
+      // show the command to the user
+      addCommand(cmdStr);
+
+      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, flags)
         .then(function(oid) {
+          // error for testing purposes
+          //throw new Error('test error2');
           console.log("change stashed with oid" + oid);
       }).catch(function(err) {
-        updateModalText("Stash error: " + err.message);
-      })
-      .done(function() {
-        // get rid of the modal
-        $('#stash-msg-modal').modal('hide');
-        // reset the modal's message
-        clearStashMsgErrorText();
-        // All the modified files have been stashed, so update the list of stage/unstaged files
-        clearModifiedFilesList();        
-      });  
-    }, function(err) {
-      // handle any errors
-      console.log("stash error!" + err)
+        handleStashError(err)
+      }).done(function() {
+        doneStash()
+      });
+    }).catch(function(err) {
+      handleStashError(err)
+    }).done(function() {
+      doneStash()
     });
+
 }
 
 function revertCommit() {
@@ -941,7 +1007,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage);
+            filePanelMessage.parentNode.removeChild(filePanelMessage); 
           }
         }
 
@@ -1425,3 +1491,7 @@ function fetchFromOrigin() {
     displayModal("No Path Found.")
   }
 }
+
+
+
+
