@@ -93,15 +93,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   }, 2000);
 
-  // Update modified files on left file panel every X seconds
+  // group all monitors here, call every 3 seconds
   setInterval(function() {
+    // Update modified files on left file panel
     displayModifiedFiles();
+    // monitor changes on branch list and tag list
+    refreshList(false);
+    // check if there is any changes to either ref list or commits
+    checkCommitChange();
   }, 3000);
 
-  // monitor changes on branch list and tag list, 1 check per second
-  setInterval(function () {
-    refreshList(false);
-  }, 1000);
 }, false);
 
 

@@ -280,6 +280,12 @@ function refreshList(verbose) {
 
           // detects changes, refresh the lists
           console.log("branch or tag changes detected... refreshing branch and tag list");
+
+          if (lastRefList.length !== 0) {
+            // show refresh graph alert
+            $("#refresh-graph-alert").show();
+          }
+
           bname = {};
           tags = {};
           clearBranchAndTagElement();
