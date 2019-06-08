@@ -1317,31 +1317,26 @@ function requestLinkModal() {
 }
 
 /**
- * after the remote button is pressedo ws the modal for adding the remote repo
+ * This method is called when the user clicks the "Remote" button on the navbar.
  */
 function addRemoteModal() {
   $('#add-remote-modal').modal('show');
 }
 
 /**
- * not done
- * nodegit reference: https://www.nodegit.org/api/remote/
+ This function is called after the user enters the address of the upstream repo to sync from. It sets the 
+ entered address as the upstream repo of the forked repository.
  */
 function addRemoteRepo() {
   let repository;
-  let upstreamRepoPath = document.getElementById("remote-path").value
+  let upstreamRepoPath = document.getElementById("remote-path").value;
   addCommand("git remote add upstream " + upstreamRepoPath);
   if(upstreamRepoPath != null) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
-      repository.getBranch('master').then(function(reference) {
-      Git.Branch.setUpstream(reference, upstreamRepoPath).then(function(result) {
-        console.log("result"+result)
-      }, function(err) {
-        console.log("error setting upstream:" + err)
-      });
-      });
+      var result = Git.Remote.setUrl(repository, "upstream", upstreamRepoPath);
+      console.log(result)
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err)
     });
