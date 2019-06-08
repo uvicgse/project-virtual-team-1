@@ -1327,68 +1327,77 @@ function addRemoteModal() {
  * not done
  * nodegit reference: https://www.nodegit.org/api/remote/
  */
-function saveRemoteRepo() {
-  $('#add-remote-modal').modal('show');
-  let upstreamRepoPath = document.getElementById("origin-path").value;
+function addRemoteRepo() {
+  let repository;
+  let upstreamRepoPath = document.getElementById("remote-path").value
   addCommand("git remote add upstream " + upstreamRepoPath);
-  var addRemote = Git.Remote.setUrl(repoFullPath, "origin", upstreamRepoPath);
-  if addRemote {
-    console.log("success");
-  } else {
-    console.log("error in adding remote repository")
+  if(upstreamRepoPath != null) {
+    Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+      repository = repo;
+      repository.getBranch('master').then(function(reference) {
+      Git.Branch.setUpstream(reference, upstreamRepoPath).then(function(result) {
+        console.log("result"+result)
+      }, function(err) {
+        console.log("error setting upstream:" + err)
+      });
+      });
+    }, function(err) {
+      console.log("Error adding remote upstream repository:" + err)
+    });
   }
 }
 
 /**
 * Not done
 */
-function syncFromFork() {
-  console.log("begin fetching");
-  let upstreamRepoPath = document.getElementById("origin-path").value;
-  console.log("bcbcvbbbcbc"+upstreamRepoPath+"fgdfgdfgfdg");
-  if(upstreamRepoPath != null){
-    Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-        addCommand("git remote add upstream " + upstreamRepoPath);
-        addCommand("git fetch upstream");
-        addCommand("git merge upstream/master");
-        console.log("fetch successful")
-        updateModalText("Synchronisation Successful");
-        refreshAll(repo);
-      },
-        function (err) {
-          console.log("Waiting for repo to be initialised");
-          displayModal("Please select a valid repository");
-        });
-  } else {
-    displayModal("No Path Found.")
-  }
-}
+// function syncFromFork() {
+//   console.log("begin fetching");
+//   let upstreamRepoPath = document.getElementById("origin-path").value;
+//   console.log("bcbcvbbbcbc"+upstreamRepoPath+"fgdfgdfgfdg");
+//   if(upstreamRepoPath != null){
+//     Git.Repository.open(repoFullPath)
+//       .then(function (repo) {
+//         addCommand("git remote add upstream " + upstreamRepoPath);
+//         addCommand("git fetch upstream");
+//         addCommand("git merge upstream/master");
+//         console.log("fetch successful")
+//         updateModalText("Synchronisation Successful");
+//         refreshAll(repo);
+//       },
+//         function (err) {
+//           console.log("Waiting for repo to be initialised");
+//           displayModal("Please select a valid repository");
+//         });
+//   } else {
+//     displayModal("No Path Found.")
+//   }
+// }
 
 /**
  * This method is called when a valid URL is given via the fetch-modal, and runs the
  * series of git commands which fetch and merge from an upstream repository.
  */
-function fetchFromOrigin() {
-  console.log("begin fetching");
-  let upstreamRepoPath = document.getElementById("origin-path").value;
-  if (upstreamRepoPath != null) {
-    Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-        console.log("fetch path valid")
-        displayModal("Beginning Synchronisation...");
-        addCommand("git remote add upstream " + upstreamRepoPath);
-        addCommand("git fetch upstream");
-        addCommand("git merge upstream/master");
-        console.log("fetch successful")
-        updateModalText("Synchronisation Successful");
-        refreshAll(repo);
-      },
-        function (err) {
-          console.log("Waiting for repo to be initialised");
-          displayModal("Please select a valid repository");
-        });
-  } else {
-    displayModal("No Path Found.")
-  }
-}
+// function fetchFromOrigin() {
+//   console.log("begin fetching");
+//   let upstreamRepoPath = document.getElementById("origin-path").value;
+//   if (upstreamRepoPath != null) {
+//     Git.Repository.open(repoFullPath)
+//       .then(function (repo) {
+//         console.log("fetch path valid")
+//         displayModal("Beginning Synchronisation...");
+//         addCommand("git remote add upstream " + upstreamRepoPath);
+//         addCommand("git fetch upstream");
+//         addCommand("git merge upstream/master");
+//         console.log("fetch successful")
+//         updateModalText("Synchronisation Successful");
+//         refreshAll(repo);
+//       },
+//         function (err) {
+//           console.log("Waiting for repo to be initialised");
+//           displayModal("Please select a valid repository");
+//         });
+//   } else {
+//     displayModal("No Path Found.")
+//   }
+// }

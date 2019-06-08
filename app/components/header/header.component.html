@@ -479,10 +479,10 @@
       </div>
       <div class="modal-body" id="modal-text-box">
         Please provide the HTTP path to the original repository:
-        <input type="text" id="origin-path" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
+        <input type="text" id="remote-path" class="form-control" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="addRemoteRepo()">Confirm</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRemoteButton" onclick="addRemoteRepo()">Confirm</button>
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
       </div>
     </div>
