@@ -1121,6 +1121,10 @@ function displayModifiedFiles() {
             }
             else if (doc.style.width === '40%') {
               document.getElementById("diff-panel-body").innerHTML = "";
+              document.getElementById("currentFilename").innerHTML = file.filePath;
+              document.getElementById("renameFilename").setAttribute("value",file.filePath);
+              document.getElementById("currentFolderPath").innerHTML = repoFullPath;
+              document.getElementById("moveFileToFolder").setAttribute("value",repoFullPath);
               document.getElementById("diff-panel-body").appendChild(fileName);
               if (selectedFile === file.filePath) {
                 // clear the selected file when diff panel is hidden
@@ -1441,11 +1445,11 @@ function fetchFromOrigin() {
  * This method implements Git Move to rename or move a given file within a repository using the simple-git library
  */
 
-function moveFile(filesource:string, filedestination:string) {
+function moveFile(filesource:string, filedestination:string, ignoretest: boolean = false) {
   console.log("Moving " + filesource + " in (" + repoFullPath + " to " + filedestination);
   addCommand("git mv " + filesource + " " + filedestination);
 
-  if(fs.existsSync(filedestination)){
+  if(fs.existsSync(filedestination) || ignoretest){
     let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
     sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
             .mv(filesource, filedestination)  //perform GIT MV operation
