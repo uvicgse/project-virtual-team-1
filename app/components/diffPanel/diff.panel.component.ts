@@ -22,7 +22,7 @@ export class DiffPanelComponent{
     let currentFilename = document.getElementById("currentFilename").innerHTML;
     let renameFilename = document.getElementById("renameFilename").value;
 
-    moveFile(currentFilename,renameFilename);
+    moveFile(currentFilename,renameFilename,true);
     $('#rename-file-modal').modal('hide');
 
   }
