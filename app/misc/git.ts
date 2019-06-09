@@ -1460,5 +1460,3 @@ function moveFile(filesource:string, filedestination:string, ignoreTest:boolean 
     displayModal("Destination directory does not exist")
   }
 }
-
-

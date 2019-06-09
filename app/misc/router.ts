@@ -248,6 +248,7 @@ function hideDiffPanel() {
   if (graphPanel != null) {
     graphPanel.style.width = "100%";
   }
+  document.getElementById("diff-panel-body")!.innerHTML= '';
 
   disableDiffPanelEditOnHide();
   hideDiffPanelButtons();
