@@ -18,6 +18,7 @@ let client;
 let avaterImg;
 let repoList = {};
 let url;
+let account;
 var repoNotFound = 0;
 var signed = 0;
 var changes = 0;
@@ -101,6 +102,11 @@ function loginWithSaved(callback) {
   if (!client.token)
     return;
 
+  // Set the account global to access the username later on
+  client.get('/user', {}, function (err, status, body, headers) {
+    account = body;
+  });
+
   // Trigger next step in login process
   getUserInfo(callback);
   
@@ -154,6 +160,15 @@ function authenticateUser(callback) {
 
       // Initialize github client with token from Oauth
       client = github.client(token['access_token']);
+
+      // If the client fails to be initialized, a new access token is required...
+      if (!client.token)
+        return;
+
+      // Set the account global to access the username later on
+      client.get('/user', {}, function (err, status, body, headers) {
+        account = body;
+      });
 
       // When user differs sign in, the sign in button must be hidden
       hideSignInButton();
@@ -511,5 +526,10 @@ function displayIssues() {
     }
 
 function getUsername(){
-  return githubName;
+  // Return null if the users account is not initialized
+  if (!account)
+    return null;
+    
+  // Return the users username
+  return account.login;
 }
