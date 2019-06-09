@@ -11,13 +11,18 @@
 <div id="rename-file-modal" class="modal fade"  role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <h1 class="modal-title">Rename File</h1>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Rename File</h4>
+      </div>
       <div class="modal-body">
 
           <div class="block">
             <div class="left">
               Current Filename:<br>
-              <p id="currentFilename"></p>
+              <div id="currentFilename" class="current-entry-display"></div>
             </div>
             <div class="right">
               New Filename:<br>
@@ -26,8 +31,8 @@
           </div>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn-primary" id="rename-file-button" (click)="renameFileFromDiff()">Rename File</button><br><br>
-          <button type="button" class="btn-primary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="rename-file-button" (click)="renameFileFromDiff()">Rename File</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -35,24 +40,29 @@
   <div id="move-file-modal" class="modal fade"  role="dialog" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <h1 class="modal-title">Move File</h1>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Move File</h4>
+        </div>
         <div class="modal-body">
             <div class="block">
               <div class="left">
                 Current Folder Path:<br>
-                <p id="currentFolderPath"></p>
+                <div id="currentFolderPath" class="current-entry-display"></div>
               </div>
               <div class="right">
                 Target Folder Path:<br>
                 <input type="text" name="folderLocal" class = "path-textbox" id="moveFileToFolder" size="50"/>
-                <button type="button" class="btn-primary" (click)="selectBrowseTargetFolder()">Browse</button>
+                <button type="button" class="btn btn-primary" (click)="selectBrowseTargetFolder()">Browse</button>
                 <input type="file" id="dirTargetFolder" name="dirTargetFolder" (change)="moveFileFromDiff()" style="display: none;" webkitdirectory />
               </div>
             </div>
           </div>
         <div class="modal-footer">
-          <button type="button" class="btn-primary" id="move-file-button" (click)="moveFileFromDiff()">Move File</button>
-          <button type="button" class="btn-primary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="move-file-button" (click)="moveFileFromDiff()">Move File</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -1445,10 +1445,15 @@ function moveFile(filesource:string, filedestination:string) {
   console.log("Moving " + filesource + " in (" + repoFullPath + " to " + filedestination);
   addCommand("git mv " + filesource + " " + filedestination);
 
-  let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
-  sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
-          .mv(filesource, filedestination)  //perform GIT MV operation
-          .then(() => console.log('move completed'))
-          .catch((err) => console.error('move failed: ', err));
+  if(fs.existsSync(filedestination)){
+    let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
+    sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
+            .mv(filesource, filedestination)  //perform GIT MV operation
+            .then(() => console.log('move completed'))
+            .catch((err) => displayModal('move failed: ' + err));
+  }
+  else{
+    displayModal("Destination directory does not exist")
+  }
 }
 
