@@ -1127,17 +1127,21 @@ function displayModifiedFiles() {
 
           document.getElementById("files-changed").appendChild(fileElement);
 
+          // On drag action, the file element is shown to the user
           fileElement.addEventListener('dragstart', function handleDragStart(e) {
             var source=e.target;
             this.style.opacity = '0.4';  // this / e.target is the source node.
+            e.target.style.border = '4px solid yellow';
            }, false);
 
+          //On drop action, the file changes state to staged, checkbox is clicked
           fileElement.addEventListener('dragend', function handleDragStart(e) {
           var divRect = document.getElementById('files-staged').getBoundingClientRect();
           if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
             e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
               checkbox.click();
           }
+
           var source=e.target;
           this.style.opacity = '1.0';  // this / e.target is the source node.
           }, false);
@@ -1211,6 +1215,7 @@ function displayModifiedFiles() {
             fileElement.className = "file";
           }
           
+          //Allow the individual file elements to be draggable
           fileElement.draggable=true;
           fileElement.id = fileId;
           fileElement.appendChild(filePath);
@@ -1233,12 +1238,14 @@ function displayModifiedFiles() {
             clearModifiedFilesList();
           }
 
-          
+          //On drag action, the file element is shows to user
           fileElement.addEventListener('dragstart', function handleDragStart(e) {
               var source=e.target;
               this.style.opacity = '0.4';  // this / e.target is the source node.
+              e.target.style.border = '4px solid yellow';
           }, false);
 
+          //On drop action, the file changes state to un-staged, checkbox is clicked
           fileElement.addEventListener('dragend', function handleDragStart(e) {
             var divRect = document.getElementById('files-changed').getBoundingClientRect();
             if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
