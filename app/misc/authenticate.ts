@@ -179,7 +179,9 @@ function authenticateUser(callback) {
 
     }, err => {
       console.log('Error while getting token', err);
-	});
+	}).catch( err => {
+    console.log(err);
+  });
 }
 
 
@@ -353,7 +355,6 @@ function signOut() {
     deleteToken();
     // Redirect the user back to the login page
     redirectToHomePage();
-
   });
 
 }
