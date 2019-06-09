@@ -22,7 +22,7 @@ export class DiffPanelComponent{
     let currentFilename = document.getElementById("currentFilename").innerHTML;
     let renameFilename = document.getElementById("renameFilename").value;
 
-    moveFile(currentFilename,renameFilename,true);
+    moveFile(currentFilename,renameFilename,true); // call moveFile method in git.ts
     $('#rename-file-modal').modal('hide');
     hideDiffPanel();
   }
@@ -35,13 +35,14 @@ export class DiffPanelComponent{
     // Grabs the name of the file that is currently open in the diff panel
     let currentFilename = document.getElementById("currentFilename").innerHTML;
     let moveFileToFolder
+    // if folder selected through directory picker dialog, assign target folder from dialog, otherwise assign from textbox
     if(event){
       moveFileToFolder = event.target.files[0].path
     }else{
       moveFileToFolder = document.getElementById("moveFileToFolder").value;
     }
 
-    moveFile(currentFilename,moveFileToFolder);
+    moveFile(currentFilename,moveFileToFolder); // call moveFile method in git.ts
     $('#move-file-modal').modal('hide');
     hideDiffPanel();
   }
