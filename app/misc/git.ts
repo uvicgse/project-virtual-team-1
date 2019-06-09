@@ -1324,7 +1324,7 @@ function addRemoteModal() {
 }
 
 /**
- This function is called after the user enters the address of the upstream repo to sync from. It sets the 
+ This function is called after the user enters the address of the upstream repo to sync from. It sets the
  entered address as the upstream repo of the forked repository.
  */
 function addRemoteRepo() {
@@ -1349,7 +1349,7 @@ function addRemoteRepo() {
 */
 function syncFromFork() {
   let repository;
-  var fetchOptions = { 
+  var fetchOptions = {
     callbacks: {
       credentials: function () { return getCredentials(); },
       certificateCheck: function () { return 1; }
@@ -1358,12 +1358,15 @@ function syncFromFork() {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repository = repo;
-      return repository.fetch('upstream', fetchOptions);
-    }) 
+      return repository.fetch("upstream", fetchOptions);
+    })
     .then(function() {
-      return repository.checkoutBranch('master', null)
+      return repository.checkoutBranch("master", null)
     })
     //.then(function()) {}
+    .then(function() {
+      repository.mergeBranches("upstream", "master");
+    });
 }
 
 /**
