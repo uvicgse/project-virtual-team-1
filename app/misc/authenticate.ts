@@ -22,10 +22,7 @@ var repoNotFound = 0;
 var signed = 0;
 var changes = 0;
 let signedAfter = false;
-let loginScopes = [
-  "user",
-  "repo",
-];
+let loginScopes = "user repo";
 
 // Configuration of Oauth Application Variables
 const OauthConfig = {
