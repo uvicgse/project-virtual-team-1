@@ -9,7 +9,7 @@ import { TextEditorComponent } from "../textEditor/text.editor.component";
 import { WikiComponent } from "../wiki/wiki.component";
 import {selectedCommitDiffPanelComponent} from "../selectedCommitDiffPanel/selected.commit.diff.panel.component";
 import { IssuePanelComponent } from "../issuePanel/issue.panel.component";
-import { PullRequestPanelComponent } from "../pullRequestPanel/pull.request.panel.component";
+import { PullRequestPanelComponent } from "../sidePanel/side.panel.component";
 
 @Component({
   selector: "my-app",

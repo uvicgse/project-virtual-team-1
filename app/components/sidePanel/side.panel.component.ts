@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 
 @Component({
   selector: "pull-request-panel",
-  templateUrl: "app/components/pullRequestPanel/pull.request.panel.component.html"
+  templateUrl: "app/components/sidePanel/side.panel.component.html"
 })
 
 /**
@@ -39,7 +39,7 @@ export class PullRequestPanelComponent {
         this.isShowingPRPanel ? this.hidePRPanel() : this.showPRPanel();
       }
     }
-    
+
   }
 
   // Shows the PR panel in it's half extended state.
@@ -59,8 +59,8 @@ export class PullRequestPanelComponent {
       prPanel.style.width = "60px";
       prListContainer.style.display = "none";
 
-      /* 
-        Calulates space leftover for the body panel after 
+      /*
+        Calulates space leftover for the body panel after
         accounting for the space taken up by the side panel.
       */
       bodyPanel.style.width = "calc(80% - 60px)";
@@ -111,7 +111,7 @@ export class PullRequestPanelComponent {
     });
   }
 
-  // This function adds a list of open repos to the UI. 
+  // This function adds a list of open repos to the UI.
   populatePRPanel(pullRequests: any[]) {
     let prList = document.getElementById("pr-list");
 
