@@ -56,7 +56,7 @@
                 Target Folder Path:<br>
                 <input type="text" name="folderLocal" class = "path-textbox" id="moveFileToFolder" size="50"/>
                 <button type="button" class="btn btn-primary" (click)="selectBrowseTargetFolder()">Browse</button>
-                <input type="file" id="dirTargetFolder" name="dirTargetFolder" (change)="moveFileFromDiff()" style="display: none;" webkitdirectory />
+                <input type="file" id="dirTargetFolder" name="dirTargetFolder" (change)="moveFileFromDiff($event)" style="display: none;" webkitdirectory />
               </div>
             </div>
           </div>

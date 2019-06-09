@@ -13,7 +13,6 @@ export class DiffPanelComponent{
   private textEditorInstance: TextEditorComponent = new TextEditorComponent();
 
 
-
   /*
     This function is called when the Rename File button is pressed in the diff panel.
     It renames the file currently open in the diff panel in the file editor
@@ -32,10 +31,15 @@ export class DiffPanelComponent{
   This function is called when the Move File button is pressed in the diff panel.
   It moves the file currently open in the diff panel in the file editor
 */
-  moveFileFromDiff():void {
+  moveFileFromDiff(event?: Event):void {
     // Grabs the name of the file that is currently open in the diff panel
     let currentFilename = document.getElementById("currentFilename").innerHTML;
-    let moveFileToFolder = document.getElementById("moveFileToFolder").value;
+    let moveFileToFolder
+    if(event){
+      moveFileToFolder = event.target.files[0].path
+    }else{
+      moveFileToFolder = document.getElementById("moveFileToFolder").value;
+    }
 
     moveFile(currentFilename,moveFileToFolder);
     $('#move-file-modal').modal('hide');
