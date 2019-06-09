@@ -122,6 +122,7 @@ function populateCommits(oldResult) {
         commitList = [];
         parentCount = {};
         columns = [];
+        branchIds = [];
 
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
