@@ -1,6 +1,24 @@
 import { Component } from "@angular/core";
 
 @Component({
+  selector: "side-bar-panel",
+  templateUrl: "app/components/sidePanel/side.panel.component.html"
+})
+
+/**
+ * This component contains the functionality
+ * of the rebase panel.
+ */
+export class RebasePanelComponent {
+  
+  /* Set the width of the side navigation to 250px */
+  toggleRebasePanel(): void {
+    let sbstatus = document.getElementById("right-pr-nav").style.width = "250px";
+  }
+}
+
+
+@Component({
   selector: "pull-request-panel",
   templateUrl: "app/components/sidePanel/side.panel.component.html"
 })
