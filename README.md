@@ -1,6 +1,8 @@
-# VisualGit - SOFTENG 701 Group 3
+# VisualGit - Blue Heron Virtual Team 1 
+## Learning without Borders: A hands-on experience in Global Software Development 
+_University of Victoria SENG421, CSC485D, CSC586D - Summer 2019_
 
-VisualGit is a visually-oriented desktop client for Git aimed at helping students learn the standard Git workflow.
+VisualGit is a visually-oriented desktop client for Git aimed at helping students learn the standard Git workflow. VisualGit was developed at the University of Auckland 
 
 # Installation
 
@@ -18,17 +20,17 @@ The repository can be cloned using either HTTPS or SSH, but SSH will be needed f
 
 #### SSH
 ````
-git clone git@github.com:uvicgse/project-seed.git
+git clone git@github.com:uvicgse/project-virtual-team-1.git
 ````
 
 #### HTTPS
 ````
-git clone https://github.com/uvicgse/project-seed.git
+git clone https://github.com/uvicgse/project-virtual-team-1.git
 ````
 then...
 
 ````
-cd VisualGit_SE701_2019_3
+cd project-virtual-team-1
 npm install
 ````
 then... for Windows 
@@ -63,40 +65,6 @@ for Node.
 
 ### CSS
 Style definitions for this project are done using [CSS](https://www.w3.org/Style/CSS/Overview.en.html).
-
-# Features
-
-### Opening / Cloning repositories
-Repositories can be added by two methods; either by cloning the remotely hosted repository or opening it from the local 
-file system. This is achieved using the add repository button in the top left which will update the screen to the add 
-repository view.
-
-#### Clone
-Cloning with SSH is recommended as there is not yet any method for entering user credentials in VisualGit. This means 
-that if you clone using HTTPS, you will still be able to see local changes and commit locally but not push.
-
-#### Open local repository
-Currently, when you clone a repository, it is saved to a directory under `./VisualGit/`. This means that when you open a
- repository which is saved locally, you can simply enter the name of the directory relative to the VisualGit directory. 
- Other save locations are not currently supported but it is planned in future work.
-
-### Adding & Committing
-When changes are made in a repository which is open, the interface will update by showing each file which has uncommitted 
-changes. These changes will be displayed as a traffic light scheme:
- - Green: Added file
- - Orange: Modified file
- - Red: Deleted file
-
-This is used to allow users to see the different types of changes easily and once they click on the files, the file 
-differences will be shown. The file differences are shown line by line with green lines representing added lines and 
-red representing deleted lines. Any other parts of the file are unchanged.
-
-### Pushing & Pulling from remote
-The pulling and pushing currently works for changes which are made on master and origin/master by syncing these up. 
-When the pull button is clicked, any changes on the remote repository will be added to the local repository and the 
-graph will be updated. When pushing, the same process applies. The changes on master will be pushed to the remote 
-repository.
-
 
 # Help
 VisualGit utilises a range of libraries and frameworks, more information on them can be found below:
