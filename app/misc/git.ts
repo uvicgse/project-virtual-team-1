@@ -1106,7 +1106,8 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
 
@@ -1126,6 +1127,20 @@ function displayModifiedFiles() {
 
           document.getElementById("files-changed").appendChild(fileElement);
 
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+            var source=e.target;
+            this.style.opacity = '0.4';  // this / e.target is the source node.
+           }, false);
+
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+          var divRect = document.getElementById('files-staged').getBoundingClientRect();
+          if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+            e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+              checkbox.click();
+          }
+          var source=e.target;
+          this.style.opacity = '1.0';  // this / e.target is the source node.
+          }, false);
 
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
@@ -1195,7 +1210,8 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          fileElement.draggable=true;
           fileElement.id = fileId;
           fileElement.appendChild(filePath);
 
@@ -1217,6 +1233,29 @@ function displayModifiedFiles() {
             clearModifiedFilesList();
           }
 
+          
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+              var source=e.target;
+              this.style.opacity = '0.4';  // this / e.target is the source node.
+          }, false);
+
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+            var divRect = document.getElementById('files-changed').getBoundingClientRect();
+            if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+              e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+                checkbox.click();
+            }
+            var source=e.target;
+            this.style.opacity = '1.0';  // this / e.target is the source node.
+          }, false);
+          
+          // document.getElementById("files-changed").addEventListener('dragover', function handleDragOver(e) {
+          //   if (e.preventDefault) {
+          //     e.preventDefault();
+          //   } 
+          //   e.dataTransfer.dropEffect = 'move';
+          //     return false;
+          // }, false);
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
