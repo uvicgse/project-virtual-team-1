@@ -1363,9 +1363,8 @@ function syncFromFork() {
     .then(function() {
       return repository.checkoutBranch("master", null)
     })
-    //.then(function()) {}
     .then(function() {
-      repository.mergeBranches("upstream", "master");
+      return repository.mergeBranches("master", "upstream/master", Git.Merge.PREFERENCE.NONE, null);
     });
 }
 
