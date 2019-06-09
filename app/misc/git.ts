@@ -1344,30 +1344,27 @@ function addRemoteRepo() {
 }
 
 /**
-* Not done
+* This function is called when the user clicks the "Sync" button on the navbar. It syncs from the upstream repository
+* configured in addRemoteRepo()
 */
-// function syncFromFork() {
-//   console.log("begin fetching");
-//   let upstreamRepoPath = document.getElementById("origin-path").value;
-//   console.log("bcbcvbbbcbc"+upstreamRepoPath+"fgdfgdfgfdg");
-//   if(upstreamRepoPath != null){
-//     Git.Repository.open(repoFullPath)
-//       .then(function (repo) {
-//         addCommand("git remote add upstream " + upstreamRepoPath);
-//         addCommand("git fetch upstream");
-//         addCommand("git merge upstream/master");
-//         console.log("fetch successful")
-//         updateModalText("Synchronisation Successful");
-//         refreshAll(repo);
-//       },
-//         function (err) {
-//           console.log("Waiting for repo to be initialised");
-//           displayModal("Please select a valid repository");
-//         });
-//   } else {
-//     displayModal("No Path Found.")
-//   }
-// }
+function syncFromFork() {
+  let repository;
+  var fetchOptions = { 
+    callbacks: {
+      credentials: function () { return getCredentials(); },
+      certificateCheck: function () { return 1; }
+    }
+  }
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repository = repo;
+      return repository.fetch('upstream', fetchOptions);
+    }) 
+    .then(function() {
+      return repository.checkoutBranch('master', null)
+    })
+    //.then(function()) {}
+}
 
 /**
  * This method is called when a valid URL is given via the fetch-modal, and runs the
