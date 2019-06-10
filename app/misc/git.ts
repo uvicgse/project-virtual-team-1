@@ -1,8 +1,10 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
+import * as simplegit from 'simple-git/promise';
 
 let $ = require("jquery");
 let Git = require("nodegit");
+let sGit = require('simple-git/promise');
 let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
@@ -374,13 +376,13 @@ function pullFromRemote() {
         updateModalText("Successfully pulled from remote branch " + branch + ", and your repo is up to date now!");
         refreshAll(repository);
       }
-      //anywhere during the above process if there is a error the following catch will catch and report it 
-      //and stop the process then and there. 
+      //anywhere during the above process if there is a error the following catch will catch and report it
+      //and stop the process then and there.
     }).catch(function(err) {
       console.log(err);
       updateModalText("Pull Failed : "+err.message);
-    }); 
-    
+    });
+
 }
 
 function pushToRemote() {
@@ -414,7 +416,7 @@ function pushToRemote() {
         }).catch(function(err) {
           console.log(err);
           updateModalText("Push Failed : "+err.message);
-          });            
+          });
         });
     });
 }
@@ -645,7 +647,7 @@ function mergeLocalBranches(element) {
     });
 }
 
-// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails. 
+// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails.
 // Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
 function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
   let repo;
@@ -664,7 +666,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
         return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
       }
     })
-    .then(function(tagOid){      
+    .then(function(tagOid){
       // Push the tag if desired
       if (pushTag) {
         console.log("Pushing tag: " + tagName);
@@ -828,6 +830,8 @@ function clearStashMsgErrorText() {
   document.getElementById("stashMsgErrorText").innerText = "";
   // @ts-ignore
   document.getElementById("stash-msg-name-input").value = "";
+  // @ts-ignore
+  document.getElementById("untracked-files-checkbox").checked = false;
 }
 
 /**
@@ -835,6 +839,21 @@ function clearStashMsgErrorText() {
  */
 function showStashModal() {
   $('#stash-msg-modal').modal('show');
+}
+
+function handleStashError(err) {
+  // handle any errors
+  console.log("stash error!" + err)
+  updateModalText("Stash error: " + err.message);
+}
+
+function doneStash() {
+  // get rid of the modal
+  $('#stash-msg-modal').modal('hide');
+  // reset the modal's message
+  clearStashMsgErrorText();
+  // All the modified files have been stashed, so update the list of stage/unstaged files
+  clearModifiedFilesList();
 }
 
 /**
@@ -846,25 +865,45 @@ function stashChanges() {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       // TODO: allow the user to select various options (include untracked, include ignored, etc.)
-      addCommand("git stash save \"" + stashMessage + "\"")
-      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
+
+      // build the command string to show the user in the terminal
+      let cmdStr = "git stash save";
+
+      // stash flags -- set to default to start
+      let flags = Git.Stash.FLAGS.DEFAULT;
+
+      if (document.getElementById("untracked-files-checkbox").checked === true) {
+        flags = flags | Git.Stash.FLAGS.INCLUDE_UNTRACKED;
+        cmdStr = cmdStr + " --include-untracked"
+      }
+
+      // if there is a message add it to the command
+      if (stashMessage.length > 0) {
+        cmdStr = cmdStr + " \"" + stashMessage + "\""
+      }
+
+      // this line is to test error handling
+      //throw new Error('test error');
+
+      // show the command to the user
+      addCommand(cmdStr);
+
+      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, flags)
         .then(function(oid) {
+          // error for testing purposes
+          //throw new Error('test error2');
           console.log("change stashed with oid" + oid);
       }).catch(function(err) {
-        updateModalText("Stash error: " + err.message);
-      })
-      .done(function() {
-        // get rid of the modal
-        $('#stash-msg-modal').modal('hide');
-        // reset the modal's message
-        clearStashMsgErrorText();
-        // All the modified files have been stashed, so update the list of stage/unstaged files
-        clearModifiedFilesList();        
-      });  
-    }, function(err) {
-      // handle any errors
-      console.log("stash error!" + err)
+        handleStashError(err)
+      }).done(function() {
+        doneStash()
+      });
+    }).catch(function(err) {
+      handleStashError(err)
+    }).done(function() {
+      doneStash()
     });
+
 }
 
 function displayStashes(){
@@ -1103,26 +1142,33 @@ function displayModifiedFiles() {
           }
           fileElement.appendChild(checkbox);
 
-          document.getElementById("files-changed").appendChild(fileElement);
+          document.getElementById("files-changed")!.appendChild(fileElement);
 
 
           fileElement.onclick = function () {
-            let doc = document.getElementById("diff-panel");
+            let doc = document.getElementById("diff-panel")!;
             console.log("width of document: " + doc.style.width);
             let fileName = document.createElement("p");
-            fileName.innerHTML = file.filePath
+            fileName.innerHTML = file.filePath;
             // Get the filename being edited and displays on top of the window
             if (doc.style.width === '0px' || doc.style.width === '') {
               displayDiffPanel();
+              // Insert elements that store filename and file path for file rename and move functionality
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
 
-              document.getElementById("diff-panel-body")!.innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
               if (fileElement.className === "file file-created") {
                 // set the selected file
                 selectedFile = file.filePath;
                 printNewFile(file.filePath);
               } else {
-
+                //disable editing if deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                }
                 let diffCols = document.createElement("div");
                 diffCols.innerText = "Old" + "\t" + "New" + "\t" + "+/-" + "\t" + "Content";
                 document.getElementById("diff-panel-body")!.appendChild(diffCols);
@@ -1131,8 +1177,14 @@ function displayModifiedFiles() {
               }
             }
             else if (doc.style.width === '40%') {
-              document.getElementById("diff-panel-body").innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
+              //populate modals
+              document.getElementById("diff-panel-body")!.innerHTML = "";
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
+
               if (selectedFile === file.filePath) {
                 // clear the selected file when diff panel is hidden
                 selectedFile = "";
@@ -1144,6 +1196,13 @@ function displayModifiedFiles() {
                 } else {
                   selectedFile = file.filePath;
                   printFileDiff(file.filePath);
+                }
+
+                //disable editing if entry is a deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                } else {
+                  displayDiffPanelButtons();
                 }
               }
             }
@@ -1448,6 +1507,22 @@ function fetchFromOrigin() {
   }
 }
 
+/**
+ * This method implements Git Move to rename or move a given file within a repository using the simple-git library
+ */
 
+function moveFile(filesource:string, filedestination:string, ignoreTest:boolean = false) {
+  console.log("Moving " + filesource + " in (" + repoFullPath + " to " + filedestination);
+  addCommand("git mv " + filesource + " " + filedestination);
 
-
+  if(fs.existsSync(filedestination) || ignoreTest){
+    let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
+    sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
+            .mv(filesource, filedestination)  //perform GIT MV operation
+            .then(() => console.log('move completed'))
+            .catch((err) => displayModal('move failed: ' + err));
+  }
+  else{
+    displayModal("Destination directory does not exist")
+  }
+}

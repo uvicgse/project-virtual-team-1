@@ -7,12 +7,58 @@ import { TextEditorComponent } from "../textEditor/text.editor.component";
   templateUrl: 'app/components/diffPanel/diff.panel.component.html'
 })
 
-export class DiffPanelComponent {
+export class DiffPanelComponent{
   // Creating instances for the classes so that their functions can be used
   private footerInstance: FooterComponent = new FooterComponent();
   private textEditorInstance: TextEditorComponent = new TextEditorComponent();
 
-  /* 
+
+  /*
+    This function is called when the Rename File button is pressed in the diff panel.
+    It renames the file currently open in the diff panel in the file editor
+  */
+  renameFileFromDiff():void {
+    // Grabs the name of the file that is currently open in the diff panel
+    let currentFilename = document.getElementById("currentFilename").innerHTML;
+    let renameFilename = document.getElementById("renameFilename").value;
+
+    moveFile(currentFilename,renameFilename,true); // call moveFile method in git.ts
+    $('#rename-file-modal').modal('hide');
+    hideDiffPanel();
+  }
+
+  /*
+  This function is called when the Move File button is pressed in the diff panel.
+  It moves the file currently open in the diff panel in the file editor
+*/
+  moveFileFromDiff(event?: Event):void {
+    // Grabs the name of the file that is currently open in the diff panel
+    let currentFilename = document.getElementById("currentFilename").innerHTML;
+    let moveFileToFolder
+    // if folder selected through directory picker dialog, assign target folder from dialog, otherwise assign from textbox
+    if(event){
+      moveFileToFolder = event.target.files[0].path
+    }else{
+      moveFileToFolder = document.getElementById("moveFileToFolder").value;
+    }
+
+    moveFile(currentFilename,moveFileToFolder); // call moveFile method in git.ts
+    $('#move-file-modal').modal('hide');
+    hideDiffPanel();
+  }
+
+
+  /*
+  This function opens the browse directory dialog that allows the user to select a target directory for a file move
+*/
+  selectBrowseTargetFolder(): void {
+    document.getElementById("dirTargetFolder").click();
+    document.getElementById("moveFileToFolder").value = document.getElementById("dirTargetFolder").files[0].path;
+  }
+
+
+
+  /*
     This function is called when the Open in Editor button is pressed in the diff panel. 
     It opens the file currently open in the diff panel in the file editor
   */

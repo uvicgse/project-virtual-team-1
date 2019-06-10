@@ -642,7 +642,7 @@ body .footer{
   border-top: none;
 }
 
-div.editor-header button.close-button, div.editor-header button.open-button, button.open-editor-button {
+div.editor-header button.close-button, div.editor-header button.open-button, button.open-editor-button,button.move-file-button,button.rename-file-button {
   display: inline;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -654,7 +654,7 @@ div.editor-header button.close-button, div.editor-header button.open-button, but
   color: #fff;
 }
 
-div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover {
+div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover,button.rename-file-button:hover,button.move-file-button:hover {
   opacity: 0.8;
 }
 
@@ -1109,10 +1109,10 @@ body .pull-request-panel {
   display: list-item;
 }
 
-.modal-body label { 
-  display: inline-block; 
-  width: 20%; 
-  text-align: left; 
+.modal-body label {
+  display: inline-block;
+  width: 20%;
+  text-align: left;
 }
 
 .modal-error {
@@ -1121,4 +1121,14 @@ body .pull-request-panel {
   color: red;
   font-size: larger;
   max-width: 70%;
+}
+
+.current-entry-display {
+  color: darkgray;
+  font-style: italic;
+}
+
+.checkbox-label {
+  white-space: nowrap;
+  font-weight: normal
 }

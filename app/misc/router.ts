@@ -248,6 +248,7 @@ function hideDiffPanel() {
   if (graphPanel != null) {
     graphPanel.style.width = "100%";
   }
+  document.getElementById("diff-panel-body")!.innerHTML= '';
 
   disableDiffPanelEditOnHide();
   hideDiffPanelButtons();
@@ -293,7 +294,10 @@ function displayDiffPanelButtons() {
   if (cancelButton != null) {
     cancelButton.style.visibility = "visible";
   }
-  document.getElementById("open-editor-button").style.visibility = "visible";
+  document.getElementById("open-editor-button")!.style.visibility = "visible";
+  document.getElementById("rename-modal-button-diff")!.style.visibility = "visible";
+  document.getElementById("move-modal-button-diff")!.style.visibility = "visible";
+
 }
 
 function hideDiffPanelButtons() {
@@ -306,7 +310,10 @@ function hideDiffPanelButtons() {
   if (cancelButton != null) {
     cancelButton.style.visibility = "hidden";
   }
-  document.getElementById("open-editor-button").style.visibility = "hidden";
+  document.getElementById("open-editor-button")!.style.visibility = "hidden";
+  document.getElementById("rename-modal-button-diff")!.style.visibility = "hidden";
+  document.getElementById("move-modal-button-diff")!.style.visibility = "hidden";
+
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
 }
