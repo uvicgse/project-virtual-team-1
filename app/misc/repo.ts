@@ -344,7 +344,7 @@ function openRepository() {
   }
 
 // works as a monitor for any change to the reference list
-function refreshList(verbose, force) {
+function refreshReferences(verbose, force) {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repo.getCurrentBranch()
@@ -442,7 +442,7 @@ function refreshList(verbose, force) {
         branch = branchParts[branchParts.length - 1];
       })
       .then(function () {
-        refreshList(true, true);
+        refreshReferences(true, true);
       })
       .then(function () {
         console.log("Updating the graph and the labels");
