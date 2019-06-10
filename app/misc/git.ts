@@ -903,7 +903,6 @@ function stashChanges() {
     }).done(function() {
       doneStash()
     });
-
 }
 
 /**
@@ -914,11 +913,15 @@ function popStash() {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
         let stashIndex = 0;
-        Git.Stash.pop(repo, stashIndex).then(function(result)
+        Git.Stash.pop(repo, stashIndex)
           .then(function(oid) {
-            console.log("result: " + result);
+            console.log("oid: " + oid);
+        }).catch(function(err) {
+          handleStashError(err)
+        }).done(function() {
+          doneStash()
         });
-    }
+    });
 }
 
 
