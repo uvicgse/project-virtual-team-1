@@ -169,14 +169,15 @@ function authenticateUser(callback) {
 
       // Set the account global to access the username later on
       client.get('/user', {}, function (err, status, body, headers) {
+        // Set the account variable
         account = body;
+        
+        // When user differs sign in, the sign in button must be hidden
+        hideSignInButton();
+
+        // Trigger next step in login process
+        getUserInfo(callback);
       });
-
-      // When user differs sign in, the sign in button must be hidden
-      hideSignInButton();
-
-      // Trigger next step in login process
-      getUserInfo(callback);
 
     }, err => {
       console.log('Error while getting token', err);
