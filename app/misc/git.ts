@@ -1144,7 +1144,7 @@ function displayModifiedFiles() {
           }
 
           var source=e.target;
-          this.style.opacity = '1.0';  // this / e.target is the source node.
+          this.style.opacity = '1.0';  // resets the view changes of dragstart
           }, false);
 
           fileElement.onclick = function () {
