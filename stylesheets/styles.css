@@ -249,6 +249,7 @@ body .navbar .dropdown-toggle {
 body .file-panel {
   width: 20%;
   height: 70vh;
+  border = '1px solid black';
   background-color: #282828;
   float: left;
   z-index: 0;

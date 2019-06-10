@@ -1131,13 +1131,17 @@ function displayModifiedFiles() {
           fileElement.addEventListener('dragstart', function handleDragStart(e) {
             var source=e.target;
             this.style.opacity = '0.4';  // this / e.target is the source node.
+            //set both file element and file panel highlight colours
             e.target.style.border = '4px solid #39C0B9';
+            document.getElementById("file-panel").style.border = '1px solid #39C0B9';
            }, false);
 
           //On drop action, the file changes state to staged, checkbox is clicked
           fileElement.addEventListener('dragend', function handleDragStart(e) {
           var divRect = document.getElementById('files-staged').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
           e.target.style.border = '1px solid white';
+          document.getElementById("file-panel").style.border = '1px solid black';
           if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
             e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
               checkbox.click();
@@ -1243,13 +1247,17 @@ function displayModifiedFiles() {
           fileElement.addEventListener('dragstart', function handleDragStart(e) {
               var source=e.target;
               this.style.opacity = '0.4';  // this / e.target is the source node.
+              //set both file element and file panel highlight colours
               e.target.style.border = '4px solid #39C0B9';
+              document.getElementById("file-panel").style.border = '1px solid #39C0B9';
           }, false);
 
           //On drop action, the file changes state to un-staged, checkbox is clicked
           fileElement.addEventListener('dragend', function handleDragStart(e) {
             var divRect = document.getElementById('files-changed').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
             e.target.style.border = '1px solid white';
+            document.getElementById("file-panel").style.border = '1px solid black';
             if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
               e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
                 checkbox.click();
