@@ -907,18 +907,23 @@ function stashChanges() {
 }
 
 function displayStashes(){
-  stashes = [];
-  
-  var stashCb = function(index, message, oid) {
-    console.log("test");
-  };
+  let sGitRepo = sGit(repoFullPath);
+  let stashList = document.getElementById("stash-list")!;
+  stashList.innerHTML = "";
 
-  let selectedFile = "";
-
-  Git.Repository.open(repoFullPath)
-    .then(function (repo) {
-      return Git.Stash.forEach(repo,stashCb);
-    }).then(function(){});
+  sGitRepo.silent(true).stashList().then((list)=>{
+    if(list.all.length > 0){
+      document.getElementById("stashed-files-message")!.hidden =true;
+    } else{
+      document.getElementById("stashed-files-message")!.hidden = false;
+    }
+    list.all.forEach(element => {
+      let stashElement = document.createElement("li");
+      stashElement.className = "list-group-item stash-list-item";
+      stashElement.innerHTML = element.message;
+      stashList.appendChild(stashElement);
+    });
+  });
 }
 
 function revertCommit() {

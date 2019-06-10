@@ -1132,3 +1132,8 @@ body .pull-request-panel {
   white-space: nowrap;
   font-weight: normal
 }
+
+.stash-list-item{
+  background-color: green;
+  color: white;
+}
