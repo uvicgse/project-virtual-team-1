@@ -344,7 +344,7 @@ function openRepository() {
   }
 
 // works as a monitor for any change to the reference list
-function refreshList(verbose) {
+function refreshReferences(verbose, force) {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repo.getCurrentBranch()
@@ -356,10 +356,13 @@ function refreshList(verbose) {
           // sort refList alphabetically to get uniform order of the list
           refList.sort();
 
-          // monitor any changes to reference list
-          if (lastRefList.length === refList.length && lastRefList.every(function(value, index) { return value.name() === refList[index].name()})) {
-            // no change to the ref list, do nothing
-            return;
+          // Always update if forced
+          if (!force) {
+            // monitor any changes to reference list
+            if (lastRefList.length === refList.length && lastRefList.every(function(value, index) { return value.name() === refList[index].name()})) {
+              // no change to the ref list, do nothing
+              return;
+            }
           }
 
           // detects changes, refresh the lists
@@ -429,9 +432,7 @@ function refreshList(verbose) {
   function refreshAll(repository) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
-    bname = {};
-    tags = {};
-
+    
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
@@ -441,7 +442,7 @@ function refreshList(verbose) {
         branch = branchParts[branchParts.length - 1];
       })
       .then(function () {
-        refreshList(true);
+        refreshReferences(true, true);
       })
       .then(function () {
         console.log("Updating the graph and the labels");

@@ -1099,3 +1099,8 @@ body .pull-request-panel {
   font-size: larger;
   max-width: 70%;
 }
+
+.checkbox-label {
+  white-space: nowrap;
+  font-weight: normal
+}
