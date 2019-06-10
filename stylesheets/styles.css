@@ -570,6 +570,7 @@ body .footer{
 
 .file-created {
   background-color: #4c994c;
+  border: 1px solid #fff;
 }
 
 .file-modified {

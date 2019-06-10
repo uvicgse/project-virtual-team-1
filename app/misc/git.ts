@@ -1131,12 +1131,13 @@ function displayModifiedFiles() {
           fileElement.addEventListener('dragstart', function handleDragStart(e) {
             var source=e.target;
             this.style.opacity = '0.4';  // this / e.target is the source node.
-            e.target.style.border = '4px solid yellow';
+            e.target.style.border = '4px solid #39C0B9';
            }, false);
 
           //On drop action, the file changes state to staged, checkbox is clicked
           fileElement.addEventListener('dragend', function handleDragStart(e) {
           var divRect = document.getElementById('files-staged').getBoundingClientRect();
+          e.target.style.border = '1px solid white';
           if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
             e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
               checkbox.click();
@@ -1242,12 +1243,13 @@ function displayModifiedFiles() {
           fileElement.addEventListener('dragstart', function handleDragStart(e) {
               var source=e.target;
               this.style.opacity = '0.4';  // this / e.target is the source node.
-              e.target.style.border = '4px solid yellow';
+              e.target.style.border = '4px solid #39C0B9';
           }, false);
 
           //On drop action, the file changes state to un-staged, checkbox is clicked
           fileElement.addEventListener('dragend', function handleDragStart(e) {
             var divRect = document.getElementById('files-changed').getBoundingClientRect();
+            e.target.style.border = '1px solid white';
             if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
               e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
                 checkbox.click();
