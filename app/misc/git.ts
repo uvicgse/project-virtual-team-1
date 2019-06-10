@@ -1139,16 +1139,20 @@ function displayModifiedFiles() {
               displayDiffPanel();
               // Insert elements that store filename and file path for file rename and move functionality
               document.getElementById("currentFilename")!.innerHTML = file.filePath;
-              document.getElementById("renameFilename")!.setAttribute("value",file.filePath);
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
               document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
-              document.getElementById("moveFileToFolder")!.setAttribute("value",repoFullPath);
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
               document.getElementById("diff-panel-body")!.appendChild(fileName);
+
               if (fileElement.className === "file file-created") {
                 // set the selected file
                 selectedFile = file.filePath;
                 printNewFile(file.filePath);
               } else {
-
+                //disable editing if deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                }
                 let diffCols = document.createElement("div");
                 diffCols.innerText = "Old" + "\t" + "New" + "\t" + "+/-" + "\t" + "Content";
                 document.getElementById("diff-panel-body")!.appendChild(diffCols);
@@ -1157,12 +1161,14 @@ function displayModifiedFiles() {
               }
             }
             else if (doc.style.width === '40%') {
+              //populate modals
               document.getElementById("diff-panel-body")!.innerHTML = "";
               document.getElementById("currentFilename")!.innerHTML = file.filePath;
-              document.getElementById("renameFilename")!.setAttribute("value",file.filePath);
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
               document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
-              document.getElementById("moveFileToFolder")!.setAttribute("value",repoFullPath);
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
               document.getElementById("diff-panel-body")!.appendChild(fileName);
+
               if (selectedFile === file.filePath) {
                 // clear the selected file when diff panel is hidden
                 selectedFile = "";
@@ -1174,6 +1180,13 @@ function displayModifiedFiles() {
                 } else {
                   selectedFile = file.filePath;
                   printFileDiff(file.filePath);
+                }
+
+                //disable editing if entry is a deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                } else {
+                  displayDiffPanelButtons();
                 }
               }
             }

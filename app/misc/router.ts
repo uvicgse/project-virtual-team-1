@@ -294,9 +294,9 @@ function displayDiffPanelButtons() {
   if (cancelButton != null) {
     cancelButton.style.visibility = "visible";
   }
-  document.getElementById("open-editor-button").style.visibility = "visible";
-  document.getElementById("move-file-button").style.visibility = "visible";
-  document.getElementById("rename-file-button").style.visibility = "visible";
+  document.getElementById("open-editor-button")!.style.visibility = "visible";
+  document.getElementById("rename-modal-button-diff")!.style.visibility = "visible";
+  document.getElementById("move-modal-button-diff")!.style.visibility = "visible";
 
 }
 
@@ -310,9 +310,9 @@ function hideDiffPanelButtons() {
   if (cancelButton != null) {
     cancelButton.style.visibility = "hidden";
   }
-  document.getElementById("open-editor-button").style.visibility = "hidden";
-  document.getElementById("rename-file-button").style.visibility = "hidden";
-  document.getElementById("move-file-button").style.visibility = "hidden";
+  document.getElementById("open-editor-button")!.style.visibility = "hidden";
+  document.getElementById("rename-modal-button-diff")!.style.visibility = "hidden";
+  document.getElementById("move-modal-button-diff")!.style.visibility = "hidden";
 
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
