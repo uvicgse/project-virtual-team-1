@@ -316,7 +316,7 @@ body .file-panel .staging-buttons:hover {
   opacity: 0.8;
 }
 
-body .file-panel .show-stash-list-button {
+body .file-panel .pop-stash-list-button {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -331,7 +331,7 @@ body .file-panel .show-stash-list-button {
   color: #fff;
 }
 
- body .file-panel .show-stash-list-button:hover {
+ body .file-panel .pop-stash-list-button:hover {
   opacity: 0.8;
 }
 

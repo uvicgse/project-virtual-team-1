@@ -906,6 +906,22 @@ function stashChanges() {
 
 }
 
+/**
+ * Remove a single stashed state from the stash list
+ * Using nodegit
+ */
+function popStash() {
+    Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        let stashIndex = 0;
+        Git.Stash.pop(repo, stashIndex).then(function(result)
+          .then(function(oid) {
+            console.log("result: " + result);
+        });
+    }
+}
+
+
 function displayStashes(){
   let sGitRepo = sGit(repoFullPath);
   let stashList = document.getElementById("stash-list")!;
@@ -1008,7 +1024,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage); 
+            filePanelMessage.parentNode.removeChild(filePanelMessage);
           }
         }
 
