@@ -609,27 +609,6 @@ function refreshList(verbose) {
     ul.appendChild(li);
   }
 
-  // deleting tags
-  function deleteTag() {
-
-    // remove taglist item
-    var tagName = name.getAttribute("id");
-    var tagNode = document.getElementById(tagName);
-    name.parentNode.removeChild(name);
-
-    let repo;
-    Git.Repository.open(repoFullPath)
-      .then(function(repoParam) {
-        repo = repoParam;
-      })
-      .then(function(){
-        return Git.Tag.delete(repo, tagName);
-      }
-    ).catch(function(msg) {
-      let errorMessage = "Error: " + msg.message;
-    });
-  }
-
   // Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
 
