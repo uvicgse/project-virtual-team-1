@@ -1130,7 +1130,7 @@ function displayModifiedFiles() {
           // On drag action, the file element is shown to the user
           fileElement.addEventListener('dragstart', function handleDragStart(e) {
             var source=e.target;
-            this.style.opacity = '0.4';  // this / e.target is the source node.
+            this.style.opacity = '0.4';   // show selected element differently
             e.target.style.border = '4px solid yellow';
            }, false);
 
@@ -1143,7 +1143,7 @@ function displayModifiedFiles() {
           }
 
           var source=e.target;
-          this.style.opacity = '1.0';  // this / e.target is the source node.
+          this.style.opacity = '1.0';  // resets the view changes of dragstart
           }, false);
 
           fileElement.onclick = function () {
