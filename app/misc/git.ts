@@ -1358,40 +1358,21 @@ function syncFromFork() {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repository = repo;
-      return repository.fetch("upstream", fetchOptions);
+      return repository.fetch("upstream", fetchOptions) //fetch from upstream
+    }, function (err) {
+      console.log("error fetching:"+ err)
     })
     .then(function() {
-      return repository.checkoutBranch("master", null)
+      return repository.checkoutBranch("master") //checkout master
+    }, function (err) {
+      console.log("error checking out branch:"+ err)
     })
     .then(function() {
-      return repository.mergeBranches("master", "upstream/master", Git.Merge.PREFERENCE.NONE, null);
+      return repository.mergeBranches("master", "upstream/master"); //merge upstream/master into master
+    }, function (err) {
+      console.log("error merging:"+ err)
+    })
+    .then(function(oid){
+      console.log("oid"+oid)
     });
 }
-
-/**
- * This method is called when a valid URL is given via the fetch-modal, and runs the
- * series of git commands which fetch and merge from an upstream repository.
- */
-// function fetchFromOrigin() {
-//   console.log("begin fetching");
-//   let upstreamRepoPath = document.getElementById("origin-path").value;
-//   if (upstreamRepoPath != null) {
-//     Git.Repository.open(repoFullPath)
-//       .then(function (repo) {
-//         console.log("fetch path valid")
-//         displayModal("Beginning Synchronisation...");
-//         addCommand("git remote add upstream " + upstreamRepoPath);
-//         addCommand("git fetch upstream");
-//         addCommand("git merge upstream/master");
-//         console.log("fetch successful")
-//         updateModalText("Synchronisation Successful");
-//         refreshAll(repo);
-//       },
-//         function (err) {
-//           console.log("Waiting for repo to be initialised");
-//           displayModal("Please select a valid repository");
-//         });
-//   } else {
-//     displayModal("No Path Found.")
-//   }
-// }
