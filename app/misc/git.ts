@@ -912,10 +912,12 @@ function stashChanges() {
 function popStash() {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
-        let stashIndex = 0;
+        addCommand("git stash pop")
+
+        let stashIndex = 0; // 0 --> top of the stack
         Git.Stash.pop(repo, stashIndex)
-          .then(function(oid) {
-            console.log("oid: " + oid);
+        .then(function(result) {
+          // unfortunately the result is ALWAYS undefined
         }).catch(function(err) {
           handleStashError(err)
         }).done(function() {
