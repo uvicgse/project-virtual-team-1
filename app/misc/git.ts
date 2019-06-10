@@ -921,6 +921,7 @@ function displayStashes(){
       let stashElement = document.createElement("li");
       stashElement.className = "list-group-item stash-list-item";
       stashElement.innerHTML = element.message;
+
       stashList.appendChild(stashElement);
     });
   });
