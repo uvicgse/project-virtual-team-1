@@ -930,8 +930,10 @@ function displayStashes(){
   sGitRepo.silent(true).stashList().then((list)=>{
     if(list.all.length > 0){
       document.getElementById("stashed-files-message")!.hidden =true;
+      document.getElementById("pop-stash-list")!.style.display = "block";
     } else{
       document.getElementById("stashed-files-message")!.hidden = false;
+      document.getElementById("pop-stash-list")!.style.display = "none";
     }
     list.all.forEach(element => {
       let stashElement = document.createElement("li");
