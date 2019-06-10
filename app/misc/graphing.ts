@@ -440,6 +440,7 @@ function makeBasicNode(c, column: number) {
                 shortName = "*" + shortName;
             }
             let bsnodeId = generateUniqueNumber();
+
             // Add branch nodes
             bsNodes.add({
                 id: bsnodeId,
@@ -449,11 +450,11 @@ function makeBasicNode(c, column: number) {
                 icon: {
                   face: "FontAwesome",
                   code: "\uf126",
-                  color: "white"
+                  color: '#3399ff'
                 },
                 // Make text visible beneath icon
                 font: {
-                  color: "white",
+                  color: '#3399ff',
                 },
                 title: branchName,
                 label: shortName,
@@ -466,7 +467,8 @@ function makeBasicNode(c, column: number) {
             // Add an edge from the bracnh to the commit
             bsEdges.add({
                 from: bsnodeId,
-                to: id
+                to: id,
+                color: '#3399ff'
             });
             // Update the branch list
             branchIds[id] = bsnodeId;
@@ -493,11 +495,11 @@ function makeBasicNode(c, column: number) {
                 icon: {
                   face: "FontAwesome",
                   code: "\uf02b",
-                  color: "teal"
+                  color: '#ff8080'
                 },
                 // Make text visible beneath icon
                 font: {
-                  color: "white",
+                  color: '#ff8080',
                 },
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
@@ -511,6 +513,7 @@ function makeBasicNode(c, column: number) {
                 from: bsnodeId,
                 to: id,
                 dashes: true,
+                color: '#ff8080',
                 arrows: {
                     to: false,
                     middle: false,
@@ -584,11 +587,11 @@ function makeAbsNode(c, column: number) {
                     icon: {
                       face: "FontAwesome",
                       code: "\uf126",
-                      color: "white"
+                      color: '#3399ff'
                     },
                     // Make text visible beneath icon
                     font: {
-                      color: "white",
+                      color: '#3399ff',
                     },
                     title: branchName,
                     label: shortName,
@@ -601,7 +604,8 @@ function makeAbsNode(c, column: number) {
                 // Add an edge from the branch to the commit
                 abEdges.add({
                     from: bsnodeId,
-                    to: id
+                    to: id,
+                    color: '#3399ff'
                 });
             }
         }
@@ -625,11 +629,11 @@ function makeAbsNode(c, column: number) {
                     icon: {
                       face: "FontAwesome",
                       code: "\uf02b",
-                      color: "teal"
+                      color: '#ff8080'
                     },
                     // Make text visible beneath icon
                     font: {
-                      color: "white",
+                      color: '#ff8080',
                     },
                     title: tagName, // hover text
                     label: shortTagName, // shown under/in shape
@@ -643,6 +647,7 @@ function makeAbsNode(c, column: number) {
                     from: bsnodeId,
                     to: id,
                     dashes: true,
+                    color: '#ff8080',
                     arrows: {
                         to: false,
                         middle: false,
@@ -725,11 +730,11 @@ function makeNode(c, column: number) {
                 icon: {
                   face: "FontAwesome",
                   code: "\uf126",
-                  color: "white"
+                  color: '#3399ff'
                 },
                 // Make text visible beneath icon
                 font: {
-                  color: "white",
+                  color: '#3399ff',
                 },                title: branchName,
                 label: shortName,
                 physics: false,
@@ -741,7 +746,8 @@ function makeNode(c, column: number) {
             // Add an edge from the bracnh to the commit
             edges.add({
                 from: bsnodeId,
-                to: id
+                to: id,
+                color: '#3399ff'
             });
         }
         flag = true;
@@ -766,11 +772,11 @@ function makeNode(c, column: number) {
                 icon: {
                   face: "FontAwesome",
                   code: "\uf02b",
-                  color: "teal"
+                  color: '#ff8080'
                 },
                 // Make text visible beneath icon
                 font: {
-                  color: "white",
+                  color: '#ff8080',
                 },
                 title: tagName, // hover text
                 label: shortTagName, // shown under/in shape
@@ -784,6 +790,7 @@ function makeNode(c, column: number) {
                 from: bsnodeId,
                 to: id,
                 dashes: true,
+                color: '#ff8080',
                 arrows: {
                     to: false,
                     middle: false,
