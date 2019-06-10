@@ -365,9 +365,10 @@ function refreshList(verbose) {
           // detects changes, refresh the lists
           console.log("branch or tag changes detected... refreshing branch and tag list");
 
-          if (lastRefList.length !== 0) {
+          if (lastRefList.length !== 0 && !refreshAllFlag) {
             // show refresh graph alert
             $("#refresh-graph-alert").show();
+            $("#refresh-button").hide();
           }
 
           bname = {};
@@ -479,6 +480,8 @@ function refreshList(verbose) {
         // TODO: add a condition here to switch between tag and branch name string
         document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
+    // suppress commit detection alert
+    refreshAllFlag = true;
   }
 
   // Displaying branches in a dropdown menu

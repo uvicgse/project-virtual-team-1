@@ -1110,8 +1110,12 @@ body .pull-request-panel {
 }
 
 /* commit graph refresh button style */
-#refresh-graph {
+.refresh-graph-btn {
   float: right;
+}
+
+#refresh-button {
+  margin: 10px 10px 0 0;
 }
 
 .btn {

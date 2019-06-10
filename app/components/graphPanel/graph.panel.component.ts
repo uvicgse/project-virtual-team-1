@@ -80,6 +80,7 @@ export class GraphPanelComponent {
 
   refreshGraph(): void {
     $("#refresh-graph-alert").hide();
+    $("#refresh-button").show();
     drawGraph();
     updateModalText("Graph successfully refreshed");
   }

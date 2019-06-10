@@ -20,6 +20,7 @@ let commitToRevert = 0;
 let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
+let refreshAllFlag = false;
 
 
 
@@ -268,7 +269,12 @@ function checkCommitChange() {
           if (typeof lastCommitLength !== "undefined" && lastCommitLength !== commits.length) {
             console.log("commit graph changes detected");
             // show refresh graph alert
-            $("#refresh-graph-alert").show();
+            if (!refreshAllFlag) {
+              $("#refresh-graph-alert").show();
+              $("#refresh-button").hide();
+            }
+
+            refreshAllFlag = false;
           }
 
           lastCommitLength = commits.length;

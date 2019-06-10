@@ -1,8 +1,9 @@
 <div class="graph-panel" id="graph-panel">
   <!-- auto-detection box on commit graph -->
+  <button id="refresh-button" type="button" class="btn btn-info refresh-graph-btn" (click)="refreshGraph()">Refresh Graph</button>
   <div id="refresh-graph-alert" class="alert alert-warning" role="alert" tabindex="-1">
     Commit graph changes detected!
-    <button id="refresh-graph" type="button" class="btn btn-warning" (click)="refreshGraph()">Refresh Graph</button>
+    <button type="button" class="btn btn-warning refresh-graph-btn" (click)="refreshGraph()">Refresh Graph</button>
   </div>
 
   <div class="network" id="my-network">
