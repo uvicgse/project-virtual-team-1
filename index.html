@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update modified files on left file panel
     displayModifiedFiles();
     // monitor changes on branch list and tag list
-    refreshList(false);
+    refreshReferences(false, false);
     // check if there is any changes to either ref list or commits
     checkCommitChange();
   }, 3000);

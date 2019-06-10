@@ -16,8 +16,8 @@ let parentCount = {};
 let columns: boolean[] = [];
 let edgeDic = {};
 let numOfCommits = 0;
-let branchIds = {};
-let tagIds = {};
+let branchIds = [];
+let tagIds = [];
 let unumberPrev = 0;
 let selectedCommit: string;
 
@@ -122,7 +122,9 @@ function populateCommits(oldResult) {
         commitList = [];
         parentCount = {};
         columns = [];
-
+        branchIds = [];
+        tagIds = [];
+        
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
             let parents: string[] = commitHistory[i].parents();
