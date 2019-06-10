@@ -133,7 +133,7 @@ function downloadFunc(cloneURL, fullLocalPath) {
           return 1;
         },
         credentials: function () {
-          return Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
+          return getCredentials();
         },
         transferProgress: function (data) {
           let bytesRatio = data.receivedObjects() / data.totalObjects();

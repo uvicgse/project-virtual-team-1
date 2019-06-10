@@ -105,11 +105,12 @@ function loginWithSaved(callback) {
 
   // Set the account global to access the username later on
   client.get('/user', {}, function (err, status, body, headers) {
+    // Set the global state of account
     account = body;
-  });
 
-  // Trigger next step in login process
-  getUserInfo(callback);
+    // Trigger next step in login process
+    getUserInfo(callback);
+  });
   
 }
 
@@ -119,7 +120,7 @@ function searchRepoName() {
   ul.innerHTML = ''; // clears the dropdown menu which shows all the repos
 
   // Gets users name and password
-  cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
+  cred = getCredentials();
 
   var ghme = client.me();
   ghme.repos(function (err, data, head) {
@@ -187,7 +188,7 @@ function authenticateUser(callback) {
 
 function getUserInfo(callback) {
 
-  cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
+  cred = getCredentials();
 
   var ghme = client.me();
 
@@ -468,7 +469,7 @@ function createIssue() {
   repoName = document.getElementById("repo-name").innerHTML
   githubName = document.getElementById("githubname").innerHTML
   if (repoName != "repository" && theArray != null) {
-      cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
+      cred = getCredentials();
       client = github.client({
         id: OauthConfig.clientId,
         secret: OauthConfig.clientSecret,
@@ -504,7 +505,7 @@ function displayIssues() {
           ul.innerHTML = ''; // clears the dropdown menu which shows all the issues
 
           // Create credentials off of Oauth token
-          cred = Git.Cred.userpassPlaintextNew(getAccessToken(), getPasswordTemp());
+          cred = getCredentials();
 
           client = github.client({
             id: OauthConfig.clientId,
