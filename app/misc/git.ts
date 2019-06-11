@@ -22,7 +22,8 @@ let commitHistory = [];
 let commitToRevert = 0;
 let commitHead = 0;
 let commitID = 0;
-
+let lastCommitLength;
+let refreshAllFlag = false;
 
 
 
@@ -259,6 +260,33 @@ function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
 }
 
+// checking if the length of commits is different
+function checkCommitChange() {
+  // get HEAD commit from current pointing branch
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getHeadCommit().then(function(commit) {
+        // get all commits under current pointing branch
+        let history = commit.history();
+        history.on("end", function (commits) {
+          if (typeof lastCommitLength !== "undefined" && lastCommitLength !== commits.length) {
+            console.log("commit graph changes detected");
+            // show refresh graph alert
+            if (!refreshAllFlag) {
+              $("#refresh-graph-alert").show();
+              $("#refresh-button").hide();
+            }
+
+            refreshAllFlag = false;
+          }
+
+          lastCommitLength = commits.length;
+        });
+        history.start();
+      });
+    });
+}
+
 function getAllCommits(callback) {
   clearModifiedFilesList();
   let repos;
@@ -274,6 +302,7 @@ function getAllCommits(callback) {
     .then(function (refs) {
       let count = 0;
       console.log("getting " + refs.length + " refs");
+      // while loop of asynchronous requests
       async.whilst(
         function test(cb) { cb(null, count < refs.length) },
         function (cb) {
@@ -1575,11 +1604,12 @@ function fetchFromOrigin() {
  * This method implements Git Move to rename or move a given file within a repository using the simple-git library
  */
 
-function moveFile(filesource:string, filedestination:string, ignoreTest:boolean = false) {
-  console.log("Moving " + filesource + " in (" + repoFullPath + " to " + filedestination);
+function moveFile(filesource:string, filedestination:string, skipFileExistTest:boolean = false) {
+  console.log("Moving " + filesource + " in (" + repoFullPath + ") to " + filedestination);
   addCommand("git mv " + filesource + " " + filedestination);
 
-  if(fs.existsSync(filedestination) || ignoreTest){
+  // test if file destination already exists or if test is to be skipped
+  if(fs.existsSync(filedestination) || skipFileExistTest){
     let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
     sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
             .mv(filesource, filedestination)  //perform GIT MV operation
@@ -1587,6 +1617,6 @@ function moveFile(filesource:string, filedestination:string, ignoreTest:boolean 
             .catch((err) => displayModal('move failed: ' + err));
   }
   else{
-    displayModal("Destination directory does not exist")
+    displayModal("Destination directory does not exist");
   }
 }
