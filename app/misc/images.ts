@@ -52,25 +52,4 @@ function imageForUser(name: string, email: string, callback) {
     pic = getLetterIcon(name);
   }  
   callback(pic);
-  // githubAvatarUrl(username, function(err,avatarURL){
-  //   if(!err && !email.includes('@users.noreply.github.com')) {
-  //     console.log(`avatar url: ${avatarURL}`);
-  //     pic = avatarURL;
-  //   } 
-  //   // fallback to letter icons if the email isn't a GitHub noreply one
-  //   else {
-  //     let first = name.trim().charAt(0).toUpperCase();
-  //     pic =  "node_modules/material-letter-icons/dist/png/" + first + ".png";
-  //   }
-    
-  // });
-
-  // if (images[email] === undefined) {
-  //   images[email] = "assets/img/starwars/" + imageFiles[imageCount];
-  //   imageCount++;
-  //   if (imageCount >= imageFiles.length) {
-  //     imageCount = 0;
-  //   }
-  // }
-  // return images[email];
 }
