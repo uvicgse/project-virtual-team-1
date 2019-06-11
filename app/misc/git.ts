@@ -1558,9 +1558,8 @@ function setUpstreamRepo() {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
-      var result = Git.Remote.createWithFetchspec(repository, "upstream", upstreamRepoPath, 'remotes/upstream/master');
+      var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
       addCommand("git remote add upstream " + upstreamRepoPath);
-      //setUrl(repository, "upstream", upstreamRepoPath);
       console.log(result)
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err)
