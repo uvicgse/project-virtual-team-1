@@ -21,11 +21,12 @@ function getName(author: string) {
   return name;
 }
 
+// seems like this function was meant to retrieve a profile pic for the nodes
 function img4User(name:string) {  
   return getLetterIcon(name);
 }
 
-// seems like this function was implemented as scaffolding for the profile pic feature.
+// seems like this function was meant to retrieve a profile pic for the commit popup
 function imageForUser(name: string, email: string, callback) {
   
   let pic;  
@@ -41,15 +42,18 @@ function imageForUser(name: string, email: string, callback) {
     // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
     let client = gh.client();
     client.get(`/users/${username}`, {}, function (err, status, body, headers) {
-      if (!err)
+      if (!err) {
         pic = body.avatar_url;
-      else
+      }
+      else {
         pic = getLetterIcon(name);
+      }
+      callback(pic);
     });
   }
   // fallback to letter icons if the email isn't a GitHub noreply one
   else {
     pic = getLetterIcon(name);
+    callback(pic);
   }  
-  callback(pic);
 }
