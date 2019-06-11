@@ -265,10 +265,6 @@ function openRepository() {
       document.getElementById('spinner').style.display = 'block';
       refreshAll(repository);
       console.log("Repo successfully opened");
-      // unpushedCommitsModal();
-      // unpushedCommitsModal();
-
-      //updateModalText("Number of un-pushed commits: " + calcUnpushedCommits());
       updateModalText("Repository successfully opened");
     },
       function (err) {

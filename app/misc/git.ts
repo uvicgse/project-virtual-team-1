@@ -2,7 +2,9 @@ import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
 import * as simplegit from 'simple-git/promise';
 import {Injectable} from "@angular/core";
+import {callbackify} from "util";
 'use strict';
+
 
 let $ = require("jquery");
 let Git = require("nodegit");
@@ -25,15 +27,15 @@ let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
 let refreshAllFlag = false;
-let total_commit = 0;
-let commit_diff = 0;
+export let total_commit ;
+export let commit_diff ;
 
 
 function passReferenceCommits(){
-  Git.Repository.open(repoFullPath)
-  .then(function(commits){
-    sortedListOfCommits(commits);
-  })
+    Git.Repository.open(repoFullPath)
+        .then(function(commits){
+            sortedListOfCommits(commits);
+        })
 }
 
 function sortedListOfCommits(commits){
@@ -466,20 +468,6 @@ export function calcUnpushedCommits() {
   }
   return calc;
 
-}
-
-//This calls calcUnpushedCommits() and displays the dialog box to the user
-//We have to call the function once to initialize the API call, and then again to calculate
-//This is a limitation of async functions in our version of angular and node
-@Injectable()
-export function unpushedCommitsModal() {
-  var calc = 0;
-
-  //call once to initialize the API call
-  calc = calcUnpushedCommits();
-
-  console.log("Number of un-pushed commits: " + calc);
-  updateModalText("Number of un-pushed commits: " + calc);
 }
 
 //This function has yet to be implemented
@@ -1519,7 +1507,7 @@ function cleanRepo() {
 }
 
 /**
- * This method is called when the sync button is pressed, and causes the fetch-modal
+ * This method is called when the sync button is pressed, and causes the fetch-modal 
  * to appear on the screen.
  */
 function requestLinkModal() {
@@ -1527,7 +1515,7 @@ function requestLinkModal() {
 }
 
 /**
- * This method is called when a valid URL is given via the fetch-modal, and runs the
+ * This method is called when a valid URL is given via the fetch-modal, and runs the 
  * series of git commands which fetch and merge from an upstream repository.
  */
 function fetchFromOrigin() {
@@ -1575,85 +1563,89 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
   }
 }
 
-//This function gets the number of commits made on a local repo, either pushed or not
-//The value is stored in total_commit
-@Injectable()
-export function countLocalCommits() {
-  var walker = null;
-
-  Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-        walker = repo.createRevWalk();
-        return repo.getHeadCommit();
-      })
-      .then(function (commit) {
-        walker.sorting(Git.Revwalk.SORT.REVERSE);
-        walker.push(commit.id());
-        walker.sorting
-        walker.pushHead();
-        return walker.getCommits(1000)
-      })
-      .then(function (commits) {
-        //console.log("Local commits: " + commits.length);
-        // console.log(commits);
-        total_commit = commits.length;
-
-      })
-
-}
-
 //This function counts the total of pushed commits made on a remote repo by walking through the history
 //The number of commits are grabbed using an async function
 //The number of commits is stored in commit_diff
 @Injectable()
-export function getAllPushedCommits() {
+export function getAllPushedCommits(callback) {
   clearModifiedFilesList();
   var repos;
   var allCommits = [];
   var aclist = [];
-  //console.log("Finding all commits");
+
   Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-        repos = repo;
-        //console.log("fetching all refs");
-        // console.log( repo.getReferences(Git.Reference.TYPE.LISTALL));
-        return repo.getReferences(Git.Reference.TYPE.LISTALL)
-      })
-      .then(function (refs) {
-        var count = 0;
-        async.whilst(function () {
-          return count < refs.length;
-        },  function (cb) {
-          if (refs[count].isRemote()) {
-            refs[count].peel(Git.Object.TYPE.COMMIT)
-                .then(function (ref) {
-                  repos.getCommit(ref)
-                      .then(function (commit) {
-                        var history = commit.history(Git.Revwalk.SORT.Time);
-                        history.on("end", function (commits) {
-                          for (var i = 0; i < commits.length; i++) {
-                            if (aclist.indexOf(commits[i].toString()) < 0) {
-                              allCommits.push(commits[i]);
-                              aclist.push(commits[i].toString());
-                            }
-                          }
-                          count++;
-                          commit_diff = allCommits.length;
-                          //console.log("you have " + commit_diff + " pushed commits");
-                          // var temp = total_commit - commit_diff;
-                          // console.log("push "+ temp + " to remote origin" );
+    .then(function (repo) {
+      repos = repo;
+      return repo.getReferences(Git.Reference.TYPE.LISTALL)
+    })
+    .then(function (refs) {
+      var count = 0;
+      async.whilst(function () {
+        return count < refs.length;
+      }, function (cb) {
+        if (refs[count].isRemote()) {
+          refs[count].peel(Git.Object.TYPE.COMMIT)
+            .then(function (ref) {
+              repos.getCommit(ref)
+                .then(function (commit) {
+                  var history = commit.history(Git.Revwalk.SORT.Time);
+                  history.on("end", function (commits) {
+                    for (var i = 0; i < commits.length; i++) {
+                      if (aclist.indexOf(commits[i].toString()) < 0) {
+                        allCommits.push(commits[i]);
+                        aclist.push(commits[i].toString());
+                      }
+                    }
+                    count++;
+                    commit_diff = allCommits.length;
+                    return callback(commit_diff);
+                    cb();
 
-                           cb();
-
-                        });
-                        history.start();
-                      })
+                  });
+                  history.start();
+                })
 
 
-                });
+            });
 
-          }
-        }, );
+        }
       });
+    });
 
 }
+
+//This calls calcUnpushedCommits() and displays the dialog box to the user
+//We have to call the function once to initialize the API call, and then again to calculate
+//This is a limitation of async functions in our version of angular and node
+@Injectable()
+export function unpushedCommitsModal( ) {
+  var countLocalCommits_value =0;
+
+  countLocalCommits(function (response) {
+      if(typeof total_commit === "undefined" ){
+        countLocalCommits(response);
+
+        //updateModalText("Number of un-pushed commits: " +(total_commit - commit_diff));
+
+      }
+      else {
+        getAllPushedCommits(function (response_2) {
+          if (typeof commit_diff === "undefined") {
+            getAllPushedCommits(response_2);
+          } else {
+            console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
+            document.getElementById("unpushed").innerHTML = total_commit - commit_diff;
+            // setTimeout(unpushedCommitsModal, 1000)
+            //updateModalText("Number of un-pushed commits: " + (total_commit - commit_diff));
+            // return callback((total_commit - commit_diff));
+          }
+        })
+
+      }
+
+    })
+
+}
+
+//the unpushedCommitModal function is refreshed every 30000ms
+  setInterval(unpushedCommitsModal, 30000);

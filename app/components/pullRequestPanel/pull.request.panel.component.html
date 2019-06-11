@@ -21,7 +21,9 @@
 
     <!-- Nav bar on the right of the screen to show/hide PR Icon. -->
     <div class="right-pr-nav">
-        <i (click)="togglePRPanel()"><img src="./assets/PullRequestIcon.svg"></i>
+        <i (click)="togglePRPanel()" height="40" width="48"><img src="./assets/PullRequestIcon.svg"></i>
+        <hr>
+        <button class="commit-button" height="40" width="48" id ="unpushed" font-weight="bold" title="# of un-pushed commits">  </button>
     </div>
 
     <div id="pr-status-2">
