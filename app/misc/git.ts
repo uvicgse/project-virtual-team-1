@@ -1,8 +1,10 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
+import * as simplegit from 'simple-git/promise';
 
 let $ = require("jquery");
 let Git = require("nodegit");
+let sGit = require('simple-git/promise');
 let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
@@ -1153,26 +1155,33 @@ function displayModifiedFiles() {
           }
           fileElement.appendChild(checkbox);
 
-          document.getElementById("files-changed").appendChild(fileElement);
+          document.getElementById("files-changed")!.appendChild(fileElement);
 
 
           fileElement.onclick = function () {
-            let doc = document.getElementById("diff-panel");
+            let doc = document.getElementById("diff-panel")!;
             console.log("width of document: " + doc.style.width);
             let fileName = document.createElement("p");
-            fileName.innerHTML = file.filePath
+            fileName.innerHTML = file.filePath;
             // Get the filename being edited and displays on top of the window
             if (doc.style.width === '0px' || doc.style.width === '') {
               displayDiffPanel();
+              // Insert elements that store filename and file path for file rename and move functionality
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
 
-              document.getElementById("diff-panel-body")!.innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
               if (fileElement.className === "file file-created") {
                 // set the selected file
                 selectedFile = file.filePath;
                 printNewFile(file.filePath);
               } else {
-
+                //disable editing if deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                }
                 let diffCols = document.createElement("div");
                 diffCols.innerText = "Old" + "\t" + "New" + "\t" + "+/-" + "\t" + "Content";
                 document.getElementById("diff-panel-body")!.appendChild(diffCols);
@@ -1181,8 +1190,14 @@ function displayModifiedFiles() {
               }
             }
             else if (doc.style.width === '40%') {
-              document.getElementById("diff-panel-body").innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
+              //populate modals
+              document.getElementById("diff-panel-body")!.innerHTML = "";
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
+
               if (selectedFile === file.filePath) {
                 // clear the selected file when diff panel is hidden
                 selectedFile = "";
@@ -1194,6 +1209,13 @@ function displayModifiedFiles() {
                 } else {
                   selectedFile = file.filePath;
                   printFileDiff(file.filePath);
+                }
+
+                //disable editing if entry is a deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                } else {
+                  displayDiffPanelButtons();
                 }
               }
             }
@@ -1498,6 +1520,23 @@ function fetchFromOrigin() {
   }
 }
 
+/**
+ * This method implements Git Move to rename or move a given file within a repository using the simple-git library
+ */
 
+function moveFile(filesource:string, filedestination:string, skipFileExistTest:boolean = false) {
+  console.log("Moving " + filesource + " in (" + repoFullPath + ") to " + filedestination);
+  addCommand("git mv " + filesource + " " + filedestination);
 
-
+  // test if file destination already exists or if test is to be skipped
+  if(fs.existsSync(filedestination) || skipFileExistTest){
+    let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
+    sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
+            .mv(filesource, filedestination)  //perform GIT MV operation
+            .then(() => console.log('move completed'))
+            .catch((err) => displayModal('move failed: ' + err));
+  }
+  else{
+    displayModal("Destination directory does not exist");
+  }
+}
