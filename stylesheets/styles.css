@@ -275,6 +275,7 @@ body .file-panel .files-changed .file {
   height: 10%;
   position: relative;
   overflow: hidden;
+  border: 1px solid #fff;
 }
 
 body .file-panel .files-changed .files-staged .file p {
@@ -569,7 +570,6 @@ body .footer{
 
 .file-created {
   background-color: #4c994c;
-  border: 1px solid #fff;
 }
 
 .file-modified {
