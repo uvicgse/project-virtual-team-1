@@ -350,6 +350,7 @@ function makeBasicNode(c, column: number) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
+    let email = stringer.split("%")[1];
     let flag = true;
     let count = 1;
     let id;
