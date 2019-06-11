@@ -109,15 +109,9 @@
         </li>
 
         <!--Add Upstream Remote Respository-->
-        <li class="toolbar-Icons" onclick="addRemoteModal()">
-            <a href="#"><img src="./assets/addremote.png" height="40" width="48" class="add-repository-button" title="Add Remote"></a>
-            <span class="toolbar-Text">Remote</span>
-        </li>
-
-        <!--Sync-->
-        <li class="toolbar-Icons" onclick="syncFromFork()">
-            <a href="#"><img src="./assets/sync.png" height="40" width="48" class="add-repository-button" title="Sync"></a>
-            <span class="toolbar-Text">Sync</span>
+        <li class="toolbar-Icons" onclick="setUpstreamModal()">
+            <a href="#"><img src="./assets/addremote.png" height="40" width="48" class="add-repository-button" title="Set Upstream"></a>
+            <span class="toolbar-Text">Upstream</span>
         </li>
       </ul>
 
@@ -376,8 +370,8 @@
         <input type="text" id="origin-path" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="fetchFromOrigin()">Confirm</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="fetchFromOrigin()">test</button>
+        <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button> -->
       </div>
     </div>
   </div>
@@ -467,7 +461,7 @@
 </div>
 
 <!--Modal for adding remote upstream repository-->
-<div id="add-remote-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+<div id="set-upstream-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content" style=" width: 602px !important">
@@ -482,8 +476,7 @@
         <input type="text" id="remote-path" class="form-control" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRemoteButton" onclick="addRemoteRepo()">Confirm</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="setUpstreamButton" onclick="setUpstreamRepo()">Confirm</button>
       </div>
     </div>
   </div>

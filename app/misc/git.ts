@@ -1319,15 +1319,15 @@ function requestLinkModal() {
 /**
  * This method is called when the user clicks the "Remote" button on the navbar.
  */
-function addRemoteModal() {
-  $('#add-remote-modal').modal('show');
+function setUpstreamModal() {
+  $('#set-upstream-modal').modal('show');
 }
 
 /**
  This function is called after the user enters the address of the upstream repo to sync from. It sets the
  entered address as the upstream repo of the forked repository.
  */
-function addRemoteRepo() {
+function setUpstreamRepo() {
   let repository;
   let upstreamRepoPath = document.getElementById("remote-path").value;
   addCommand("git remote add upstream " + upstreamRepoPath);
