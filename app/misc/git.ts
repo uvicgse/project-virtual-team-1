@@ -1541,6 +1541,13 @@ function setUpstreamModal() {
 }
 
 /**
+ * Clears the fields from the upstream repo modal.
+ */
+function clearUpstreamModalText() {
+  document.getElementById("remote-path").value = "";
+}
+
+/**
  This function is called after the user enters the address of the upstream repo to sync from. It sets the
  entered address as the upstream repo of the forked repository.
  */
@@ -1559,6 +1566,7 @@ function setUpstreamRepo() {
       console.log("Error adding remote upstream repository:" + err)
     });
   }
+  clearUpstreamModalText();
 }
 
 /**
