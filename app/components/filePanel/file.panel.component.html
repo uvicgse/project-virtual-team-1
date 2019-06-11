@@ -5,7 +5,7 @@
     <button class="staging-buttons" id="stage-all">Stage All</button>
   </div>
 
-  <div class="files-changed" id="files-changed">
+  <div class="files-changed" id="files-changed" style="min-height: 30%">
     <p class="modified-files-message" id="modified-files-message">Your modified files will appear here</p>
     <div class="file" *ngFor="let file of files">
       <p>{{file}}</p>
@@ -17,7 +17,7 @@
     <button class="staging-buttons" id="unstage-all">Unstage All</button>
   </div>
 
-  <div class="files-staged" id="files-staged">
+  <div class="files-staged" id="files-staged" style="min-height: 30%">
     <p class="modified-files-message" id="staged-files-message">Your staged files will appear here</p>
     <div class="file" *ngFor="let file of files">
       <p>{{file}}</p>

@@ -37,9 +37,8 @@
                   </span>
                 </div>
                 <div id="tag-button" class="input-group menuitem" [ngClass]="{'hidden' : branchSelectedInRefDropdown}">
-                  <input type="text" id="tag-name" class="form-control" placeholder="Search a tag">
+                  <input type="text" id="tag-name" class="form-control" oninput="searchTag()" placeholder="Search a tag">
                   <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" onclick="">OK</button>
                   </span>
                 </div>
               </div>
@@ -436,20 +435,23 @@
 <!--Modal for adding stash message -->
 <div id="stash-msg-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
-    <!---->
     <div class="modal-content" id="rep-modal">
       <div class="modal-header stashMsgModalHeader">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" onclick="clearStashMsgErrorText()" class="stashMsgModalComponents">&times;</span>
+            </button>
         <h4 class="modal-title stashMsgModalTitle stashMsgModalComponents" >Create new stash message</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" onclick="clearStashMsgErrorText()" class="stashMsgModalComponents">&times;</span>
-        </button>
       </div>
       <div class="modal-body">
         <!--Stash Message Text-->
         <h5 type="text" id="stashMsgText" class="stashMsgModalComponents"> Stash Message: </h5>
-        <br>
-        <input type="text" id="stash-msg-name-input" class="form-control stashMsgModalComponents" placeholder="Stash Message">
-        <br>
+        <input type="text" id="stash-msg-name-input" class="form-control stashMsgModalComponents" placeholder="Enter Your Message">
+        <!-- Allow the user to select to stash untracked files-->
+        <!-- Checkbox to allow the user to stash untracked files -->
+        <div class="UntrackedFiles" style="padding-top: 5px">
+            <input type="checkbox" id="untracked-files-checkbox">
+            <label class="checkbox-label">Include Untracked Files</label>
+        </div>
         <div class="modal-body stashMsgModalError stashMsgModalComponents" id="stashMsgErrorText"></div>
       </div>
 

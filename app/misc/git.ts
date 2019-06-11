@@ -1,8 +1,10 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
+import * as simplegit from 'simple-git/promise';
 
 let $ = require("jquery");
 let Git = require("nodegit");
+let sGit = require('simple-git/promise');
 let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
@@ -19,6 +21,8 @@ let commitHistory = [];
 let commitToRevert = 0;
 let commitHead = 0;
 let commitID = 0;
+let lastCommitLength;
+let refreshAllFlag = false;
 
 
 
@@ -203,11 +207,12 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-      clearSelectAllCheckbox();
+
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
       addCommand('git commit -m "' + commitMessage + '"');
+
       refreshAll(repository);
     }, function (err) {
       console.log("git.ts, line 112, could not commit, " + err);
@@ -254,8 +259,31 @@ function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
 }
 
-function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
+// checking if the length of commits is different
+function checkCommitChange() {
+  // get HEAD commit from current pointing branch
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getHeadCommit().then(function(commit) {
+        // get all commits under current pointing branch
+        let history = commit.history();
+        history.on("end", function (commits) {
+          if (typeof lastCommitLength !== "undefined" && lastCommitLength !== commits.length) {
+            console.log("commit graph changes detected");
+            // show refresh graph alert
+            if (!refreshAllFlag) {
+              $("#refresh-graph-alert").show();
+              $("#refresh-button").hide();
+            }
+
+            refreshAllFlag = false;
+          }
+
+          lastCommitLength = commits.length;
+        });
+        history.start();
+      });
+    });
 }
 
 function getAllCommits(callback) {
@@ -273,6 +301,7 @@ function getAllCommits(callback) {
     .then(function (refs) {
       let count = 0;
       console.log("getting " + refs.length + " refs");
+      // while loop of asynchronous requests
       async.whilst(
         function test(cb) { cb(null, count < refs.length) },
         function (cb) {
@@ -390,6 +419,7 @@ function pushToRemote() {
     .then(function (repo) {
       console.log("Pushing changes to remote")
       displayModal("Pushing changes to remote...");
+      console.log("Branch name: " + branch);
       addCommand("git push -u origin " + branch);
       repo.getRemotes()
       .then(function (remotes) {
@@ -496,6 +526,36 @@ function createBranch() {
     clearBranchErrorText();
   }
 }
+
+// search for tags
+function searchTag() {
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getCurrentBranch()
+        .then(function () {
+          // grab the list of references - these could be branches or tags
+          return repo.getReferences(Git.Reference.TYPE.LISTALL);
+        }).then(function (refList) {
+          for (let i = 0; i < refList.length; i++) {
+
+            // strip name for readability
+            let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
+
+            if (refList[i].isTag()){
+              if (refName.indexOf( document.getElementById("tag-name").value ) > -1) {
+                var attribute = "display:block";
+              } else {
+                var attribute = "display:none";
+              }
+              document.getElementById(refName).setAttribute("style", attribute);
+            }
+          }
+        }
+      )
+    }
+  );
+}
+
 
 function clearBranchErrorText() {
   // @ts-ignore
@@ -612,6 +672,65 @@ function mergeLocalBranches(element) {
       console.log(text);
       updateModalText(text);
       refreshAll(repos);
+    });
+}
+
+// Creates a tag in the current repository and updates the 'Create Tag' window and the network graph based on if it succeeds or fails.
+// Creates a lightweight tag if no message is provided, otherwise creates an annotated tag.
+function createTag(tagName: string, commitSha: string, pushTag: boolean, message?:string){
+  let repo;
+  Git.Repository.open(repoFullPath)
+    .then(function(repoParam) {
+      repo = repoParam;
+    })
+    .then(function() {
+      return repo.getCommit(commitSha);
+    })
+    .then(function(commit){
+      //The '0' parameter indicates that we are creating the tag without the '--force' option, so tags will not be overwritten
+      if (message == undefined) {
+        return Git.Tag.createLightweight(repo, tagName, commit, 0);
+      } else {
+        return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
+      }
+    })
+    .then(function(tagOid){
+      // Push the tag if desired
+      if (pushTag) {
+        console.log("Pushing tag: " + tagName);
+        return repo.getRemotes()
+          .then(function (remotes) {
+            return repo.getRemote(remotes[0]);
+          })
+          .then(function(remote){
+            return remote.push(
+              ["refs/tags/" + tagName + ":refs/tags/" + tagName],
+              {
+                callbacks: {
+                  credentials: function () {
+                    return getCredentials();
+                  }
+                }
+              }
+            );
+          }).then(function(){
+            console.log("Successfully pushed tag: " + tagName);
+          });
+      }
+    })
+    .then(function(){
+      //Refresh the repository to display the new changes in the graph
+      $("#createTagModal").modal('hide');
+      updateModalText("Successfully created tag " + tagName + ".")
+      refreshAll(repo)
+    })
+    .catch(function(msg){
+      let errorMessage = "Error: " + msg.message;
+      console.log(errorMessage);
+      $("#createTagError")[0].innerHTML = errorMessage;
+
+      // Re-enable the submit button
+      $("#createTagModalCreateButton")[0].disabled = false;
     });
 }
 
@@ -739,6 +858,8 @@ function clearStashMsgErrorText() {
   document.getElementById("stashMsgErrorText").innerText = "";
   // @ts-ignore
   document.getElementById("stash-msg-name-input").value = "";
+  // @ts-ignore
+  document.getElementById("untracked-files-checkbox").checked = false;
 }
 
 /**
@@ -746,6 +867,21 @@ function clearStashMsgErrorText() {
  */
 function showStashModal() {
   $('#stash-msg-modal').modal('show');
+}
+
+function handleStashError(err) {
+  // handle any errors
+  console.log("stash error!" + err)
+  updateModalText("Stash error: " + err.message);
+}
+
+function doneStash() {
+  // get rid of the modal
+  $('#stash-msg-modal').modal('hide');
+  // reset the modal's message
+  clearStashMsgErrorText();
+  // All the modified files have been stashed, so update the list of stage/unstaged files
+  clearModifiedFilesList();
 }
 
 /**
@@ -757,25 +893,45 @@ function stashChanges() {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       // TODO: allow the user to select various options (include untracked, include ignored, etc.)
-      addCommand("git stash save \"" + stashMessage + "\"")
-      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, Git.Stash.FLAGS.DEFAULT)
+
+      // build the command string to show the user in the terminal
+      let cmdStr = "git stash save";
+
+      // stash flags -- set to default to start
+      let flags = Git.Stash.FLAGS.DEFAULT;
+
+      if (document.getElementById("untracked-files-checkbox").checked === true) {
+        flags = flags | Git.Stash.FLAGS.INCLUDE_UNTRACKED;
+        cmdStr = cmdStr + " --include-untracked"
+      }
+
+      // if there is a message add it to the command
+      if (stashMessage.length > 0) {
+        cmdStr = cmdStr + " \"" + stashMessage + "\""
+      }
+
+      // this line is to test error handling
+      //throw new Error('test error');
+
+      // show the command to the user
+      addCommand(cmdStr);
+
+      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, flags)
         .then(function(oid) {
+          // error for testing purposes
+          //throw new Error('test error2');
           console.log("change stashed with oid" + oid);
       }).catch(function(err) {
-        updateModalText("Stash error: " + err.message);
-      })
-      .done(function() {
-        // get rid of the modal
-        $('#stash-msg-modal').modal('hide');
-        // reset the modal's message
-        clearStashMsgErrorText();
-        // All the modified files have been stashed, so update the list of stage/unstaged files
-        clearModifiedFilesList();
+        handleStashError(err)
+      }).done(function() {
+        doneStash()
       });
-    }, function(err) {
-      // handle any errors
-      console.log("stash error!" + err)
+    }).catch(function(err) {
+      handleStashError(err)
+    }).done(function() {
+      doneStash()
     });
+
 }
 
 function revertCommit() {
@@ -859,7 +1015,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage);
+            filePanelMessage.parentNode.removeChild(filePanelMessage); 
           }
         }
 
@@ -981,7 +1137,8 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
 
@@ -999,26 +1156,56 @@ function displayModifiedFiles() {
           }
           fileElement.appendChild(checkbox);
 
-          document.getElementById("files-changed").appendChild(fileElement);
+          document.getElementById("files-changed")!.appendChild(fileElement);
 
+          // On drag action, the file element is shown to the user
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+            var source=e.target;
+            this.style.opacity = '0.4';  // this / e.target is the source node.
+            //set both file element and file panel highlight colours
+            e.target.style.border = '4px solid #39C0B9';
+            document.getElementById("files-staged").classList.add("dropzone");
+           }, false);
+
+          //On drop action, the file changes state to staged, checkbox is clicked
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+          var divRect = document.getElementById('files-staged').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
+          e.target.style.border = '1px solid white';
+          document.getElementById("files-staged").classList.remove("dropzone");
+          if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+            e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+              checkbox.click();
+          }
+
+          var source=e.target;
+          this.style.opacity = '1.0';  // resets the view changes of dragstart
+          }, false);
 
           fileElement.onclick = function () {
-            let doc = document.getElementById("diff-panel");
+            let doc = document.getElementById("diff-panel")!;
             console.log("width of document: " + doc.style.width);
             let fileName = document.createElement("p");
-            fileName.innerHTML = file.filePath
+            fileName.innerHTML = file.filePath;
             // Get the filename being edited and displays on top of the window
             if (doc.style.width === '0px' || doc.style.width === '') {
               displayDiffPanel();
+              // Insert elements that store filename and file path for file rename and move functionality
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
 
-              document.getElementById("diff-panel-body")!.innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
               if (fileElement.className === "file file-created") {
                 // set the selected file
                 selectedFile = file.filePath;
                 printNewFile(file.filePath);
               } else {
-
+                //disable editing if deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                }
                 let diffCols = document.createElement("div");
                 diffCols.innerText = "Old" + "\t" + "New" + "\t" + "+/-" + "\t" + "Content";
                 document.getElementById("diff-panel-body")!.appendChild(diffCols);
@@ -1027,8 +1214,14 @@ function displayModifiedFiles() {
               }
             }
             else if (doc.style.width === '40%') {
-              document.getElementById("diff-panel-body").innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
+              //populate modals
+              document.getElementById("diff-panel-body")!.innerHTML = "";
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
+
               if (selectedFile === file.filePath) {
                 // clear the selected file when diff panel is hidden
                 selectedFile = "";
@@ -1040,6 +1233,13 @@ function displayModifiedFiles() {
                 } else {
                   selectedFile = file.filePath;
                   printFileDiff(file.filePath);
+                }
+
+                //disable editing if entry is a deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                } else {
+                  displayDiffPanelButtons();
                 }
               }
             }
@@ -1070,7 +1270,9 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          //Allow the individual file elements to be draggable
+          fileElement.draggable=true;
           fileElement.id = fileId;
           fileElement.appendChild(filePath);
 
@@ -1092,6 +1294,29 @@ function displayModifiedFiles() {
             clearModifiedFilesList();
           }
 
+          //On drag action, the file element is shows to user
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+              var source=e.target;
+              this.style.opacity = '0.4';  // this / e.target is the source node.
+              //set both file element and file panel highlight colours
+              e.target.style.border = '4px solid #39C0B9';
+              document.getElementById("files-changed").classList.add("dropzone");
+          }, false);
+
+          //On drop action, the file changes state to un-staged, checkbox is clicked
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+            var divRect = document.getElementById('files-changed').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
+            e.target.style.border = '1px solid white';
+            document.getElementById("files-changed").classList.remove("dropzone");
+            if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+              e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+                checkbox.click();
+            }
+            var source=e.target;
+            this.style.opacity = '1.0';  // this / e.target is the source node.
+          }, false);
+          
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
@@ -1341,5 +1566,26 @@ function setUpstreamRepo() {
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err)
     });
+  }
+}
+
+/**
+ * This method implements Git Move to rename or move a given file within a repository using the simple-git library
+ */
+
+function moveFile(filesource:string, filedestination:string, skipFileExistTest:boolean = false) {
+  console.log("Moving " + filesource + " in (" + repoFullPath + ") to " + filedestination);
+  addCommand("git mv " + filesource + " " + filedestination);
+
+  // test if file destination already exists or if test is to be skipped
+  if(fs.existsSync(filedestination) || skipFileExistTest){
+    let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
+    sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
+            .mv(filesource, filedestination)  //perform GIT MV operation
+            .then(() => console.log('move completed'))
+            .catch((err) => displayModal('move failed: ' + err));
+  }
+  else{
+    displayModal("Destination directory does not exist");
   }
 }

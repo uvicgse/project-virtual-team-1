@@ -14,6 +14,82 @@ let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
 let lastRefList = [];
+let jsonfile = require('jsonfile');
+
+// Issue 6
+// Retrieve repos from repos.json
+function getRecentRepositories() {
+    let repoFile = 'repos.json';
+    let repoList;
+
+    try {
+        repoList = JSON.parse(checkFile.readFileSync(repoFile));
+    } catch (err) {
+        console.log('Cannot read ' + repoFile);
+        repoList = {
+            recentRepos: []
+        }
+    }
+
+    // reverse for more understandable view
+    displayList = repoList.recentRepos.reverse();
+    console.log("Collecting recently used repositories: " + displayList);
+    return displayList;
+}
+
+// Issue 6
+// Save repo entry to repos.json
+function saveRecentRepositories(repoPath) {
+    let repoFile = 'repos.json';
+    let repoList;
+    let recentRepos;
+
+    try {
+        repoList = JSON.parse(checkFile.readFileSync(repoFile));
+    } catch (err) {
+        console.log('Cannot read ' + repoFile);
+        repoList = {
+            recentRepos: []
+        }
+    }
+
+    console.log('Updating recent repos');
+    updatedRepoList = {
+        recentRepos: updateRecentRepos(repoList.recentRepos, repoPath)
+    }
+
+    try {
+      jsonfile.writeFileSync(repoFile, updatedRepoList);
+    } catch (err) {
+      console.log(err);
+    }
+}
+
+// Issue 6
+// Update recent repo list
+function updateRecentRepos(recentRepos, repoToAdd) {
+    let maxRepos = 5;
+
+    if (recentRepos === undefined) {
+        let newList = [repoToAdd];
+        return newList;
+    }
+
+    for (let i = 0; i < recentRepos.length; i++) {
+        if (recentRepos[i] === repoToAdd) {
+            // using splice as suggested by:
+            // https://stackoverflow.com/questions/15292278/how-do-i-remove-an-array-item-in-typescript
+            recentRepos.splice(i, 1);
+        }
+    }
+    recentRepos.push(repoToAdd);
+
+    if (recentRepos.length > maxRepos) {
+        console.log('Removing head of list')
+        recentRepos.splice(0, 1);
+    }
+    return recentRepos;
+}
 
 function downloadRepository() {
   let fullLocalPath;
@@ -37,6 +113,8 @@ function downloadRepository() {
     switchToAddRepositoryPanel();
   } else {
     downloadFunc(cloneURL, fullLocalPath);
+    // save to recent repos
+    saveRecentRepositories(fullLocalPath);
   }
 }
 
@@ -119,6 +197,9 @@ function openRepository() {
         fullLocalPath = require("path").join(__dirname, localPath);
       }
     }
+
+    console.log('Saving repository path');
+    saveRecentRepositories(fullLocalPath);
 
     console.log("Trying to open repository at " + fullLocalPath);
     displayModal("Opening Local Repository...");
@@ -240,6 +321,9 @@ function openRepository() {
           //console.log("repo.ts, line 131, cannot open repository: "+err); // TODO show error on screen
         });
     }
+
+    // save file to repos
+    saveRecentRepositories(fullLocalPath);
   }
 
   function addBranchestoNode(thisB: string) {
@@ -260,7 +344,7 @@ function openRepository() {
   }
 
 // works as a monitor for any change to the reference list
-function refreshList(verbose) {
+function refreshReferences(verbose, force) {
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
       repo.getCurrentBranch()
@@ -272,14 +356,24 @@ function refreshList(verbose) {
           // sort refList alphabetically to get uniform order of the list
           refList.sort();
 
-          // monitor any changes to reference list
-          if (lastRefList.length === refList.length && lastRefList.every(function(value, index) { return value.name() === refList[index].name()})) {
-            // no change to the ref list, do nothing
-            return;
+          // Always update if forced
+          if (!force) {
+            // monitor any changes to reference list
+            if (lastRefList.length === refList.length && lastRefList.every(function(value, index) { return value.name() === refList[index].name()})) {
+              // no change to the ref list, do nothing
+              return;
+            }
           }
 
           // detects changes, refresh the lists
           console.log("branch or tag changes detected... refreshing branch and tag list");
+
+          if (lastRefList.length !== 0 && !refreshAllFlag) {
+            // show refresh graph alert
+            $("#refresh-graph-alert").show();
+            $("#refresh-button").hide();
+          }
+
           bname = {};
           tags = {};
           clearBranchAndTagElement();
@@ -302,13 +396,19 @@ function refreshList(verbose) {
                   bname[oid.tostrS()] = [refList[i]];
                 }
               } else if (refList[i].isTag()){
-                if (verbose) { console.log(refName + ": adding tag to end of " + oid.tostrS()); }
-                // add to list of tags
-                if (oid.tostrS() in tags) {
-                  tags[oid.tostrS()].push(refList[i]);
-                } else {
-                  tags[oid.tostrS()] = [refList[i]];
-                }
+                // use peel() to get real commit SHA string from oid
+                refList[i].peel(Git.Object.TYPE.COMMIT)
+                  .then(ref => Git.Commit.lookup(repo, ref.id()))
+                  .then(function (commit) {
+                      if (verbose) { console.log(refName + ": adding tag to end of " + commit.sha()); }
+                      // add to list of tags
+                      if (commit.sha() in tags) {
+                          tags[commit.sha()].push(refList[i]);
+                      } else {
+                          tags[commit.sha()] = [refList[i]];
+                      }
+                  });
+
               } else{
                 console.log("Unsupported reference: " + refList[i].name());
               }
@@ -339,9 +439,8 @@ function refreshList(verbose) {
   function refreshAll(repository) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
-    bname = {};
-    tags = {};
-
+    lastRefList = [];
+    
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
@@ -351,7 +450,7 @@ function refreshList(verbose) {
         branch = branchParts[branchParts.length - 1];
       })
       .then(function () {
-        refreshList(true);
+        refreshReferences(true, true);
       })
       .then(function () {
         console.log("Updating the graph and the labels");
@@ -382,8 +481,11 @@ function refreshList(verbose) {
         // TODO: add a condition here to switch between tag and branch name string
         document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
+    // suppress commit detection alert
+    refreshAllFlag = true;
   }
 
+  // Displaying branches in a dropdown menu
   function getAllBranches() {
     let repos;
     Git.Repository.open(repoFullPath)
@@ -453,6 +555,7 @@ function refreshList(verbose) {
     })
   }
 
+// Adding features to branch dropdown menu
   function displayBranch(name, id, onclick) {
     let ul = document.getElementById(id);
     let li = document.createElement("li");
@@ -517,22 +620,52 @@ function refreshList(verbose) {
     ul.appendChild(li);
   }
 
+  // Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
+
+    // create HTML element for tag list dropdown
     let tagList = document.getElementById(id);
     let li = document.createElement("li");
     let a = document.createElement("a");
-    a.setAttribute("href", "#");
-    a.setAttribute("class", "list-group-item");
-    a.setAttribute("onclick", onclick + ";event.stopPropagation()");
-    li.setAttribute("role", "presentation");
-    a.appendChild(document.createTextNode(name));
-    a.innerHTML = name;
-    li.appendChild(a);
+    let span = document.createElement("span");
+    let button = document.createElement("span");
 
-    if (id === "tag-item-list") {
-      // TODO: tagging support - add delete button here
+    // set HTML attributes
+    a.setAttribute("href", "#");
+    a.setAttribute("class", "list-group-item tag-list-item");
+    a.setAttribute("id", name);
+    a.setAttribute("onclick", onclick + ";event.stopPropagation();");
+    li.setAttribute("role", "presentation");
+    span.setAttribute("class", "pull-right");
+    button.setAttribute("id", name);
+    button.setAttribute("class", "btn btn-danger");
+    button.innerHTML = "Delete";
+
+    // deleting a tag
+    button.onclick = (event) => {
+
+      // get name of tag from event
+      tagName = event.srcElement.getAttribute("id");
+
+      let repo;
+      Git.Repository.open(repoFullPath)
+        .then(function(repoParam) {
+          repo = repoParam;
+        })
+        .then(function(){
+          return Git.Tag.delete(repo, tagName);
+        }
+      ).catch(function(msg) {
+        let errorMessage = "Error: " + msg.message;
+      });
     }
 
+    // create tag element in list
+    span.appendChild(button);
+    a.appendChild(document.createTextNode(id));
+    a.innerHTML = name;
+    a.appendChild(span);
+    li.appendChild(a);
     tagList.appendChild(li);
   }
 
@@ -682,7 +815,7 @@ function refreshList(verbose) {
       localPath = document.getElementById("dirPickerSaveNew").files[0].webkitRelativePath;
       fullLocalPath = document.getElementById("dirPickerSaveNew").files[0].path;
 
-      // display the new folder location on repoSave text field 
+      // display the new folder location on repoSave text field
       updateRepoSaveText(fullLocalPath);
     }
   }
@@ -739,8 +872,8 @@ function refreshList(verbose) {
       prPanel.style.width = "60px";
       prListContainer.style.display = "none";
 
-      /* 
-        Calulates space leftover for the body panel after 
+      /*
+        Calulates space leftover for the body panel after
         accounting for the space taken up by the side panel.
       */
       bodyPanel.style.width = "calc(80% - 60px)";
