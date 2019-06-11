@@ -1137,7 +1137,8 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
 
@@ -1157,6 +1158,29 @@ function displayModifiedFiles() {
 
           document.getElementById("files-changed")!.appendChild(fileElement);
 
+          // On drag action, the file element is shown to the user
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+            var source=e.target;
+            this.style.opacity = '0.4';  // this / e.target is the source node.
+            //set both file element and file panel highlight colours
+            e.target.style.border = '4px solid #39C0B9';
+            document.getElementById("files-staged").classList.add("dropzone");
+           }, false);
+
+          //On drop action, the file changes state to staged, checkbox is clicked
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+          var divRect = document.getElementById('files-staged').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
+          e.target.style.border = '1px solid white';
+          document.getElementById("files-staged").classList.remove("dropzone");
+          if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+            e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+              checkbox.click();
+          }
+
+          var source=e.target;
+          this.style.opacity = '1.0';  // resets the view changes of dragstart
+          }, false);
 
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel")!;
@@ -1246,7 +1270,9 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          //Allow the individual file elements to be draggable
+          fileElement.draggable=true;
           fileElement.id = fileId;
           fileElement.appendChild(filePath);
 
@@ -1268,6 +1294,29 @@ function displayModifiedFiles() {
             clearModifiedFilesList();
           }
 
+          //On drag action, the file element is shows to user
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+              var source=e.target;
+              this.style.opacity = '0.4';  // this / e.target is the source node.
+              //set both file element and file panel highlight colours
+              e.target.style.border = '4px solid #39C0B9';
+              document.getElementById("files-changed").classList.add("dropzone");
+          }, false);
+
+          //On drop action, the file changes state to un-staged, checkbox is clicked
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+            var divRect = document.getElementById('files-changed').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
+            e.target.style.border = '1px solid white';
+            document.getElementById("files-changed").classList.remove("dropzone");
+            if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+              e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+                checkbox.click();
+            }
+            var source=e.target;
+            this.style.opacity = '1.0';  // this / e.target is the source node.
+          }, false);
+          
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
