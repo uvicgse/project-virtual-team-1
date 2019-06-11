@@ -767,7 +767,7 @@ div.selected-commit-diff-panel button.close-button {
 .toolbar-Icons {
   text-align: center;
   cursor: pointer;
-  padding: 10px;
+  padding-top: 10px;
   margin: 0 auto;
   max-height: 65px;
   max-width: 55px;
@@ -1159,4 +1159,10 @@ body .pull-request-panel {
 .stash-list-item{
   background-color: slategray;
   color: white;
+}
+
+.dropzone {  
+  border-style: solid;
+  border-color: #39C0B9;
+  border-width: 1px;
 }
