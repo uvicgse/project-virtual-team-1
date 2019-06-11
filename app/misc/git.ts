@@ -23,6 +23,8 @@ let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
 let refreshAllFlag = false;
+let total_commit ;
+let commit_diff ;
 
 
 
@@ -1588,4 +1590,124 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
   else{
     displayModal("Destination directory does not exist");
   }
+}
+
+
+//This function gets the number of commits made on a local repo, either pushed or not
+//The value is stored in total_commit, we limited the totally number of commits we wanted to check to 1000
+//because a user could have more than 1000 commits and that would slow down the process.
+function countLocalCommits(callback ){
+  var walker = null;
+
+  Git.Repository.open(repoFullPath).then(function (repo) {
+    walker = repo.createRevWalk();
+    return repo.getHeadCommit().then(function (commit) {
+      walker.sorting(Git.Revwalk.SORT.REVERSE);
+      walker.push(commit.id());
+      walker.sorting
+      walker.pushHead();
+      //Looks for commits up to 1000 commits max
+      //This number is set to limit affecting system resources
+      return walker.getCommits(1000).then(function (commits) {
+        total_commit = commits.length;
+        console.log("count local commit :"+total_commit);
+        return callback(total_commit);
+      })
+    })
+  })
+
+
+
+
+
+}
+
+//This function counts the total of pushed commits made on a remote repo by walking through the history
+//The number of commits are grabbed using an async function
+//The number of commits is stored in commit_diff
+
+function getAllPushedCommits(callback) {
+  clearModifiedFilesList();
+  let repos;
+  let allCommits = [];
+  let aclist = [];
+  console.log("Finding all unpushed commits");
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        repos = repo;
+        //console.log("fetching all refs");
+        return repo.getReferences(Git.Reference.TYPE.LISTALL);
+      })
+      .then(function (refs) {
+        let count = 0;
+        //console.log("getting " + refs.length + " refs");
+        // while loop of asynchronous requests
+        async.whilst(
+            function test(cb) { cb(null, count < refs.length) },
+            function (cb) {
+              if (refs[count].isRemote()) {
+                //console.log("referenced branch exists on remote repository");
+                refs[count].peel(Git.Object.TYPE.COMMIT)
+                    .then(function(ref) {
+                      repos.getCommit(ref)
+                          .then(function (commit) {
+                            let history = commit.history(Git.Revwalk.SORT.Time);
+                            history.on("end", function (commits) {
+                              for (let i = 0; i < commits.length; i++) {
+                                if (aclist.indexOf(commits[i].toString()) < 0) {
+                                  allCommits.push(commits[i]);
+                                  aclist.push(commits[i].toString());
+                                }
+                              }
+                              count++;
+                              console.log("Unpushed remote   " + allCommits.length + " commits");
+                              commit_diff = allCommits.length;
+                              callback(commit_diff);
+                              cb();
+                            });
+
+                            history.start();
+                          });
+                    })
+              } else {
+                console.log('current branch does not exist on remote');
+                count++;
+                cb();
+              }
+            },
+
+            function (err) {
+              console.log("git.ts, line 203, cannot load all commits" + err);
+              callback(allCommits);
+            });
+      });
+}
+
+function unpushedCommitsModal() {
+  var countLocalCommits_value =0;
+      getAllPushedCommits(function (response2) {
+        if(typeof commit_diff === "undefined" ){
+          console.log("unpused undefined ");
+          getAllPushedCommits(response2);
+
+
+        }
+        else{
+          countLocalCommits(function (response) {
+            if(typeof total_commit === "undefined" ){
+              console.log("total_commit undefined ");
+              countLocalCommits(response);
+
+            }
+            else{
+              console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
+              document.getElementById("unpushed").innerHTML = total_commit - commit_diff;
+            }
+          })
+
+
+
+        }
+      })
+
 }

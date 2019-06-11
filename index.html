@@ -101,6 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
     refreshReferences(false, false);
     // check if there is any changes to either ref list or commits
     checkCommitChange();
+    //referesh the number of unpushed commits
+    unpushedCommitsModal();
+
   }, 3000);
 
 }, false);
