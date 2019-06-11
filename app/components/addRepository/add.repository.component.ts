@@ -67,8 +67,8 @@ export class AddRepositoryComponent {
   returnToMainPanel(): void {
     switchToMainPanel();
   }
-  prepareDontMissDND :  function() {
-
+  // old code, not written correctly and not getting used and hence commented
+  // prepareDontMissDND :  function() {
       // $(document.body).bind("dragover", function(e) {
       //     e.preventDefault();
       //     return false;
@@ -106,3 +106,4 @@ function fileUpload(ev){
     switchToMainPanel();
   }
 }
+
