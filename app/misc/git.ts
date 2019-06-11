@@ -1266,13 +1266,6 @@ function displayModifiedFiles() {
             this.style.opacity = '1.0';  // this / e.target is the source node.
           }, false);
           
-          // document.getElementById("files-changed").addEventListener('dragover', function handleDragOver(e) {
-          //   if (e.preventDefault) {
-          //     e.preventDefault();
-          //   } 
-          //   e.dataTransfer.dropEffect = 'move';
-          //     return false;
-          // }, false);
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
