@@ -1,4 +1,6 @@
+// cache for profile pictures
 let images = {};
+
 // let imageFiles = ["dog1.jpg", "dog2.jpg", "dog3.jpg", "dog4.jpg", "dog5.jpg"];
 let imageFiles = ["jarjar.jpg", "yoda.png", "obiwan.jpg"];
 let imageCount = 0;
@@ -22,6 +24,7 @@ function getName(author: string) {
 }
 
 // seems like this function was meant to retrieve a profile pic for the nodes
+// TODO: no longer used, remove
 function img4User(name:string) {  
   return getLetterIcon(name);
 }
@@ -38,26 +41,30 @@ function imageForUser(name: string, email: string, callback) {
     // See https://help.github.com/en/articles/about-commit-email-addresses for more info.
     let username = email.replace('@users.noreply.github.com','').replace(/^(\d){7}\+/,'');
 
-    // github-avatar-url insists on having an API token, 
-    // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
-    let client = gh.client();
-    client.get(`/users/${username}`, {}, function (err, status, body, headers) {
-      if (!err) {
-        pic = body.avatar_url;
-      }
-      else {
-        pic = getLetterIcon(name);
-      }
-      if (typeof(callback) !== "undefined")
+    // try the local cache first
+    pic = images[username];
+    if (typeof(pic) !== "undefined") {
+      callback(pic);
+    }
+    else {
+      // github-avatar-url insists on having an API token, 
+      // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
+      let client = gh.client();
+      client.get(`/users/${username}`, {}, function (err, status, body, headers) {
+        if (!err) {
+          pic = body.avatar_url;
+          images[username] = pic;   // add to cache
+        }
+        else {
+          pic = getLetterIcon(name);
+        }        
         callback(pic);
-    });
+      });
+    }
   }
   // fallback to letter icons if the email isn't a GitHub noreply one
   else {
     pic = getLetterIcon(name);
-    if (typeof(callback) !== "undefined")
-      callback(pic);
+    callback(pic);
   }
-  if (typeof(callback) === "undefined")
-    return pic;  
 }

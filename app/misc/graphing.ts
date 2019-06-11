@@ -373,14 +373,18 @@ function makeBasicNode(c, column: number) {
     if (flag) {
         id = basicNodeId++;
         tagid = id + 1;
-
         let title = "Number of Commits: " + count;
         console.log(title);
+        let imageUrl;
+        imageForUser(name, email, function (pic) {
+            imageUrl = pic;
+        });
+
         bsNodes.add({
             id: id,
             shape: "circularImage",
             title: title,
-            image: imageForUser(name,'null'),   // TODO: actually pass in the email instead of 'null'
+            image: imageUrl,
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
@@ -494,12 +498,16 @@ function makeAbsNode(c, column: number) {
         let id = absNodeId++;
         let tagid = id + 1;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
-
+        let imageUrl;
+        imageForUser(name, email, function (pic) {
+            imageUrl = pic;
+        });
+        
         abNodes.add({
             id: id,
             shape: "circularImage",
             title: title,
-            image: imageForUser(name,'null'),   // TODO: actually pass in the email instead of 'null'
+            image: imageUrl,
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
@@ -604,11 +612,16 @@ function makeNode(c, column: number) {
     }
 
     let flag = false;
+    let imageUrl;
+    imageForUser(name, email, function (pic) {
+        imageUrl = pic;
+    });
+    
     nodes.add({
         id: id,
         shape: "circularImage",
         title: title,
-        image: imageForUser(name,'null'),   // TODO: actually pass in the email instead of 'null'
+        image: imageUrl,
         physics: false,
         fixed: false,
         x: (column - 1) * spacingX,
