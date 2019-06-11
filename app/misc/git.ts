@@ -906,8 +906,7 @@ function stashChanges() {
 }
 
 /**
- * Remove a single stashed state from the stash list
- * Using nodegit
+ * Pop a single stashed state from the top of the stash list
  */
 function popStash() {
   Git.Repository.open(repoFullPath)
