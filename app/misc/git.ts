@@ -1427,7 +1427,7 @@ export function unpushedCommitsModal( ) {
 }
 
 //the unpushedCommitModal function is refreshed every 30000ms
- setInterval(unpushedCommitsModal, 30000);
+  setInterval(unpushedCommitsModal, 30000);
 
 
 
