@@ -1100,12 +1100,36 @@ body .pull-request-panel {
   max-width: 70%;
 }
 
+
 .current-entry-display {
   color: darkgray;
   font-style: italic;
+}
+
+/* commit graph change alert box style */
+#refresh-graph-alert {
+  margin-bottom: 0;
+  padding: 10px;
+  line-height: 34px;
+  font-weight: 600;
+  display: none;
+}
+
+/* commit graph refresh button style */
+.refresh-graph-btn {
+  float: right;
+}
+
+#refresh-button {
+  margin: 10px 10px 0 0;
+}
+
+.btn {
+  outline: none;
 }
 
 .checkbox-label {
   white-space: nowrap;
   font-weight: normal
 }
+
