@@ -1534,14 +1534,6 @@ function cleanRepo() {
 }
 
 /**
- * This method is called when the sync button is pressed, and causes the fetch-modal
- * to appear on the screen.
- */
-function requestLinkModal() {
-  $("#fetch-modal").modal();
-}
-
-/**
  * This method is called when the user clicks the "Remote" button on the navbar.
  */
 function setUpstreamModal() {
@@ -1555,12 +1547,12 @@ function setUpstreamModal() {
 function setUpstreamRepo() {
   let repository;
   let upstreamRepoPath = document.getElementById("remote-path").value;
-  addCommand("git remote add upstream " + upstreamRepoPath);
   if(upstreamRepoPath != null) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
       var result = Git.Remote.createWithFetchspec(repository, "upstream", upstreamRepoPath, 'remotes/upstream/master');
+      addCommand("git remote add upstream " + upstreamRepoPath);
       //setUrl(repository, "upstream", upstreamRepoPath);
       console.log(result)
     }, function(err) {
