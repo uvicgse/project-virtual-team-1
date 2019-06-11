@@ -48,12 +48,16 @@ function imageForUser(name: string, email: string, callback) {
       else {
         pic = getLetterIcon(name);
       }
-      callback(pic);
+      if (typeof(callback) !== "undefined")
+        callback(pic);
     });
   }
   // fallback to letter icons if the email isn't a GitHub noreply one
   else {
     pic = getLetterIcon(name);
-    callback(pic);
-  }  
+    if (typeof(callback) !== "undefined")
+      callback(pic);
+  }
+  if (typeof(callback) === "undefined")
+    return pic;  
 }

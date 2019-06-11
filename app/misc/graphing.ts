@@ -380,7 +380,7 @@ function makeBasicNode(c, column: number) {
             id: id,
             shape: "circularImage",
             title: title,
-            image: img4User(name),
+            image: imageForUser(name,'null'),   // TODO: actually pass in the email instead of 'null'
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
@@ -499,7 +499,7 @@ function makeAbsNode(c, column: number) {
             id: id,
             shape: "circularImage",
             title: title,
-            image: img4User(name),
+            image: imageForUser(name,'null'),   // TODO: actually pass in the email instead of 'null'
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
@@ -608,7 +608,7 @@ function makeNode(c, column: number) {
         id: id,
         shape: "circularImage",
         title: title,
-        image: img4User(name),
+        image: imageForUser(name,'null'),   // TODO: actually pass in the email instead of 'null'
         physics: false,
         fixed: false,
         x: (column - 1) * spacingX,
