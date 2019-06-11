@@ -59,7 +59,7 @@ export class GraphPanelComponent {
     createTag(tagName, getSelectedCommit(), pushTag, tagMessage);
   }
 
-  // Initializes  the create tag modal. Should be called before displaying the modal.
+  // Initializes the create tag modal. Should be called before displaying the modal.
   setCreateTagModal() {
     $("#createTagModalCreateButton")[0].disabled = false;
 
@@ -72,9 +72,16 @@ export class GraphPanelComponent {
     let inputPushTag = $("#inputPushTag")[0];
     inputPushTag.checked = inputPushTag.defaultChecked;
     inputPushTag.disabled = signed ? false : true;
-    inputPushTag.title = signed ? "" : "Must be signed in to push tags"
+    inputPushTag.title = signed ? "" : "Must be signed in to push tags";
 
     let createTagError = $("#createTagError")[0];
     createTagError.innerHTML = "";
+  }
+
+  refreshGraph(): void {
+    $("#refresh-graph-alert").hide();
+    $("#refresh-button").show();
+    drawGraph();
+    updateModalText("Graph successfully refreshed");
   }
 }

@@ -367,6 +367,13 @@ function refreshReferences(verbose, force) {
 
           // detects changes, refresh the lists
           console.log("branch or tag changes detected... refreshing branch and tag list");
+
+          if (lastRefList.length !== 0 && !refreshAllFlag) {
+            // show refresh graph alert
+            $("#refresh-graph-alert").show();
+            $("#refresh-button").hide();
+          }
+
           bname = {};
           tags = {};
           clearBranchAndTagElement();
@@ -432,6 +439,7 @@ function refreshReferences(verbose, force) {
   function refreshAll(repository) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
+    lastRefList = [];
     
     //Get the current branch from the repo
     repository.getCurrentBranch()
@@ -473,6 +481,8 @@ function refreshReferences(verbose, force) {
         // TODO: add a condition here to switch between tag and branch name string
         document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
+    // suppress commit detection alert
+    refreshAllFlag = true;
   }
 
   // Displaying branches in a dropdown menu

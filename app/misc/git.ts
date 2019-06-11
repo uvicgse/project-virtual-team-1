@@ -19,7 +19,8 @@ let commitHistory = [];
 let commitToRevert = 0;
 let commitHead = 0;
 let commitID = 0;
-
+let lastCommitLength;
+let refreshAllFlag = false;
 
 
 
@@ -256,6 +257,33 @@ function clearCommitMessage() {
   document.getElementById('commit-message-input').value = "";
 }
 
+// checking if the length of commits is different
+function checkCommitChange() {
+  // get HEAD commit from current pointing branch
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      repo.getHeadCommit().then(function(commit) {
+        // get all commits under current pointing branch
+        let history = commit.history();
+        history.on("end", function (commits) {
+          if (typeof lastCommitLength !== "undefined" && lastCommitLength !== commits.length) {
+            console.log("commit graph changes detected");
+            // show refresh graph alert
+            if (!refreshAllFlag) {
+              $("#refresh-graph-alert").show();
+              $("#refresh-button").hide();
+            }
+
+            refreshAllFlag = false;
+          }
+
+          lastCommitLength = commits.length;
+        });
+        history.start();
+      });
+    });
+}
+
 function getAllCommits(callback) {
   clearModifiedFilesList();
   let repos;
@@ -271,6 +299,7 @@ function getAllCommits(callback) {
     .then(function (refs) {
       let count = 0;
       console.log("getting " + refs.length + " refs");
+      // while loop of asynchronous requests
       async.whilst(
         function test(cb) { cb(null, count < refs.length) },
         function (cb) {

@@ -477,6 +477,7 @@ function makeAbsNode(c, column: number) {
     let email = stringer.split("%")[1];
     let flag = true;
     let count = 1;
+    let nodeId;
     if (c.parents().length === 1) {
         let cp = c.parents()[0].toString();
         for (let i = 0; i < abstractList.length; i++) {
@@ -486,95 +487,36 @@ function makeAbsNode(c, column: number) {
                 abstractList[i]['count'] += 1;
                 count = abstractList[i]['count'];
                 abstractList[i]['sha'].push(c.toString());
-                abNodes.update({id: i+1, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
+                nodeId = i+1;
+                abNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
                 break;
             }
         }
     }
 
     if (flag) {
-        let id = absNodeId++;
-        let tagid = id + 1;
+        nodeId = absNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
 
         abNodes.add({
-            id: id,
+            id: nodeId,
             shape: "circularImage",
             title: title,
             image: img4User(name),
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
+            y: (nodeId - 1) * spacingY,
             author: c.author(),
             nodeType: NodeType.Abstract
         });
-
-        if (c.toString() in bname) {
-            for (let i = 0; i < bname[c.toString()].length; i++) {
-                let branchName = bname[c.toString()][i];
-                let bp = branchName.name().split("/");
-                let shortName = bp[bp.length - 1];
-                console.log(shortName + " sub-branch: " + branchName.isHead().toString());
-                if (branchName.isHead()) {
-                    shortName = "*" + shortName;
-                }
-                let bsnodeId = generateUniqueNumber();
-                abNodes.add({
-                    id: bsnodeId,
-                    shape: "box",
-                    title: branchName,
-                    label: shortName,
-                    physics: false,
-                    fixed: false,
-                    x: (column - 0.6 * (i + 1)) * spacingX,
-                    y: (id - 0.3) * spacingY,
-                    nodeType: NodeType.Branch
-                });
-
-                abEdges.add({
-                    from: bsnodeId,
-                    to: id
-                });
-            }
-        }
-
-        // Initializing viewable tags in second zoom graph level
-        if (c.toString() in tags) {
-            for (let i = 0; i < tags[c.toString()].length; i++) {
-                let tagName = tags[c.toString()][i];
-                let tp = tagName.name().split("/");
-                let shortTagName = tp[tp.length - 1];
-                console.log(shortTagName + " tag: " + tagName.isHead().toString());
-                if (tagName.isHead()) {
-                    shortTagName = "*" + shortTagName;
-                }
-                let bsnodeId = generateUniqueNumber();
-                abNodes.add({
-                    id: bsnodeId,
-                    shape: "ellipse",
-                    // color: "teal",
-                    title: tagName, // hover text
-                    label: shortTagName, // shown under/in shape
-                    physics: false,
-                    fixed: false,
-                    x: (column - 0.6 * (i + 1)) * tagSpacingX,
-                    y: (id - 0.3) * tagSpacingY,
-                });
-
-                abEdges.add({
-                    from: bsnodeId,
-                    to: id
-                });
-            }
-        }
 
         let shaList = [];
         shaList.push(c.toString());
 
         abstractList.push({
             sha: shaList,
-            id: id,
+            id: nodeId,
             time: c.timeMs(),
             column: column,
             email: email,
@@ -583,11 +525,70 @@ function makeAbsNode(c, column: number) {
             count: 1,
         });
     }
+
+    // link the branch to updated absNode
+    if (c.toString() in bname) {
+        for (let i = 0; i < bname[c.toString()].length; i++) {
+            let branchName = bname[c.toString()][i];
+            let bp = branchName.name().split("/");
+            let shortName = bp[bp.length - 1];
+            console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+            if (branchName.isHead()) {
+                shortName = "*" + shortName;
+            }
+            let bsnodeId = generateUniqueNumber();
+            abNodes.add({
+                id: bsnodeId,
+                shape: "box",
+                title: branchName,
+                label: shortName,
+                physics: false,
+                fixed: false,
+                x: (column - 0.6 * (i + 1)) * spacingX,
+                y: (nodeId - 0.3) * spacingY,
+                nodeType: NodeType.Branch
+            });
+
+            abEdges.add({
+                from: bsnodeId,
+                to: nodeId
+            });
+        }
+    }
+
+    // link the tag to updated absNode
+    if (c.toString() in tags) {
+        for (let i = 0; i < tags[c.toString()].length; i++) {
+            let tagName = tags[c.toString()][i];
+            let tp = tagName.name().split("/");
+            let shortTagName = tp[tp.length - 1];
+            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            if (tagName.isHead()) {
+                shortTagName = "*" + shortTagName;
+            }
+            let bsnodeId = generateUniqueNumber();
+            abNodes.add({
+                id: bsnodeId,
+                shape: "ellipse",
+                // color: "teal",
+                title: tagName, // hover text
+                label: shortTagName, // shown under/in shape
+                physics: false,
+                fixed: false,
+                x: (column - 0.6 * (i + 1)) * tagSpacingX,
+                y: (nodeId - 0.3) * tagSpacingY,
+            });
+
+            abEdges.add({
+                from: bsnodeId,
+                to: nodeId
+            });
+        }
+    }
 }
 
 function makeNode(c, column: number) {
     let id = nodeId++;
-    let tagid = id + 1;
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -690,7 +691,6 @@ function makeNode(c, column: number) {
         reference: reference,
         branch: flag,
     });
-    // console.log("commit: "+ id + ", message: " + commitList[id-1]['id']); // + ", tags: " + tags[tagid]; ??
 }
 
 function makeEdge(sha: string, parentSha: string) {
