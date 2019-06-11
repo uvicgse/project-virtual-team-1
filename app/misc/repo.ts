@@ -1,4 +1,3 @@
-
 let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
