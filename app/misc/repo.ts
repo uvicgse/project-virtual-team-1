@@ -363,8 +363,7 @@ function refreshList(verbose) {
           }
 
           // detects changes, refresh the lists
-          console.log("stash, branch or tag changes detected... refreshing stash, branch and tag list");
-          displayStashes();
+          console.log("branch or tag changes detected... refreshing branch and tag list");
           bname = {};
           tags = {};
           clearBranchAndTagElement();
