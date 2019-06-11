@@ -1133,7 +1133,7 @@ function displayModifiedFiles() {
             this.style.opacity = '0.4';  // this / e.target is the source node.
             //set both file element and file panel highlight colours
             e.target.style.border = '4px solid #39C0B9';
-            document.getElementById("file-panel").style.border = '1px solid #39C0B9';
+            document.getElementById("files-staged").classList.add("dropzone");
            }, false);
 
           //On drop action, the file changes state to staged, checkbox is clicked
@@ -1141,7 +1141,7 @@ function displayModifiedFiles() {
           var divRect = document.getElementById('files-staged').getBoundingClientRect();
             //reset both file element and file panel highlight colours
           e.target.style.border = '1px solid white';
-          document.getElementById("file-panel").style.border = '1px solid black';
+          document.getElementById("files-staged").classList.remove("dropzone");
           if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
             e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
               checkbox.click();
@@ -1249,7 +1249,7 @@ function displayModifiedFiles() {
               this.style.opacity = '0.4';  // this / e.target is the source node.
               //set both file element and file panel highlight colours
               e.target.style.border = '4px solid #39C0B9';
-              document.getElementById("file-panel").style.border = '1px solid #39C0B9';
+              document.getElementById("files-changed").classList.add("dropzone");
           }, false);
 
           //On drop action, the file changes state to un-staged, checkbox is clicked
@@ -1257,7 +1257,7 @@ function displayModifiedFiles() {
             var divRect = document.getElementById('files-changed').getBoundingClientRect();
             //reset both file element and file panel highlight colours
             e.target.style.border = '1px solid white';
-            document.getElementById("file-panel").style.border = '1px solid black';
+            document.getElementById("files-changed").classList.remove("dropzone");
             if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
               e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
                 checkbox.click();

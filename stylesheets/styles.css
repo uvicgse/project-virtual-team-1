@@ -1106,3 +1106,9 @@ body .pull-request-panel {
   white-space: nowrap;
   font-weight: normal
 }
+
+.dropzone {  
+  border-style: solid;
+  border-color: #39C0B9;
+  border-width: 1px;
+}
