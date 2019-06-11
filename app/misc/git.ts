@@ -1568,6 +1568,42 @@ function setUpstreamRepo() {
   }
   clearUpstreamModalText();
 }
+/**
+* This function is called when the user clicks the "Sync" button on the navbar. It syncs from the upstream repository
+* configured in addRemoteRepo()
+*/
+function syncFromFork() {
+  let repository;
+  let commitRef;
+  var fetchOptions = {
+    callbacks: {
+      credentials: function () { return getCredentials(); },
+      certificateCheck: function () { return 1; }
+    }
+  }
+  Git.Repository.open(repoFullPath)
+  .then(function (repo) {
+    repository = repo;
+    var result = Git.Remote.addFetch(repository, 'upstream', 'remotes/upstream/master');
+    console.log(result)
+    return repository.fetch('upstream',fetchOptions) //fetch from upstream
+  }, function (err) {
+    console.log("error fetching:"+ err)
+  })
+  .then(function() {
+    return repository.checkoutBranch("master") //checkout master
+  }, function (err) {
+    console.log("error checking out branch:"+ err)
+  })
+  .then(function() {
+    return repository.mergeBranches("master", "upstream/master"); //merge upstream/master into master
+  }, function (err) {
+    console.log("error merging:"+ err)
+  })
+  .then(function(oid){
+    console.log("oid"+oid)
+  });
+}
 
 /**
  * This method implements Git Move to rename or move a given file within a repository using the simple-git library
