@@ -13,7 +13,7 @@ let repo, index, oid, remote, commitMessage;
 let filesToAdd = [];
 let theirCommit = null;
 let modifiedFiles;
-let stashes;
+let prevStashList = []
 let warnbool;
 var CommitButNoPush = 0;
 let stagedFiles: any;
@@ -910,44 +910,79 @@ function stashChanges() {
  * Using nodegit
  */
 function popStash() {
-    Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-        addCommand("git stash pop")
+  Git.Repository.open(repoFullPath)
+  .then(function (repo) {
+    addCommand("git stash pop")
 
-        let stashIndex = 0; // 0 --> top of the stack
-        Git.Stash.pop(repo, stashIndex)
-        .then(function(result) {
-          // unfortunately the result is ALWAYS undefined
-        }).catch(function(err) {
-          handleStashError(err)
-        }).done(function() {
-          doneStash()
-        });
+    let stashIndex = 0; // 0 --> top of the stack
+    Git.Stash.pop(repo, stashIndex)
+    .then(function(result) {
+      // unfortunately the result is ALWAYS undefined
+    }).catch(function(err) {
+      handleStashError(err)
+    }).done(function() {
+      doneStash()
     });
+  });
 }
 
 
 function displayStashes(){
   let sGitRepo = sGit(repoFullPath);
-  let stashList = document.getElementById("stash-list")!;
-  stashList.innerHTML = "";
 
   sGitRepo.silent(true).stashList().then((list)=>{
+    // check if the list changed
+    if (isStashListTheSame(list) === false) {
+      // clear the list
+      let stashList = document.getElementById("stash-list")!;
+      stashList.innerHTML = "";
+      // update the list
+      list.all.forEach(element => {
+        let stashElement = document.createElement("li");
+        stashElement.className = "list-group-item stash-list-item";
+        stashElement.innerHTML = element.message;
+        stashList.appendChild(stashElement);
+      });
+    }
+
+    // do this anyway, just to make sure we can see it.
     if(list.all.length > 0){
       document.getElementById("stashed-files-message")!.hidden =true;
       document.getElementById("pop-stash-list")!.style.display = "block";
-    } else{
+    } else {
       document.getElementById("stashed-files-message")!.hidden = false;
       document.getElementById("pop-stash-list")!.style.display = "none";
     }
-    list.all.forEach(element => {
-      let stashElement = document.createElement("li");
-      stashElement.className = "list-group-item stash-list-item";
-      stashElement.innerHTML = element.message;
-
-      stashList.appendChild(stashElement);
-    });
   });
+}
+
+function isStashListTheSame(list) {
+  // get the list of hashes
+  let currStashHashList = []
+  list.all.forEach(element => {
+    currStashHashList.push(element.hash);
+  });
+
+  currStashHashList.sort();
+
+  let same = (currStashHashList.length === prevStashList.length)
+
+  if (same) {
+    // they are the same length, check each element now
+    for (var i = currStashHashList.length - 1; i >= 0; --i) {
+      if (currStashHashList[i] !== prevStashList[i]) {
+        // found an element that is not the same.
+        // update the cached version
+        prevStashList = currStashHashList.slice();
+        same = false;
+      }
+    }
+  } else {
+    // not the same length, so they are not the same
+    prevStashList = currStashHashList.slice();
+  }
+
+  return same;
 }
 
 function revertCommit() {
