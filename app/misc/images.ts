@@ -1,17 +1,13 @@
-// cache for profile pictures
-let images = {};
-
-// let imageFiles = ["dog1.jpg", "dog2.jpg", "dog3.jpg", "dog4.jpg", "dog5.jpg"];
-let imageFiles = ["jarjar.jpg", "yoda.png", "obiwan.jpg"];
-let imageCount = 0;
-let githubAvatarUrl = require('github-avatar-url');
 let gh = require('octonode');
+
+// local cache for profile picture URLs
+let images = {};
 
 /**
  * Helper function for getting the letter icon for a given author.
  * 
- * @param name Name of the commit's contributor
- * @returns filepath for the given person's first initial
+ * @param name Name of the commit's author
+ * @returns filepath for the picture containing the author's first initial
  */
 function getLetterIcon(name: string) {
   let first = name.trim().charAt(0).toUpperCase();
@@ -23,13 +19,13 @@ function getName(author: string) {
   return name;
 }
 
-// seems like this function was meant to retrieve a profile pic for the nodes
-// TODO: no longer used, remove
+// No longer in use, but keeping it here in case of any backward-compatibility 
+// issues on other VisualGit branches.
 function img4User(name:string) {  
   return getLetterIcon(name);
 }
 
-// seems like this function was meant to retrieve a profile pic for the commit popup
+/** Retreives the URL for the given author's GitHub profile picture.*/
 function imageForUser(name: string, email: string, callback) {
   
   let pic;  
@@ -50,12 +46,13 @@ function imageForUser(name: string, email: string, callback) {
       // github-avatar-url insists on having an API token, 
       // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
       let client = gh.client();
+      
       client.get(`/users/${username}`, {}, function (err, status, body, headers) {
         if (!err) {
           pic = body.avatar_url;
           images[username] = pic;   // add to cache
-        }
-        else {
+        }        
+        else {    // fallback to letter icons if API request failed
           pic = getLetterIcon(name);
         }        
         callback(pic);
