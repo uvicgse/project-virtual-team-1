@@ -1558,9 +1558,8 @@ function setUpstreamRepo() {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
-      var result = Git.Remote.createWithFetchspec(repository, "upstream", upstreamRepoPath, 'remotes/upstream/master');
+      var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
       addCommand("git remote add upstream " + upstreamRepoPath);
-      //setUrl(repository, "upstream", upstreamRepoPath);
       console.log(result)
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err)
@@ -1568,6 +1567,7 @@ function setUpstreamRepo() {
   }
   clearUpstreamModalText();
 }
+
 /**
 * This function is called when the user clicks the "Sync" button on the navbar. It syncs from the upstream repository
 * configured in addRemoteRepo()
@@ -1585,23 +1585,22 @@ function syncFromFork() {
   .then(function (repo) {
     repository = repo;
     var result = Git.Remote.addFetch(repository, 'upstream', 'remotes/upstream/master');
-    console.log(result)
     return repository.fetch('upstream',fetchOptions) //fetch from upstream
   }, function (err) {
-    console.log("error fetching:"+ err)
+    displayModal("Error fetching:"+ err)
   })
   .then(function() {
     return repository.checkoutBranch("master") //checkout master
   }, function (err) {
-    console.log("error checking out branch:"+ err)
+    displayModal("Error checking out branch:"+ err)
   })
   .then(function() {
     return repository.mergeBranches("master", "upstream/master"); //merge upstream/master into master
   }, function (err) {
-    console.log("error merging:"+ err)
+    displayModal("Error merging:"+ err)
   })
   .then(function(oid){
-    console.log("oid"+oid)
+    displayModal("Sync complete!")
   });
 }
 
