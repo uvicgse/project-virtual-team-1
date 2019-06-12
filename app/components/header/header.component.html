@@ -465,16 +465,19 @@
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6" select-outline>
+                    <div class="col-md-9" select-outline>
+                      <div>
                         <label for="currentBranch">From: </label>
                         <b><i id="currentBranch" onclick="getRebaseFromBranch()">{{branch}}</i></b>
-                    </div>
-                    <div class = col-md-6 select-outline>
+                      </div>
+                      <div>
                         <label>Onto: </label>
-                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
-                            <option value="" disabled selected>Choose your option</option>
-                            <option value="1">Option 1</option>
+                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary" id="rebaseOntoBranches">
+                            <option value="1">issue-70-unpushedcommits-PR</option>
+                            <option value="2">feature-110-rebase-ui-popup-fresh</option>
+                            <option value="3">issue-6-recent-repository</option> 
                         </select>
+                      </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
                             <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
