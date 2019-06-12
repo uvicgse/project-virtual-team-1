@@ -24,8 +24,7 @@ let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
 let refreshAllFlag = false;
-let total_commit ;
-let commit_diff ;
+
 
 
 
