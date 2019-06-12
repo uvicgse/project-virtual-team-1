@@ -1,9 +1,6 @@
 var CryptoJS = require("crypto-js");
 const os = require('os');
 var jsonfile = require('jsonfile');
-var fs = require('fs');
-var encryptedPassword;
-var encryptedUsername;
 var encryptedToken;
 
 function encryptAccessToken(accessToken) {
@@ -31,12 +28,6 @@ function getAccessToken(){
 // Takes in the un-encrypted access token, then encrypts it and stores it in memory
 function encryptTemp(token) {
   encryptedToken = CryptoJS.AES.encrypt(token, os.hostname());
-}
-
-// Returns the password used for Oauth Credentials
-function getPasswordTemp() {
-  // When using GitHub OAuth, the password for Git operations is always the following string
-  return "x-oauth-basic";  
 }
 
 

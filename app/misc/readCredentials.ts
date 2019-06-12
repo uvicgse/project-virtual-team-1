@@ -3,7 +3,6 @@ const os = require("os");
 var jsonfile = require("jsonfile");
 var fs = require("fs");
 var file;
-
 var encryptedToken;
 
 function decrypt() {
@@ -31,7 +30,8 @@ function deleteToken() {
   file = "data.json"
   try {
     // Remove file
-    fs.unlinkSync(file)
+    fs.unlinkSync(file);
+    encryptedToken = null;
   } catch(err) {
     console.error(err)
   }
