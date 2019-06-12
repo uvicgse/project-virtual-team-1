@@ -372,7 +372,7 @@ function refreshReferences(verbose, force) {
           // detects changes, refresh the lists
           console.log("branch or tag changes detected... refreshing branch and tag list");
 
-          if (lastRefList.length !== 0 && !refreshAllFlagRef) {
+          if (!refreshAllFlagRef) {
             // show refresh graph alert
             $("#refresh-graph-alert").show();
             $("#refresh-button").hide();
@@ -463,6 +463,7 @@ function refreshReferences(verbose, force) {
         refreshAllFlagRef = true;
         refreshAllFlagCommit = true;
         refreshReferences(true, true);
+        checkCommitChange();
       })
       .then(function () {
         console.log("Updating the graph and the labels");

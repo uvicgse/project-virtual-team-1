@@ -266,7 +266,7 @@ function checkCommitChange() {
         // get all commits under current pointing branch
         let history = commit.history();
         history.on("end", function (commits) {
-          if (typeof lastCommitLength !== "undefined" && lastCommitLength !== commits.length) {
+          if (lastCommitLength !== commits.length) {
             console.log("commit graph changes detected");
             // show refresh graph alert
             if (!refreshAllFlagCommit) {
