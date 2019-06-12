@@ -476,15 +476,11 @@
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6" select-outline>
                         <label for="currentBranch">From: </label>
-                        <select id="currentBranch">
-                            <datalist>
-                              <option *ngFor="let branch of getRebaseFromBranch()">{{branch}}</option>
-                            </datalist>
-                        </select>
+                        <b><i id="currentBranch" onclick="getRebaseFromBranch()">{{branch}}</i></b>
                     </div>
-                    <div class = col-md-6 select-outline >
+                    <div class = col-md-6 select-outline>
                         <label>Onto: </label>
                         <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
                             <option value="" disabled selected>Choose your option</option>
