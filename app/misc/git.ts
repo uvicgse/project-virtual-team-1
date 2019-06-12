@@ -1685,14 +1685,6 @@ function getAllPushedCommits(callback) {
 
 function unpushedCommitsModal() {
   var countLocalCommits_value =0;
-      getAllPushedCommits(function (response2) {
-        if(typeof commit_diff === "undefined" ){
-          console.log("unpused undefined ");
-          getAllPushedCommits(response2);
-
-
-        }
-        else{
           countLocalCommits(function (response) {
             if(typeof total_commit === "undefined" ){
               console.log("total_commit undefined ");
@@ -1700,14 +1692,18 @@ function unpushedCommitsModal() {
 
             }
             else{
-              console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
-              document.getElementById("unpushed").innerHTML = total_commit - commit_diff;
-            }
-          })
+              getAllPushedCommits(function (response2) {
+                if (typeof commit_diff === "undefined") {
+                  console.log("unpused undefined ");
+                  getAllPushedCommits(response2);
 
 
-
-        }
+                } else {
+                  console.log("Number of un-pushed commits: " + (total_commit - commit_diff));
+                  document.getElementById("unpushed").innerHTML = total_commit - commit_diff;
+                }
+              })
+          }
       })
 
 }
