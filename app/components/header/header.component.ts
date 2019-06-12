@@ -14,7 +14,7 @@ export class HeaderComponent   {
   repoBranch: string = "Repo branch";
   repository: any;
 
-  // If 'branch' is the selected tab in the dropdown of references. False means that 'tag' is the selected tab.
+  // If 'branch' is the selected tab in the dropdown of references. False means that 'tag' is the selected tab. 
   branchSelectedInRefDropdown: boolean = true;
 
   promptUserToAddRepository(): void {
@@ -47,44 +47,8 @@ export class HeaderComponent   {
     redirectToHomePage();
   }
 
-  /*
-    If the password is empty, made the input field for the password red and show a icon that shows that the password
-    field is empty.
-  */
-  emptyPassword(): void {
-    document.getElementById('Password1').classList.add("error");
-    document.getElementById('password-error-icon').style.visibility = 'visible';
-  }
-
-  /*
-    If the username is empty, made the input field for the username red and show a icon that shows that the username
-    field is empty.
-  */
-  emptyUsername(): void {
-    document.getElementById('Email1').classList.add('error');
-    document.getElementById('username-error-icon').style.visibility = 'visible';
-  }
-
-  /*
-    If the username is not empty and the input field has been made red, change it back to normal and get
-    rid of the warning icon.
-  */
-  notEmptyUsername(): void {
-    if (document.getElementById('Email1').classList.contains('error')) {
-      document.getElementById('Email1').classList.remove('error');
-      document.getElementById('username-error-icon').style.visibility = 'hidden';
-    }
-  }
-
-  /*
-    If the password is not empty and the input field has been made red, change it back to normal and get
-    rid of the warning icon.
-  */
-  notEmptyPassword(): void {
-    if (document.getElementById('Password1').classList.contains('error')) {
-      document.getElementById('Password1').classList.remove('error');
-      document.getElementById('password-error-icon').style.visibility = 'hidden';
-    }
+  authenticateGithub(): void {
+    authenticateUser(switchToAddRepositoryPanel);
   }
 
   showBranchList(): void {

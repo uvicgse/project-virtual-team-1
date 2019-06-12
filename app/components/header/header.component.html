@@ -123,30 +123,14 @@
         <li>
           <label id="githubname" style="color:white"></label>
           <div id="Button_Sign_out">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signInOrOut()">Sign out</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()">Sign out</a>
           </div>
           <div id="Button_Sign_in">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()">Sign in</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()">Sign In Using Github</a>
           </div>
           </li>
       </ul>
-
-
-      <div class="collapse nav navbar-nav nav-collapse" id="nav-collapse1">
-        <form class="navbar-form navbar-right form-inline" role="form" style="width:280px;">
-          <div class="form-group">
-            <label class="sr-only" for="Email">User name</label>
-            <img src="./assets/error.png" class="error-icon" id="username-error-icon">
-            <input type="text" class="form-control" id="Email1" placeholder="Username or Email" autofocus required style="width: 206px !important"/>
-          </div>
-          <div class="form-group">
-            <label class="sr-only" for="Password">Password</label>
-            <img src="./assets/error.png" class="error-icon" id="password-error-icon">
-            <input type="password" class="form-control" id="Password1" placeholder="Password" required />
-          </div>
-          <button type="submit" class="btn btn-success" (click)="switchToMainPanel()">Sign in</button>
-        </form>
-      </div>
+      
 
       <ul class="nav navbar-nav visible-xs">
         <li (click)="promptUserToAddRepository()"><a>&nbsp;&nbsp;add repository</a></li>

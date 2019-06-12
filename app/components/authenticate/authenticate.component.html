@@ -5,32 +5,12 @@
       <h1>VisualGit</h1>
     </label>
     <br><br>
-    <div class="input-group" style="width:280px;">
-      <input id="username" type="text" class="form-control" placeholder="Username or Email" aria-describedby="basic-addon1">
-      <div class = "error-message" id="username-error">Username or Email is a required field.</div>
-    </div>
-    <br>
-
-    <div class="input-group" style="width:280px;">
-      <input id="password" type="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
-      <div class = "error-message" id="password-error">Password is a required field.</div>
-      <br>    
-    </div>
-    <br>
-    <input id="rememberLogin" type="checkbox"><span id = "checkboxText"> Remember Login</span> <br/>
     
-    <br>
+  
     <div>
-      <button type="submit" style="width:280px;" class="btn btn-success" (click)="switchToMainPanel()">Sign In</button>
+      <button type="submit" style="width:280px;" class="btn btn-success" (click)="authenticateGithub()">Sign In Using Github</button>
       <br>
     </div>
-    
-    <button style="width:280px;" class="btn btn-link" (click)="openGitHubPasswordResetPage()">Forgot your password?</button>
-    
-    <br>
-
-    <button style="width:280px;" class="btn btn-link" (click)="createNewAccount()">Create New Account?</button>
-
     <br>
     <button type="submit" style="width:280px;" class="btn btn-primary" onclick="switchToAddRepositoryPanelWhenNotSignedIn()">Continue without sign in</button>
   </form>
