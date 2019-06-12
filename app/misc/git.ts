@@ -774,15 +774,16 @@ function mergeCommits(from) {
 // Rebase modal functionality starts here!
 function showRebaseModal() {
   $('#rebase-modal').modal('show');
+  getRebaseFromBranch();
 }
 
 function getRebaseFromBranch() {
+    console.log('Getting your current branch');
     // let repo: Git.Repository = await Git.Repository.open(repoFullPath);
     // let currentBranch: Git.Reference = await repo.getCurrentBranch();
     // let currentBranchName: string = currentBranch.shorthand();
-    // return currentBranchName;
-    console.log('we get here at least?');
-    return [1, 2, 3];
+    let newtry = document.getElementById("currentBranch");
+    newtry.innerText = repoCurrentBranch;
 }
 
 function rebaseCommits(from: string, to: string) {
