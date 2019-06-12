@@ -378,6 +378,7 @@ function makeBasicNode(c, column: number) {
         console.log(title);
         let imageUrl;
         
+        // Get the image URL, then create and add the node for the commmit
         imageForUser(name, email, function (pic) {
             imageUrl = pic;
 
@@ -509,6 +510,7 @@ function makeAbsNode(c, column: number) {
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
         let imageUrl;
         
+        // Get the image URL, then create and add the node for the commmit
         imageForUser(name, email, function (pic) {
             imageUrl = pic;
             
@@ -633,6 +635,7 @@ function makeNode(c, column: number) {
     let flag = false;
     let imageUrl;
     
+    // Get the image URL, then create and add the node for the commmit
     imageForUser(name, email, function (pic) {
         imageUrl = pic;
 

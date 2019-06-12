@@ -19,8 +19,8 @@ function getName(author: string) {
   return name;
 }
 
-// No longer in use, but keeping it here in case of any backward-compatibility 
-// issues on other VisualGit branches.
+// No longer in use, but keeping it here in case of any potential 
+// backward-compatibility issues on other VisualGit branches.
 function img4User(name:string) {  
   return getLetterIcon(name);
 }
@@ -50,9 +50,10 @@ function imageForUser(name: string, email: string, callback) {
       let client = gh.client();
       
       client.get(`/users/${username}`, {}, function (err, status, body, headers) {
-        if (!err) {
+        if (!err) {          
           pic = body.avatar_url;
           images[username] = pic;   // add to cache
+          console.log(`GitHub API: ${pic}`)
         }        
         else {
           console.log(`GitHub API: ${err}`);
