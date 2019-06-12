@@ -396,11 +396,6 @@ function makeBasicNode(c, column: number) {
             });
 
         });        
-        // TODO:
-        // if (typeof(imageUrl) === "undefined") {
-        //     imageUrl = getLetterIcon(name);
-        // }
-
 
 
         let shaList = [];
@@ -529,13 +524,6 @@ function makeAbsNode(c, column: number) {
 
         });
 
-        
-        // TODO:
-        // if (typeof(imageUrl) === "undefined") {
-        //     imageUrl = getLetterIcon(name);
-        // }
-
-
 
         if (c.toString() in bname) {
             for (let i = 0; i < bname[c.toString()].length; i++) {
@@ -654,13 +642,6 @@ function makeNode(c, column: number) {
         });
 
     });
-
-
-    // TODO:
-    // if (typeof(imageUrl) === "undefined") {
-    //     imageUrl = getLetterIcon(name);
-    // }
-
 
 
     if (c.toString() in bname) {
