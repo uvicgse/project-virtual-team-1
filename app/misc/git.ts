@@ -774,8 +774,8 @@ function showRebaseModal() {
 }
 
 function getRebaseFromBranch() {
-    let newtry = document.getElementById("currentBranch");
-    newtry.innerText = repoCurrentBranch;
+    let rebaseFromBranch = document.getElementById("currentBranch");
+    rebaseFromBranch.innerText = repoCurrentBranch;
 }
 
 function rebaseCommits(from: string, to: string) {
