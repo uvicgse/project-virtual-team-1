@@ -35,7 +35,7 @@ function imageForUser(name: string, email: string, callback) {
     // Extract GitHub username from noreply email (<number>+<username>@users.noreply.github.com)
     // This won't work for users that are NOT hiding their email in the GitHub settings.
     // See https://help.github.com/en/articles/about-commit-email-addresses for more info.
-    let username = email.replace('@users.noreply.github.com','').replace(/^(\d){7}\+/,'');
+    let username = email.replace('@users.noreply.github.com','').replace(/^(\d){4,}\+/,'');
     
     // try the local cache first
     pic = images[username];
