@@ -36,10 +36,11 @@ function imageForUser(name: string, email: string, callback) {
     // This won't work for users that are NOT hiding their email in the GitHub settings.
     // See https://help.github.com/en/articles/about-commit-email-addresses for more info.
     let username = email.replace('@users.noreply.github.com','').replace(/^(\d){7}\+/,'');
-
+    
     // try the local cache first
     pic = images[username];
     if (typeof(pic) !== "undefined") {
+      console.log(`Cached image URL: ${pic}`)
       callback(pic);
     }
     else {
@@ -53,6 +54,7 @@ function imageForUser(name: string, email: string, callback) {
           images[username] = pic;   // add to cache
         }        
         else {    // fallback to letter icons if API request failed
+          console.log("GitHub API request failed; using letter icons instead");
           pic = getLetterIcon(name);
         }        
         callback(pic);
@@ -62,6 +64,7 @@ function imageForUser(name: string, email: string, callback) {
   // fallback to letter icons if the email isn't a GitHub noreply one
   else {
     pic = getLetterIcon(name);
+    console.log("No GitHub username detected; using letter icons instead");
     callback(pic);
   }
 }

@@ -377,22 +377,30 @@ function makeBasicNode(c, column: number) {
         let title = "Number of Commits: " + count;
         console.log(title);
         let imageUrl;
+        console.log(`imageForUser(): name=${name}, email=${email}`)
         imageForUser(name, email, function (pic) {
             imageUrl = pic;
-        });
 
-        bsNodes.add({
-            id: id,
-            shape: "circularImage",
-            title: title,
-            image: imageUrl,
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Basic
-        });
+            bsNodes.add({
+                id: id,
+                shape: "circularImage",
+                title: title,
+                image: imageUrl,
+                physics: false,
+                fixed: false,
+                x: (column - 1) * spacingX,
+                y: (id - 1) * spacingY,
+                author: c.author(),
+                nodeType: NodeType.Basic
+            });
+
+        });        
+        // TODO:
+        // if (typeof(imageUrl) === "undefined") {
+        //     imageUrl = getLetterIcon(name);
+        // }
+
+
 
         let shaList = [];
         shaList.push(c.toString());
@@ -500,22 +508,32 @@ function makeAbsNode(c, column: number) {
         let tagid = id + 1;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
         let imageUrl;
+        console.log(`imageForUser(): name=${name}, email=${email}`)
         imageForUser(name, email, function (pic) {
             imageUrl = pic;
+            
+            abNodes.add({
+                id: id,
+                shape: "circularImage",
+                title: title,
+                image: imageUrl,
+                physics: false,
+                fixed: false,
+                x: (column - 1) * spacingX,
+                y: (id - 1) * spacingY,
+                author: c.author(),
+                nodeType: NodeType.Abstract
+            });
+
         });
+
         
-        abNodes.add({
-            id: id,
-            shape: "circularImage",
-            title: title,
-            image: imageUrl,
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Abstract
-        });
+        // TODO:
+        // if (typeof(imageUrl) === "undefined") {
+        //     imageUrl = getLetterIcon(name);
+        // }
+
+
 
         if (c.toString() in bname) {
             for (let i = 0; i < bname[c.toString()].length; i++) {
@@ -614,23 +632,33 @@ function makeNode(c, column: number) {
 
     let flag = false;
     let imageUrl;
+    console.log(`imageForUser(): name=${name}, email=${email}`)
     imageForUser(name, email, function (pic) {
         imageUrl = pic;
+
+        nodes.add({
+            id: id,
+            shape: "circularImage",
+            title: title,
+            image: imageUrl,
+            physics: false,
+            fixed: false,
+            x: (column - 1) * spacingX,
+            y: (id - 1) * spacingY,
+            author: c.author(),
+            nodeType: NodeType.Node,
+            commitSha: c.sha()
+        });
+
     });
-    
-    nodes.add({
-        id: id,
-        shape: "circularImage",
-        title: title,
-        image: imageUrl,
-        physics: false,
-        fixed: false,
-        x: (column - 1) * spacingX,
-        y: (id - 1) * spacingY,
-        author: c.author(),
-        nodeType: NodeType.Node,
-        commitSha: c.sha()
-    });
+
+
+    // TODO:
+    // if (typeof(imageUrl) === "undefined") {
+    //     imageUrl = getLetterIcon(name);
+    // }
+
+
 
     if (c.toString() in bname) {
         for (let i = 0; i < bname[c.toString()].length; i++) {
