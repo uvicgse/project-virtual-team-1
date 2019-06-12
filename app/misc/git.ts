@@ -778,10 +778,6 @@ function showRebaseModal() {
 }
 
 function getRebaseFromBranch() {
-    console.log('Getting your current branch');
-    // let repo: Git.Repository = await Git.Repository.open(repoFullPath);
-    // let currentBranch: Git.Reference = await repo.getCurrentBranch();
-    // let currentBranchName: string = currentBranch.shorthand();
     let newtry = document.getElementById("currentBranch");
     newtry.innerText = repoCurrentBranch;
 }
