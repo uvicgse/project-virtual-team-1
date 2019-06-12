@@ -24,6 +24,8 @@ let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
 let refreshAllFlag = false;
+let total_commit ;
+let commit_diff ;
 
 
 
@@ -1667,4 +1669,19 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
   else{
     displayModal("Destination directory does not exist");
   }
+}
+
+//This functions using simple git to find the ahead and behind number of commits
+function unpushedCommitsModal() {
+  let sGitRepo = sGit(repoFullPath);
+
+  sGitRepo.silent(true).status().then((status: StatusSummary) => {
+
+    document.getElementById("ahead_count").innerHTML = status.ahead;
+    document.getElementById("behind_count").innerHTML = status.behind;
+
+    console.log(status.ahead);
+    console.log(status.behind);
+  });
+
 }
