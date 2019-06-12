@@ -46,6 +46,7 @@ function imageForUser(name: string, email: string, callback) {
     else {
       // github-avatar-url insists on having an API token, 
       // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
+      // That being said, if you've hit the rate limit, just supply the token below; i.e. gh.client('token')
       let client = gh.client();
       
       client.get(`/users/${username}`, {}, function (err, status, body, headers) {
@@ -53,8 +54,10 @@ function imageForUser(name: string, email: string, callback) {
           pic = body.avatar_url;
           images[username] = pic;   // add to cache
         }        
-        else {    // fallback to letter icons if API request failed
+        else {
+          console.log(`GitHub API: ${err}`);
           console.log("GitHub API request failed; using letter icons instead");
+
           pic = getLetterIcon(name);
         }        
         callback(pic);

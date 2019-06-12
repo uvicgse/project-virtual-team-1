@@ -377,7 +377,7 @@ function makeBasicNode(c, column: number) {
         let title = "Number of Commits: " + count;
         console.log(title);
         let imageUrl;
-        console.log(`imageForUser(): name=${name}, email=${email}`)
+        
         imageForUser(name, email, function (pic) {
             imageUrl = pic;
 
@@ -508,7 +508,7 @@ function makeAbsNode(c, column: number) {
         let tagid = id + 1;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
         let imageUrl;
-        console.log(`imageForUser(): name=${name}, email=${email}`)
+        
         imageForUser(name, email, function (pic) {
             imageUrl = pic;
             
@@ -632,7 +632,7 @@ function makeNode(c, column: number) {
 
     let flag = false;
     let imageUrl;
-    console.log(`imageForUser(): name=${name}, email=${email}`)
+    
     imageForUser(name, email, function (pic) {
         imageUrl = pic;
 
