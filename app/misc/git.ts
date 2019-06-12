@@ -455,10 +455,6 @@ function commitModal() {
   displayModal("Commit inside a modal yet to be implemented");
 }
 
-function showRebaseModal() {
-  $('#rebase-modal').modal('show');
-}
-
 function openBranchModal() {
   $('#branch-modal').modal('show');
 
@@ -769,6 +765,20 @@ function mergeCommits(from) {
         refreshAll(repos);
       }
     });
+}
+
+// Rebase modal functionality starts here!
+function showRebaseModal() {
+  $('#rebase-modal').modal('show');
+}
+
+function getRebaseFromBranch() {
+    // let repo: Git.Repository = await Git.Repository.open(repoFullPath);
+    // let currentBranch: Git.Reference = await repo.getCurrentBranch();
+    // let currentBranchName: string = currentBranch.shorthand();
+    // return currentBranchName;
+    console.log('we get here at least?');
+    return [1, 2, 3];
 }
 
 function rebaseCommits(from: string, to: string) {

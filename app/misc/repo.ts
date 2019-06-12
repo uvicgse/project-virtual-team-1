@@ -33,7 +33,6 @@ function getRecentRepositories() {
 
     // reverse for more understandable view
     displayList = repoList.recentRepos.reverse();
-    console.log("Collecting recently used repositories: " + displayList);
     return displayList;
 }
 
@@ -440,7 +439,7 @@ function refreshReferences(verbose, force) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
     lastRefList = [];
-    
+
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
