@@ -455,6 +455,10 @@ function commitModal() {
   displayModal("Commit inside a modal yet to be implemented");
 }
 
+function showRebaseModal() {
+  $('#rebase-modal').modal('show');
+}
+
 function openBranchModal() {
   $('#branch-modal').modal('show');
 
@@ -1216,7 +1220,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
@@ -1349,7 +1353,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           //Allow the individual file elements to be draggable
           fileElement.draggable=true;
           fileElement.id = fileId;
@@ -1395,7 +1399,7 @@ function displayModifiedFiles() {
             var source=e.target;
             this.style.opacity = '1.0';  // this / e.target is the source node.
           }, false);
-          
+
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);

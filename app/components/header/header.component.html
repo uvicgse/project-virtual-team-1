@@ -106,6 +106,12 @@
             <a href="#"><img src="./assets/stash.png" height="40" width="48" class="add-repository-button" title="Stash"></a>
             <span class="toolbar-Text">Stash</span>
         </li>
+
+        <!--Rebase-->
+        <li class="toolbar-Icons" onclick="showRebaseModal()">
+            <a href="#"><img src="./assets/Rebase.png" height="40" width="48" class="add-repository-button" title="Rebase"></a>
+            <span class="toolbar-Text">Rebase</span>
+        </li>
       </ul>
 
       <ul class="navbar-nav navbar-right hidden-xs">
@@ -454,4 +460,65 @@
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
+</div>
+
+<!--rebase-->
+<div id="rebase-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Rebase branch </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 select-outline">
+                        <label>Git Root: </label>
+                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="1">Option 1</option>
+                        </select>
+                    </div>
+                    <div class = col-md-6 select-outline >
+                        <label> Branch:</label>
+                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="1">Option 1</option>
+                        </select>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                            <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                            <label class="form-check-label" for="inlineCheckbox2">Preserve Merge</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 select-outline">
+                        <label>From: </label>
+                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="1">Option 1</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 select-outline">
+                        <label>Merge Strategy: </label>
+                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
+                            <option value="" disabled selected>default</option>
+                            <option value="1"> 1</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Abort</button>
+            </div>
+        </div>
+    </div>
 </div>
