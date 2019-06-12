@@ -459,6 +459,10 @@ function commitModal() {
   displayModal("Commit inside a modal yet to be implemented");
 }
 
+function showRebaseModal() {
+  $('#rebase-modal').modal('show');
+}
+
 function openBranchModal() {
   $('#branch-modal').modal('show');
 
