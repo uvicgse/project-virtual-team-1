@@ -316,6 +316,29 @@ body .file-panel .staging-buttons:hover {
   opacity: 0.8;
 }
 
+body .file-panel .pop-stash-list-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 30px;
+  border-radius: 10px;
+  border: 0;
+  padding: 0 15px;
+  white-space: nowrap;
+  background-color: #39c0ba;
+  color: #fff;
+}
+
+ body .file-panel .pop-stash-list-button:hover {
+  opacity: 0.8;
+}
+
+body .file-panel .files-stashed .stashed-files-message {
+    padding: 20px;
+}
+
 body .file-panel .commit-panel .commit-button:hover {
   opacity: 0.8;
 }
@@ -619,7 +642,7 @@ body .footer{
   border-top: none;
 }
 
-div.editor-header button.close-button, div.editor-header button.open-button, button.open-editor-button {
+div.editor-header button.close-button, div.editor-header button.open-button, button.open-editor-button,button.move-file-button,button.rename-file-button {
   display: inline;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -631,7 +654,7 @@ div.editor-header button.close-button, div.editor-header button.open-button, but
   color: #fff;
 }
 
-div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover {
+div.editor-header button.close-button:hover, div.editor-header button.open-button:hover, button.open-editor-button:hover,button.rename-file-button:hover,button.move-file-button:hover {
   opacity: 0.8;
 }
 
@@ -744,7 +767,7 @@ div.selected-commit-diff-panel button.close-button {
 .toolbar-Icons {
   text-align: center;
   cursor: pointer;
-  padding: 10px;
+  padding-top: 10px;
   margin: 0 auto;
   max-height: 65px;
   max-width: 55px;
@@ -1100,6 +1123,12 @@ body .pull-request-panel {
   max-width: 70%;
 }
 
+
+.current-entry-display {
+  color: darkgray;
+  font-style: italic;
+}
+
 /* commit graph change alert box style */
 #refresh-graph-alert {
   margin-bottom: 0;
@@ -1127,3 +1156,13 @@ body .pull-request-panel {
   font-weight: normal
 }
 
+.stash-list-item{
+  background-color: slategray;
+  color: white;
+}
+
+.dropzone {  
+  border-style: solid;
+  border-color: #39C0B9;
+  border-width: 1px;
+}

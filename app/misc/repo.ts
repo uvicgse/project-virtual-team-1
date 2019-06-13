@@ -631,24 +631,52 @@ function refreshReferences(verbose, force) {
     ul.appendChild(li);
   }
 
-// Adding tags to branch dropdown menu
+  // Adding tags to branch dropdown menu
   function displayTag(name, id, onclick) {
+
+    // create HTML element for tag list dropdown
     let tagList = document.getElementById(id);
     let li = document.createElement("li");
     let a = document.createElement("a");
-    a.setAttribute("href", "#");
-    a.setAttribute("class", "list-group-item");
-    a.setAttribute("id", name);
-    a.setAttribute("onclick", onclick + ";event.stopPropagation()");
-    li.setAttribute("role", "presentation");
-    a.appendChild(document.createTextNode(name));
-    a.innerHTML = name;
-    li.appendChild(a);
+    let span = document.createElement("span");
+    let button = document.createElement("span");
 
-    if (id === "tag-item-list") {
-      // TODO: tagging support - add delete button here
+    // set HTML attributes
+    a.setAttribute("href", "#");
+    a.setAttribute("class", "list-group-item tag-list-item");
+    a.setAttribute("id", name);
+    a.setAttribute("onclick", onclick + ";event.stopPropagation();");
+    li.setAttribute("role", "presentation");
+    span.setAttribute("class", "pull-right");
+    button.setAttribute("id", name);
+    button.setAttribute("class", "btn btn-danger");
+    button.innerHTML = "Delete";
+
+    // deleting a tag
+    button.onclick = (event) => {
+
+      // get name of tag from event
+      tagName = event.srcElement.getAttribute("id");
+
+      let repo;
+      Git.Repository.open(repoFullPath)
+        .then(function(repoParam) {
+          repo = repoParam;
+        })
+        .then(function(){
+          return Git.Tag.delete(repo, tagName);
+        }
+      ).catch(function(msg) {
+        let errorMessage = "Error: " + msg.message;
+      });
     }
 
+    // create tag element in list
+    span.appendChild(button);
+    a.appendChild(document.createTextNode(id));
+    a.innerHTML = name;
+    a.appendChild(span);
+    li.appendChild(a);
     tagList.appendChild(li);
   }
 

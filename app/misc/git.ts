@@ -1,8 +1,10 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
+import * as simplegit from 'simple-git/promise';
 
 let $ = require("jquery");
 let Git = require("nodegit");
+let sGit = require('simple-git/promise');
 let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
@@ -11,6 +13,7 @@ let repo, index, oid, remote, commitMessage;
 let filesToAdd = [];
 let theirCommit = null;
 let modifiedFiles;
+let prevStashList = []
 let warnbool;
 var CommitButNoPush = 0;
 let stagedFiles: any;
@@ -932,7 +935,85 @@ function stashChanges() {
     }).done(function() {
       doneStash()
     });
+}
 
+/**
+ * Pop a single stashed state from the top of the stash list
+ */
+function popStash() {
+  Git.Repository.open(repoFullPath)
+  .then(function (repo) {
+    addCommand("git stash pop")
+
+    let stashIndex = 0; // 0 --> top of the stack
+    Git.Stash.pop(repo, stashIndex)
+    .then(function(result) {
+      // unfortunately the result is ALWAYS undefined
+    }).catch(function(err) {
+      handleStashError(err)
+    }).done(function() {
+      doneStash()
+    });
+  });
+}
+
+
+function displayStashes(){
+  let sGitRepo = sGit(repoFullPath);
+
+  sGitRepo.silent(true).stashList().then((list)=>{
+    // check if the list changed
+    if (isStashListTheSame(list) === false) {
+      // clear the list
+      let stashList = document.getElementById("stash-list")!;
+      stashList.innerHTML = "";
+      // update the list
+      list.all.forEach(element => {
+        let stashElement = document.createElement("li");
+        stashElement.className = "list-group-item stash-list-item";
+        stashElement.innerHTML = element.message;
+        stashList.appendChild(stashElement);
+      });
+    }
+
+    // do this anyway, just to make sure we can see it.
+    if(list.all.length > 0){
+      document.getElementById("stashed-files-message")!.hidden =true;
+      document.getElementById("pop-stash-list")!.style.display = "block";
+    } else {
+      document.getElementById("stashed-files-message")!.hidden = false;
+      document.getElementById("pop-stash-list")!.style.display = "none";
+    }
+  });
+}
+
+function isStashListTheSame(list) {
+  // get the list of hashes
+  let currStashHashList = []
+  list.all.forEach(element => {
+    currStashHashList.push(element.hash);
+  });
+
+  currStashHashList.sort();
+
+  let same = (currStashHashList.length === prevStashList.length)
+
+  if (same) {
+    // they are the same length, check each element now
+    for (var i = currStashHashList.length - 1; i >= 0; --i) {
+      if (currStashHashList[i] !== prevStashList[i]) {
+        // found an element that is not the same.
+        // update the cached version
+        prevStashList = currStashHashList.slice();
+        same = false;
+      }
+    }
+  } else {
+    // not the same length, so they are not the same
+    prevStashList = currStashHashList.slice();
+  }
+
+  return same;
 }
 
 function revertCommit() {
@@ -1016,7 +1097,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage); 
+            filePanelMessage.parentNode.removeChild(filePanelMessage);
           }
         }
 
@@ -1138,7 +1219,8 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
 
@@ -1156,26 +1238,56 @@ function displayModifiedFiles() {
           }
           fileElement.appendChild(checkbox);
 
-          document.getElementById("files-changed").appendChild(fileElement);
+          document.getElementById("files-changed")!.appendChild(fileElement);
 
+          // On drag action, the file element is shown to the user
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+            var source=e.target;
+            this.style.opacity = '0.4';  // this / e.target is the source node.
+            //set both file element and file panel highlight colours
+            e.target.style.border = '4px solid #39C0B9';
+            document.getElementById("files-staged").classList.add("dropzone");
+           }, false);
+
+          //On drop action, the file changes state to staged, checkbox is clicked
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+          var divRect = document.getElementById('files-staged').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
+          e.target.style.border = '1px solid white';
+          document.getElementById("files-staged").classList.remove("dropzone");
+          if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+            e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+              checkbox.click();
+          }
+
+          var source=e.target;
+          this.style.opacity = '1.0';  // resets the view changes of dragstart
+          }, false);
 
           fileElement.onclick = function () {
-            let doc = document.getElementById("diff-panel");
+            let doc = document.getElementById("diff-panel")!;
             console.log("width of document: " + doc.style.width);
             let fileName = document.createElement("p");
-            fileName.innerHTML = file.filePath
+            fileName.innerHTML = file.filePath;
             // Get the filename being edited and displays on top of the window
             if (doc.style.width === '0px' || doc.style.width === '') {
               displayDiffPanel();
+              // Insert elements that store filename and file path for file rename and move functionality
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
 
-              document.getElementById("diff-panel-body")!.innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
               if (fileElement.className === "file file-created") {
                 // set the selected file
                 selectedFile = file.filePath;
                 printNewFile(file.filePath);
               } else {
-
+                //disable editing if deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                }
                 let diffCols = document.createElement("div");
                 diffCols.innerText = "Old" + "\t" + "New" + "\t" + "+/-" + "\t" + "Content";
                 document.getElementById("diff-panel-body")!.appendChild(diffCols);
@@ -1184,8 +1296,14 @@ function displayModifiedFiles() {
               }
             }
             else if (doc.style.width === '40%') {
-              document.getElementById("diff-panel-body").innerHTML = "";
-              document.getElementById("diff-panel-body").appendChild(fileName);
+              //populate modals
+              document.getElementById("diff-panel-body")!.innerHTML = "";
+              document.getElementById("currentFilename")!.innerHTML = file.filePath;
+              (<HTMLInputElement>document.getElementById("renameFilename")!).value = file.filePath;
+              document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+              (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+              document.getElementById("diff-panel-body")!.appendChild(fileName);
+
               if (selectedFile === file.filePath) {
                 // clear the selected file when diff panel is hidden
                 selectedFile = "";
@@ -1197,6 +1315,13 @@ function displayModifiedFiles() {
                 } else {
                   selectedFile = file.filePath;
                   printFileDiff(file.filePath);
+                }
+
+                //disable editing if entry is a deletion
+                if(fileElement.className === "file file-deleted"){
+                  hideDiffPanelButtons();
+                } else {
+                  displayDiffPanelButtons();
                 }
               }
             }
@@ -1227,7 +1352,9 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-
+          
+          //Allow the individual file elements to be draggable
+          fileElement.draggable=true;
           fileElement.id = fileId;
           fileElement.appendChild(filePath);
 
@@ -1249,6 +1376,29 @@ function displayModifiedFiles() {
             clearModifiedFilesList();
           }
 
+          //On drag action, the file element is shows to user
+          fileElement.addEventListener('dragstart', function handleDragStart(e) {
+              var source=e.target;
+              this.style.opacity = '0.4';  // this / e.target is the source node.
+              //set both file element and file panel highlight colours
+              e.target.style.border = '4px solid #39C0B9';
+              document.getElementById("files-changed").classList.add("dropzone");
+          }, false);
+
+          //On drop action, the file changes state to un-staged, checkbox is clicked
+          fileElement.addEventListener('dragend', function handleDragStart(e) {
+            var divRect = document.getElementById('files-changed').getBoundingClientRect();
+            //reset both file element and file panel highlight colours
+            e.target.style.border = '1px solid white';
+            document.getElementById("files-changed").classList.remove("dropzone");
+            if (e.clientX >= divRect.left && e.clientX <= divRect.right &&
+              e.clientY >= divRect.top && e.clientY <= divRect.bottom) {
+                checkbox.click();
+            }
+            var source=e.target;
+            this.style.opacity = '1.0';  // this / e.target is the source node.
+          }, false);
+          
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
@@ -1501,6 +1651,23 @@ function fetchFromOrigin() {
   }
 }
 
+/**
+ * This method implements Git Move to rename or move a given file within a repository using the simple-git library
+ */
 
+function moveFile(filesource:string, filedestination:string, skipFileExistTest:boolean = false) {
+  console.log("Moving " + filesource + " in (" + repoFullPath + ") to " + filedestination);
+  addCommand("git mv " + filesource + " " + filedestination);
 
-
+  // test if file destination already exists or if test is to be skipped
+  if(fs.existsSync(filedestination) || skipFileExistTest){
+    let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
+    sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
+            .mv(filesource, filedestination)  //perform GIT MV operation
+            .then(() => console.log('move completed'))
+            .catch((err) => displayModal('move failed: ' + err));
+  }
+  else{
+    displayModal("Destination directory does not exist");
+  }
+}
