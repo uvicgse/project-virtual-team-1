@@ -1220,7 +1220,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
@@ -1353,7 +1353,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           //Allow the individual file elements to be draggable
           fileElement.draggable=true;
           fileElement.id = fileId;
@@ -1399,7 +1399,7 @@ function displayModifiedFiles() {
             var source=e.target;
             this.style.opacity = '1.0';  // this / e.target is the source node.
           }, false);
-          
+
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
@@ -1540,7 +1540,8 @@ function displayModifiedFiles() {
       });
     },
       function (err) {
-        console.log("waiting for repo to be initialised");
+        // this log line occurs far too frequently
+        //console.log("waiting for repo to be initialised");
       });
 }
 
@@ -1682,8 +1683,9 @@ function unpushedCommitsModal() {
     document.getElementById("ahead_count").innerHTML = status.ahead;
     document.getElementById("behind_count").innerHTML = status.behind;
 
-    console.log(status.ahead);
-    console.log(status.behind);
+    //we don't need to log these on a continuous basis
+    //console.log(status.ahead);
+    //console.log(status.behind);
   });
 
 }
