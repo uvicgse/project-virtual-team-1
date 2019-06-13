@@ -537,7 +537,10 @@ function getUsername(){
 }
 
 // Get a git signature for the account that is logged in.
-function getSignature(){
+function getSignature(repository){
+  // If the user has deffered loggin in, use the default signature
+  if (!account)
+    return repository.defaultSignature();
   // Set email to the email in account object
   var email = account.email;
   // If the email is null, change it to <uesrname>@users.noreply.github.com

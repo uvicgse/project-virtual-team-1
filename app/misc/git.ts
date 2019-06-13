@@ -184,7 +184,7 @@ function addAndCommit() {
       console.log("Verifying account");
       let sign;
 
-      sign = getSignature();
+      sign = getSignature(repository);
 
       commitMessage = document.getElementById('commit-message-input').value;
       console.log("Signature to be put on commit: " + sign.toString());
@@ -515,7 +515,7 @@ function createBranch() {
               branchName,
               commit,
               0,
-              getSignature(),
+              getSignature(repo),
               "Created new-branch on HEAD");
           }, function (err) {
             console.log("git.ts, line 337, error occurred while trying to create a new branch " + err);
@@ -659,7 +659,7 @@ function mergeLocalBranches(element) {
       console.log("branch to merge to: " + toBranch.name());
       return repos.mergeBranches(toBranch,
         fromBranch,
-        getSignature(),
+        getSignature(repos),
         Git.Merge.PREFERENCE.NONE,
         null);
     })
@@ -693,7 +693,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
       if (message == undefined) {
         return Git.Tag.createLightweight(repo, tagName, commit, 0);
       } else {
-        return Git.Tag.create(repo, tagName, commit, getSignature(), message, 0);
+        return Git.Tag.create(repo, tagName, commit, getSignature(repo), message, 0);
       }
     })
     .then(function(tagOid){
@@ -918,7 +918,7 @@ function stashChanges() {
       // show the command to the user
       addCommand(cmdStr);
 
-      Git.Stash.save(repo, getSignature(), stashMessage, flags)
+      Git.Stash.save(repo, getSignature(repo), stashMessage, flags)
         .then(function(oid) {
           // error for testing purposes
           //throw new Error('test error2');
