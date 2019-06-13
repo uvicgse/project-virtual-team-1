@@ -1015,7 +1015,7 @@ function displayModifiedFiles() {
         if (modifiedFiles.length !== 0) {
           if (document.getElementById("modified-files-message") !== null) {
             let filePanelMessage = document.getElementById("modified-files-message");
-            filePanelMessage.parentNode.removeChild(filePanelMessage); 
+            filePanelMessage.parentNode.removeChild(filePanelMessage);
           }
         }
 
@@ -1137,7 +1137,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
@@ -1270,7 +1270,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           //Allow the individual file elements to be draggable
           fileElement.draggable=true;
           fileElement.id = fileId;
@@ -1316,7 +1316,7 @@ function displayModifiedFiles() {
             var source=e.target;
             this.style.opacity = '1.0';  // this / e.target is the source node.
           }, false);
-          
+
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
@@ -1561,8 +1561,17 @@ function setUpstreamRepo() {
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
       addCommand("git remote add upstream " + upstreamRepoPath);
       console.log(result)
+      result.catch(function(error) {
+      if (error.message == "cannot set empty URL"){
+        displayModal("Please enter a valid path to the original branch");
+      }
+      else if (error.message == "remote 'upstream' already exists"){
+        displayModal("Upstream branch already exists");
+      }
+      });
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err)
+      displayModal("Please select a valid repository first");
     });
   }
   clearUpstreamModalText();
