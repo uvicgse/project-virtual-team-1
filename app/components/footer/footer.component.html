@@ -1,13 +1,22 @@
 <div class="footer" id="footer">
-    <div class="commit-panel" id="commit-panel">
-        <textarea placeholder="Describe your changes here..." class="commit-message-input" id="commit-message-input"></textarea>
-        <div class="commit-button-wrapper" id="commit-button-wrapper">
-            <button class="commit-button" id="commit-button">Commit</button>
-            <button class="commit-button" id="fileEdit-button" (click)="displayFileEditor()">File Editor</button>
-            <button class="commit-button" id="Issues-button" (click)="displayIssuePanel()">Issues</button>
+    <div class="container-fluid" style="width: 100%;">
+        <div class="row">
+            <div class="commit-panel col-sm-3" id="commit-panel">
+                <textarea placeholder="Describe your changes here..." class="commit-message-input" id="commit-message-input"></textarea>
+                <div class="commit-button-wrapper" id="commit-button-wrapper">
+                    <button class="commit-button" id="commit-button">Commit</button>
+                    <button class="commit-button" id="fileEdit-button" (click)="displayFileEditor()">File Editor</button>
+                    <button class="commit-button" id="Issues-button" (click)="displayIssuePanel()">Issues</button>
+                </div>
+            </div>
+        
+            <div class="terminal col-sm-7" id="terminal">
+            </div>
+            <div class="stash-panel col-sm-2">
+                <stash-panel></stash-panel>
+            </div> 
         </div>
     </div>
-
-    <div class="terminal" id="terminal">
-    </div>
 </div>
+
+
