@@ -534,9 +534,6 @@ body .footer p {
   margin: 0;
 }
 
-body .footer .commit-panel {
-  width: 20%;
-}
 
 body .footer .commit-panel .commit-message-input {
   resize: none;
@@ -545,7 +542,6 @@ body .footer .commit-panel .commit-message-input {
   margin-left: auto;
   margin-right: auto;
   margin-top: 5px;
-  margin-bottom: 5px;
   height: 50px;
   border-radius: 5px;
   padding: 5px;
@@ -555,19 +551,17 @@ body .footer .commit-panel .commit-button-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
 }
 
 body .footer .commit-panel .commit-button-wrapper .commit-button {
   display: block;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
   height: 30px;
   border-radius: 10px;
   border: 0;
-  padding: 0 15px;
+  padding: 0 14px;
   background-color: #39c0ba;
   color: #fff;
   white-space: nowrap;
@@ -583,12 +577,10 @@ body .footer .terminal .git-command {
 
 body .footer .terminal{
   overflow-y: auto;
-  width: 80%;
 }
 
 body .footer{
   display: flex;
-  flex-flow: row wrap;
 }
 
 .file-created {
@@ -1165,4 +1157,8 @@ body .pull-request-panel {
   border-style: solid;
   border-color: #39C0B9;
   border-width: 1px;
+}
+
+.stash-panel {
+  overflow: auto;
 }
