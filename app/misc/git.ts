@@ -1558,12 +1558,6 @@ function setUpstreamRepo() {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
-      //****************** Trying to delete the upstream if it already exists ******************************
-      /*if(Git.Remote.lookup(repository, "upstream", callback)){
-        console.log("dgfjwsfkgsfgsdfgsdkfgsdg")
-        var res = Git.Remote.delete(repository, "upstream") // delete remote upstream branch
-        console.log("res")
-      }*/
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
       console.log(result)
       result.catch(function(error) {
