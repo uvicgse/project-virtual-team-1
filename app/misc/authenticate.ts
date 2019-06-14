@@ -25,6 +25,7 @@ var signed = 0;
 var changes = 0;
 let signedAfter = false;
 let loginScopes = "user repo";
+let password = "x-oauth-basic";
 
 // Configuration of Oauth Application Variables
 const OauthConfig = {

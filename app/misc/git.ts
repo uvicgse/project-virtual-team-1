@@ -23,9 +23,8 @@ let commitToRevert = 0;
 let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
-let refreshAllFlag = false;
-let total_commit ;
-let commit_diff ;
+let refreshAllFlagCommit = false;
+
 
 
 
@@ -271,15 +270,18 @@ function checkCommitChange() {
         // get all commits under current pointing branch
         let history = commit.history();
         history.on("end", function (commits) {
-          if (typeof lastCommitLength !== "undefined" && lastCommitLength !== commits.length) {
+          if (lastCommitLength !== commits.length) {
             console.log("commit graph changes detected");
             // show refresh graph alert
-            if (!refreshAllFlag) {
+            if (!refreshAllFlagCommit) {
               $("#refresh-graph-alert").show();
               $("#refresh-button").hide();
+            } else {
+              $("#refresh-graph-alert").hide();
+              $("#refresh-button").show();
             }
 
-            refreshAllFlag = false;
+            refreshAllFlagCommit = false;
           }
 
           lastCommitLength = commits.length;
@@ -1218,7 +1220,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           fileElement.draggable=true;
           fileElement.appendChild(filePath);
           fileElement.id = file.filePath;
@@ -1351,7 +1353,7 @@ function displayModifiedFiles() {
           } else {
             fileElement.className = "file";
           }
-          
+
           //Allow the individual file elements to be draggable
           fileElement.draggable=true;
           fileElement.id = fileId;
@@ -1397,7 +1399,7 @@ function displayModifiedFiles() {
             var source=e.target;
             this.style.opacity = '1.0';  // this / e.target is the source node.
           }, false);
-          
+
           fileElement.onclick = function () {
             let doc = document.getElementById("diff-panel");
             console.log("width of document: " + doc.style.width);
@@ -1538,7 +1540,8 @@ function displayModifiedFiles() {
       });
     },
       function (err) {
-        console.log("waiting for repo to be initialised");
+        // this log line occurs far too frequently
+        //console.log("waiting for repo to be initialised");
       });
 }
 
@@ -1715,8 +1718,9 @@ function unpushedCommitsModal() {
     document.getElementById("ahead_count").innerHTML = status.ahead;
     document.getElementById("behind_count").innerHTML = status.behind;
 
-    console.log(status.ahead);
-    console.log(status.behind);
+    //we don't need to log these on a continuous basis
+    //console.log(status.ahead);
+    //console.log(status.behind);
   });
 
 }
