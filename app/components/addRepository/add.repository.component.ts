@@ -67,18 +67,18 @@ export class AddRepositoryComponent {
   returnToMainPanel(): void {
     switchToMainPanel();
   }
-  prepareDontMissDND :  function() {
+  // old code, not written correctly and not getting used and hence commented
+  // prepareDontMissDND :  function() {
+      // $(document.body).bind("dragover", function(e) {
+      //     e.preventDefault();
+      //     return false;
+      // });
 
-      $(document.body).bind("dragover", function(e) {
-          e.preventDefault();
-          return false;
-      });
-
-      $(document.body).bind("drop", function(e){
-          e.preventDefault();
-          fileUpload(e);
-          return false;
-      });
+      // $(document.body).bind("drop", function(e){
+      //     e.preventDefault();
+      //     fileUpload(e);
+      //     return false;
+      // });
 }
 
 function fileUpload(ev){
@@ -106,3 +106,4 @@ function fileUpload(ev){
     switchToMainPanel();
   }
 }
+

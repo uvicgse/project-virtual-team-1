@@ -37,7 +37,6 @@ function switchToMainPanel() {
       document.getElementById("Button_Sign_in").style.display="none";
     }else{
       document.getElementById("Button_Sign_out").style.display = "none";
-      document.getElementById("Button_Sign_in").style.display="block";
     }
   }
   previousWindow = "mainPanel";
@@ -89,7 +88,6 @@ function switchToAddRepositoryPanel() {
   }else{
     $("#nav-collapse1").collapse("hide");
     document.getElementById("Button_Sign_out").style.display = "none";
-    document.getElementById("Button_Sign_in").style.display = "block";
   }
   let repoOpen = <HTMLInputElement>document.getElementById("repoOpen");
   if (repoOpen != null){
@@ -98,7 +96,10 @@ function switchToAddRepositoryPanel() {
 }
 
 function hideSignInButton():void{
-  document.getElementById("Button_Sign_in").style.display = "none";
+
+  if (getAccessToken()) {
+    document.getElementById("Button_Sign_in").style.display = "none";
+  }
   if(previousWindow!="repoPanel"){
     switchToMainPanel();
   }
@@ -248,6 +249,7 @@ function hideDiffPanel() {
   if (graphPanel != null) {
     graphPanel.style.width = "100%";
   }
+  document.getElementById("diff-panel-body")!.innerHTML= '';
 
   disableDiffPanelEditOnHide();
   hideDiffPanelButtons();
@@ -293,7 +295,10 @@ function displayDiffPanelButtons() {
   if (cancelButton != null) {
     cancelButton.style.visibility = "visible";
   }
-  document.getElementById("open-editor-button").style.visibility = "visible";
+  document.getElementById("open-editor-button")!.style.visibility = "visible";
+  document.getElementById("rename-modal-button-diff")!.style.visibility = "visible";
+  document.getElementById("move-modal-button-diff")!.style.visibility = "visible";
+
 }
 
 function hideDiffPanelButtons() {
@@ -306,7 +311,10 @@ function hideDiffPanelButtons() {
   if (cancelButton != null) {
     cancelButton.style.visibility = "hidden";
   }
-  document.getElementById("open-editor-button").style.visibility = "hidden";
+  document.getElementById("open-editor-button")!.style.visibility = "hidden";
+  document.getElementById("rename-modal-button-diff")!.style.visibility = "hidden";
+  document.getElementById("move-modal-button-diff")!.style.visibility = "hidden";
+
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
 }
