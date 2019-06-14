@@ -1558,20 +1558,26 @@ function setUpstreamRepo() {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
+      //****************** Trying to delete the upstream if it already exists ******************************
+      /*if(Git.Remote.lookup(repository, "upstream", callback)){
+        console.log("dgfjwsfkgsfgsdfgsdkfgsdg")
+        var res = Git.Remote.delete(repository, "upstream") // delete remote upstream branch
+        console.log("res")
+      }*/
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
-      addCommand("git remote add upstream " + upstreamRepoPath);
       console.log(result)
       result.catch(function(error) {
-      if (error.message == "cannot set empty URL"){
+      if (error.message == "cannot set empty URL"){ //Checking for empty URL in the upstream modal
         displayModal("Please enter a valid path to the original branch");
       }
-      else if (error.message == "remote 'upstream' already exists"){
+      else if (error.message == "remote 'upstream' already exists"){ //Checking for existing upstream branch
         displayModal("Upstream branch already exists");
       }
+      addCommand("git remote add upstream " + upstreamRepoPath);
       });
     }, function(err) {
-      console.log("Error adding remote upstream repository:" + err)
-      displayModal("Please select a valid repository first");
+      console.log("Error adding remote upstream repository:" + err) //Checking if a repo is opened before setting an upstream
+      displayModal("Please open a valid repository first");
     });
   }
   clearUpstreamModalText();
