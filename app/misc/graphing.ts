@@ -1,4 +1,6 @@
 import * as nodegit from "git";
+import * as simplegit from 'simple-git/promise';
+let sGit = require('simple-git/promise');
 
 let nodeId = 1;
 let absNodeId = 1;
@@ -64,6 +66,7 @@ function processGraph(commits: nodegit.Commit[]) {
                 }
             });
     });
+
     return promise;
 }
 
@@ -124,7 +127,8 @@ function populateCommits(oldResult) {
         columns = [];
         branchIds = [];
         tagIds = [];
-        
+
+
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
             let parents: string[] = commitHistory[i].parents();
@@ -349,6 +353,7 @@ function makeBranchColor(oldResult) {
 
 
 function makeBasicNode(c, column: number) {
+
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -357,6 +362,7 @@ function makeBasicNode(c, column: number) {
     let id;
     let tagid;
     let colors1 = JSON.stringify(bDict[c.toString()]);
+    let sGitRepo = sGit(repoFullPath);
     for (let i = 0; i < basicList.length; i++) {
         let colors2 = JSON.stringify(basicList[i]['colors']);
         if (colors1 === colors2) {
@@ -370,6 +376,7 @@ function makeBasicNode(c, column: number) {
             basicList[i]['parents'] = basicList[i]['parents'].concat(c.parents());
             break;
         }
+
     }
 
     if (flag) {
@@ -468,9 +475,24 @@ function makeBasicNode(c, column: number) {
             tagIds[tagid] = bsnodeId;
         }
     }
+    //localCommitIDs();
+}
+function localCommitIDs() {
+    let sGitRepo = sGit(repoFullPath);
+    sGitRepo.silent(true).log(["@{u}.."]).then((result)=> {
+        for(var i = 0 ; i < result.all.length; i++){
+            console.log("node id of unpushed is :" +getNodeId(result.all[i].hash));
+
+            //console.log(result.all[i].hash);
+        }
+
+    }).catch(function(err) {
+        console.log(err);
+    });
 }
 
 function makeAbsNode(c, column: number) {
+
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -478,6 +500,7 @@ function makeAbsNode(c, column: number) {
     let flag = true;
     let count = 1;
     let nodeId;
+    let sGitRepo = sGit(repoFullPath);
     if (c.parents().length === 1) {
         let cp = c.parents()[0].toString();
         for (let i = 0; i < abstractList.length; i++) {
@@ -488,9 +511,12 @@ function makeAbsNode(c, column: number) {
                 count = abstractList[i]['count'];
                 abstractList[i]['sha'].push(c.toString());
                 nodeId = i+1;
+
                 abNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
+
                 break;
             }
+
         }
     }
 
@@ -681,6 +707,23 @@ function makeNode(c, column: number) {
         }
         flag = true;
     }
+    /*get the node Id of the the ahead commits*/
+    let sGitRepo = sGit(repoFullPath);
+    sGitRepo.silent(true).log(["@{u}.."]).then((result)=> {
+        for(var i = 0 ; i < result.all.length; i++){
+            if(id === getNodeId(result.all[i].hash) ){
+                console.log("node id of unpushed is :" +getNodeId(result.all[i].hash));
+               // nodes.update({shape: "circle"});
+            }
+
+
+            //console.log(result.all[i].hash);
+        }
+
+    }).catch(function(err) {
+        console.log(err);
+    });
+
 
     commitList.push({
         sha: c.sha(),

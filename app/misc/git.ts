@@ -1684,6 +1684,7 @@ function unpushedCommitsModal() {
   });
 
   localCommitIDs();
+  localCommitIDs();
 
 }
 
@@ -1692,7 +1693,10 @@ function unpushedCommitsModal() {
 function localCommitIDs() {
   let sGitRepo = sGit(repoFullPath);
   sGitRepo.silent(true).log(["@{u}.."]).then((result)=> {
-    console.log(result.all);
+    for(var i = 0 ; i < result.all.length; i++){
+      console.log(result.all[i].hash);
+    }
+
     }).catch(function(err) {
     console.log(err);
     });
