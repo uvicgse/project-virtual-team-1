@@ -22,7 +22,7 @@ let branchIds = [];
 let tagIds = [];
 let unumberPrev = 0;
 let selectedCommit: string;
-
+var ahead: any[] =[];
 /* 
 Types of nodes in the network.
     Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
@@ -117,6 +117,8 @@ function sortCommits(commits) {
 }
 
 function populateCommits(oldResult) {
+    /*Issue 150: Store the Ahead commit Id hash on an array*/
+    set_boolean();
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
         nodeId = 1;
@@ -188,11 +190,20 @@ function populateCommits(oldResult) {
             let localCommitCount = 0;
             localCommitCount = + (document.getElementById("ahead_count").innerHTML);
             let isLocalCommit = false
-            if ( i >= commitHistory.length - localCommitCount )
-            {
-                //another logic could be comparing the commitHistory[i].sha() with the local commit hashes
-                //also we can set color here so dont have to do write same code 3 time
-                isLocalCommit=true
+            // if ( i >= commitHistory.length - localCommitCount )
+            // {
+            //     //another logic could be comparing the commitHistory[i].sha() with the local commit hashes
+            //     //also we can set color here so dont have to do write same code 3 time
+            //     isLocalCommit=true
+            // }
+            /*Issue 150
+            * Iterate through the array of ahead commits ID And compare*/
+            for(var a = 0 ; a < ahead.length; a++){
+                if (commitHistory[i] == ahead[a]) {
+                    isLocalCommit=true;
+                    break;
+
+                }
             }
             makeNode(commitHistory[i], nodeColumn, isLocalCommit);
             makeAbsNode(commitHistory[i], nodeColumn, isLocalCommit);
@@ -218,6 +229,18 @@ function populateCommits(oldResult) {
         resolve(oldResult);
     });
     return promise;
+}
+function set_boolean() {
+    let sGitRepo = sGit(repoFullPath);
+
+    var response = false
+    sGitRepo.silent(true).log(["@{u}.."]).then((result) => {
+        for (let k = 0; k < result.all.length; k++) {
+           // console.log("hash of unpushed is :" + (result.all[k].hash));
+            ahead.push(result.all[k].hash);
+            //console.log("Ahead:"+ahead);
+        }
+    })
 }
 
 function timeCompare(a, b) {
@@ -498,23 +521,9 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
             tagIds[tagid] = bsnodeId;
         }
     }
-    //localCommitIDs();
+
 }
 
-function localCommitIDs() {
-    let sGitRepo = sGit(repoFullPath);
-    sGitRepo.silent(true).log(["@{u}.."]).then((result)=> {
-        for ( var i = 0; i < result.all.length; i++ )
-        {
-            let commit_id=result.all[ i ].hash
-            let nodeId = getNodeId( commit_id );
-            console.log("node id of unpushed is :" +nodeId);
-        }
-
-    }).catch(function(err) {
-        console.log(err);
-    });
-}
 
 function makeAbsNode(c, column: number, isLocalCommit : boolean) {
 
@@ -757,22 +766,7 @@ function makeNode(c, column: number, isLocalCommit : boolean) {
         }
         flag = true;
     }
-    /*get the node Id of the the ahead commits*/
-    let sGitRepo = sGit(repoFullPath);
-    sGitRepo.silent(true).log(["@{u}.."]).then((result)=> {
-        for(var i = 0 ; i < result.all.length; i++){
-            if(id === getNodeId(result.all[i].hash) ){
-                console.log("node id of unpushed is :" +getNodeId(result.all[i].hash));
-               // nodes.update({shape: "circle"});
-            }
 
-
-            //console.log(result.all[i].hash);
-        }
-
-    }).catch(function(err) {
-        console.log(err);
-    });
 
 
     commitList.push({

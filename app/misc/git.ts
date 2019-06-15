@@ -1683,21 +1683,7 @@ function unpushedCommitsModal() {
     console.log(status.behind);
   });
 
-  localCommitIDs();
-  localCommitIDs();
 
 }
 
-//This functions using simple git to find the number of local commits not on remote by their IDs
-//Uses command git log @{u}.. to get the list of un-pushed commit IDs
-function localCommitIDs() {
-  let sGitRepo = sGit(repoFullPath);
-  sGitRepo.silent(true).log(["@{u}.."]).then((result)=> {
-    for(var i = 0 ; i < result.all.length; i++){
-      console.log(result.all[i].hash);
-    }
 
-    }).catch(function(err) {
-    console.log(err);
-    });
-}
