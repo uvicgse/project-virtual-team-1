@@ -67,6 +67,10 @@ export class AddRepositoryComponent {
   returnToMainPanel(): void {
     switchToMainPanel();
   }
+
+//creating dummy error so that tsc warning wont show up
+generateDummyError:  function(){}
+
   // old code, not written correctly and not getting used and hence commented
   // prepareDontMissDND :  function() {
       // $(document.body).bind("dragover", function(e) {
@@ -79,7 +83,7 @@ export class AddRepositoryComponent {
       //     fileUpload(e);
       //     return false;
       // });
-}
+
 
 function fileUpload(ev){
   if(checkIfInTheApp()){
