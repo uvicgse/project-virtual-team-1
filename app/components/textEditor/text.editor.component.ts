@@ -55,6 +55,10 @@ export class TextEditorComponent {
       let files = (<HTMLInputElement>fileOpenInput).files!;
 
       if (files != null) {
+        // Set current filename for file rename modal dialog
+        document.getElementById("currentFilename")!.innerHTML = (<HTMLInputElement>fileOpenInput).files[0].webkitRelativePath;
+        (<HTMLInputElement>document.getElementById("renameFilename")!).value = (<HTMLInputElement>fileOpenInput).files[0].webkitRelativePath;
+
         // This runs when the reader has finished reading the file.
         reader.onload = (e) => {
           this.latestFileId++;
@@ -302,6 +306,36 @@ export class TextEditorComponent {
       }
     } else if (saveButton != null) {
       saveButton.innerHTML = "Save";
+    }
+  }
+
+  /*
+
+
+   */
+  renameFileFromEditor():void {
+    if (this.filePaths[this.currentFileId] != ""){
+      document.getElementById("currentFilename")!.innerHTML = this.filePaths[this.currentFileId];
+      (<HTMLInputElement>document.getElementById("renameFilename")!).value = this.filePaths[this.currentFileId];
+      $('#rename-file-modal').modal('show');
+    }
+    else {
+      displayModal("Please open a file first");
+    }
+  }
+
+  /*
+
+
+ */
+  moveFileFromEditor():void {
+    if (this.filePaths[this.currentFileId] != ""){
+      document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+      (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+      $('#move-file-modal').modal('show');
+    }
+    else {
+      displayModal("Please open a file first");
     }
   }
 

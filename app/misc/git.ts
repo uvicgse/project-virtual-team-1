@@ -1664,7 +1664,11 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
             .mv(filesource, filedestination)  //perform GIT MV operation
             .then(() => console.log('move completed'))
             .catch((err) => displayModal('move failed: ' + err));
-  }
+
+    // update filename for current file open in file editor
+    if (skipFileExistTest){
+      this.filePaths[this.currentFileId] = filedestination;
+    }
   else{
     displayModal("Destination directory does not exist");
   }
