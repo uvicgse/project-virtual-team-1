@@ -7,7 +7,7 @@ import { Component } from "@angular/core";
 
 /**
  * This component contains the HTML and functionality
- * of the text editor.
+ * of the stash panel.
  */
 export class StashPanelComponent {
 }

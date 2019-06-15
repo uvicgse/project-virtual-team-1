@@ -969,10 +969,17 @@ function displayStashes(){
       let stashList = document.getElementById("stash-list")!;
       stashList.innerHTML = "";
       // update the list
-      list.all.forEach(element => {
+      list.all.forEach((element,key) => {
         let stashElement = document.createElement("li");
         stashElement.className = "list-group-item stash-list-item";
         stashElement.innerHTML = element.message;
+
+        let button = document.createElement("i");
+        button.className = "fa fa-camera";
+        button.onclick = function (){
+          applyStash(key);
+        };
+        stashElement.appendChild(button);
         stashList.appendChild(stashElement);
       });
     }
@@ -986,6 +993,16 @@ function displayStashes(){
       document.getElementById("pop-stash-list")!.style.display = "none";
     }
   });
+}
+
+function applyStash(index){
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.silent(true).stash(["apply",index]).then((result)=>{
+    addCommand("git stash apply " + index)
+  }).catch(function(err) {
+    handleStashError(err);
+  });;
+
 }
 
 function isStashListTheSame(list) {
