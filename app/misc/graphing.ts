@@ -423,11 +423,11 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
         if ( isLocalCommit )
         {
         colorData= {
-            border: '#74FF53',
-            background: '#C642FF', //getting overriden by image
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
             hover: {
-                border: '#FF7042', 
-                background: '#FFD042' //getting overriden by image
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
                 }
             }
         }
@@ -561,12 +561,12 @@ function makeAbsNode(c, column: number, isLocalCommit : boolean) {
         let colorData = {};
         if ( isLocalCommit )
         {
-        colorData= {
-            border: '#74FF53',
-            background: '#C642FF', //getting overriden by image
-            hover: {
-                border: '#FF7042', 
-                background: '#FFD042' //getting overriden by image
+            colorData= {
+                border: '#FF3D24',
+                background: '#E82034', //getting overriden by image
+                hover: {
+                    border: '#FF31AC',
+                    background: '#DD20E8' //getting overriden by image
                 }
             }
         }
@@ -683,12 +683,13 @@ function makeNode(c, column: number, isLocalCommit : boolean) {
     let colorData = {}
     if ( isLocalCommit )
     {
+
         colorData= {
-            border: '#74FF53',
-            background: '#C642FF', //getting overriden by image
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
             hover: {
-                border: '#FF7042',
-                background: '#FFD042' //getting overriden by image
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
             }
         }
     }
