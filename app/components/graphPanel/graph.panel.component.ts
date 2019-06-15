@@ -25,7 +25,7 @@ export class GraphPanelComponent {
 
   // Empty function. Used to replace event handlers with a noop.
   doNothing() {
-    
+
   }
 
   // Disables the context menu in the graphed network
@@ -34,13 +34,23 @@ export class GraphPanelComponent {
     contextMenu.hide();
   }
 
-  // Shows the modal for creating a new tag  
+  // Shows the modal for creating a new tag
   showCreateTagModal() {
     this.setCreateTagModal();
 
     let modal = $("#createTagModal");
     modal.modal("show");
     this.disableContextMenu();
+  }
+
+  // Handler for deleting tags from the graph
+  showDeleteTagList() {
+    let dropdown = $("#deleteTagList");
+    if dropdown.css("display") == "block" {
+      dropdown.css("display", "none");
+    } else {
+      dropdown.css("display", "block"); 
+    }
   }
 
   // Handler for a click on the create tag button in the create tag modal.
@@ -55,7 +65,7 @@ export class GraphPanelComponent {
     if (!this.lightweightTagSelected) {
       tagMessage = $("#inputTagMessage")[0].value;
     }
-    
+
     createTag(tagName, getSelectedCommit(), pushTag, tagMessage);
   }
 

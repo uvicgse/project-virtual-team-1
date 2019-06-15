@@ -2,6 +2,7 @@ let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
+let refList;
 let tags = {};
 let remoteName = {};
 let localBranches = [];
@@ -449,7 +450,7 @@ function refreshReferences(verbose, force) {
     document.getElementById('spinner').style.display = 'block';
     let branch;
     lastRefList = [];
-    
+
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
@@ -652,6 +653,9 @@ function refreshReferences(verbose, force) {
     button.setAttribute("class", "btn btn-danger");
     button.innerHTML = "Delete";
 
+    // display tag in delete list on graph
+    displayTagDeleteList(name);
+
     // deleting a tag
     button.onclick = (event) => {
 
@@ -678,6 +682,49 @@ function refreshReferences(verbose, force) {
     a.appendChild(span);
     li.appendChild(a);
     tagList.appendChild(li);
+  }
+
+  // populate delete tag dropdown
+  function displayTagDeleteList(name) {
+
+    // create HTML element for tag list dropdown
+    var parentDropdownList = document.getElementById("deleteTagList");
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+
+    // set HTML attributes
+    li.setAttribute("class", "list-group-item");
+    a.setAttribute("href", "#");
+    a.innerHTML = name;
+
+    // deleting a tag
+    li.onclick = () => {
+
+      console.log("deleting ... ");
+      console.log(name);
+
+      let repo;
+      Git.Repository.open(repoFullPath)
+        .then(function(repoParam) {
+          repo = repoParam;
+        })
+        .then(function(){
+          return Git.Tag.delete(repo, name);
+        }
+      ).catch(function(msg) {
+        let errorMessage = "Error: " + msg.message;
+      });
+
+      var parentList = document.getElementById("deleteTagList");
+      var deleteChildren = parentList.childNodes;
+      for( i = 0; i < deleteChildren.length; i++ ) {
+        if (deleteChildren[i].getAttribute("id") == name) {
+          deleteChildren[i].remove();
+        }
+      }
+    }
+    li.appendChild(a);
+    parentDropdownList.appendChild(li);
   }
 
   function createDropDownFork(name, id) {

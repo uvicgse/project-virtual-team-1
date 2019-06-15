@@ -13,8 +13,12 @@
   <div id="networkContext" class="context-menu" tabindex="-1" (blur)="disableContextMenu()">
     <ul class="dropdown-menu">
       <li>
-        <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create Tag</a>
+        <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create tag</a>
       </li>
+      <li>
+        <a (click)="showDeleteTagList()">Delete a tag</a>
+        <ul class="list-group list-group-flush" id="deleteTagList"></ul>
+      <li>
     </ul>
   </div>
 
