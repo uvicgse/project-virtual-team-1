@@ -318,6 +318,7 @@ export class TextEditorComponent {
       document.getElementById("currentFilename")!.innerHTML = this.filePaths[this.currentFileId];
       (<HTMLInputElement>document.getElementById("renameFilename")!).value = this.filePaths[this.currentFileId];
       $('#rename-file-modal').modal('show');
+
     }
     else {
       displayModal("Please open a file first");
@@ -373,6 +374,7 @@ export class TextEditorComponent {
     let closingTab = false;
 
     let id = "" + this.latestFileId;
+
     let closeIcon = document.createElement("i");
     closeIcon.className = "fa fa-times"
     closeIcon.onclick = (e) => {
@@ -383,8 +385,43 @@ export class TextEditorComponent {
     }
     closeIcon.style.marginLeft = "5px";
 
+    // add file rename icon
+    let renameIcon = document.createElement("i");
+    renameIcon.className = "fa fa-edit"
+    renameIcon.onclick = (e) => {
+      document.getElementById("currentFilename")!.innerHTML = this.filePaths[this.currentFileId];
+      (<HTMLInputElement>document.getElementById("renameFilename")!).value = this.filePaths[this.currentFileId];
+      $('#rename-file-modal').modal('show');
+      // close tab after file rename
+      closingTab = true;
+      let fileEditor = document.getElementById(id)!;
+      fileEditor.remove();
+      newTab.remove();
+    }
+    renameIcon.style.marginLeft = "5px";
+
+    // add file move icon
+    let moveIcon = document.createElement("i");
+    moveIcon.className = "fa fa-caret-right"
+    moveIcon.onclick = (e) => {
+      document.getElementById("currentFilename")!.innerHTML = this.filePaths[this.currentFileId];
+      document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
+      (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+      $('#move-file-modal').modal('show');
+
+      // close tab after file move
+      closingTab = true;
+      let fileEditor = document.getElementById(id)!;
+      fileEditor.remove();
+      newTab.remove();
+    }
+    moveIcon.style.marginLeft = "5px";
+
+
     newTab.innerHTML = fileName;
     newTab.appendChild(closeIcon);
+    newTab.appendChild(renameIcon);
+    newTab.appendChild(moveIcon);
 
     // Store function to be called when the tab is clicked.
     let fileTabId = "tab-link-" + this.latestFileId;
