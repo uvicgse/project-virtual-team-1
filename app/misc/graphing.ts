@@ -1,9 +1,7 @@
 import * as nodegit from "git";
 
 let nodeId = 1;
-let absNodeId = 1;
 let basicNodeId = 1;
-let abstractList = [];
 let basicList = [];
 let bDict = {};
 let commitHistory = [];
@@ -24,12 +22,11 @@ let selectedCommit: string;
 /* 
 Types of nodes in the network.
     Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
-    Abstract = Commit node in the second zoom level . Represents a collection of commits
     Node = Commit node in the lowest zoom level (3rd level). Represents a a single commit
     Branch = Represents a branch reference. Is linked to a single commit node
     Tag = Represents a tag reference. Is linked to a single commit node
 */
-enum NodeType{Basic, Abstract, Node, Branch, Tag}
+enum NodeType{Basic, Node, Branch, Tag}
 
 // In order to allow tags, branches, and nodes to have unique numerical id's
 // reference: https://stackoverflow.com/questions/8012002/create-a-unique-number-with-javascript-time
@@ -49,7 +46,7 @@ function generateUniqueNumber() {
 function processGraph(commits: nodegit.Commit[]) {
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
-        abstractList = [];
+        basicList = [];
         numOfCommits = commits.length;
 
         sortCommits(commits)
@@ -117,7 +114,6 @@ function populateCommits(oldResult) {
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
         nodeId = 1;
-        absNodeId = 1;
         basicNodeId = 1;
         commitList = [];
         parentCount = {};
@@ -181,7 +177,6 @@ function populateCommits(oldResult) {
             }
 
             makeNode(commitHistory[i], nodeColumn);
-            makeAbsNode(commitHistory[i], nodeColumn);
             makeBasicNode(commitHistory[i], nodeColumn);
         }
 
@@ -190,14 +185,10 @@ function populateCommits(oldResult) {
             addEdges(commitHistory[i]);
         }
 
-        for (let i = 0; i < abstractList.length; i++) {
-            addAbsEdge(abstractList[i]);
-        }
-
         for (let i = 0; i < basicList.length; i++) {
             addBasicEdge(basicList[i]);
         }
-        sortBasicGraph();
+        //sortBasicGraph();
 
         commitList = commitList.sort(timeCompare);
         reCenter();
@@ -228,33 +219,15 @@ function addEdges(c) {
     }
 }
 
-function addAbsEdge(c) {
-    let parents = c['parents'];
-    for (let i = 0; i < parents.length; i++) {
-        for (let j = 0; j < abstractList.length; j++) {
-            if (abstractList[j]['sha'].indexOf(parents[i].toString()) > -1) {
-                abEdges.add({
-                    from: abstractList[j]['id'],
-                    to: c['id']
-                });
-            }
-        }
-    }
-}
-
 function addBasicEdge(c) {
-    let flag = true;
     let parents = c['parents'];
-    edgeDic[c['id']] = [];
     for (let i = 0; i < parents.length; i++) {
         for (let j = 0; j < basicList.length; j++) {
-            if (basicList[j]['sha'].indexOf(parents[i].toString()) > -1 && basicList[j] !== c) {
-                flag = false;
+            if (basicList[j]['sha'].indexOf(parents[i].toString()) > -1) {
                 bsEdges.add({
                     from: basicList[j]['id'],
                     to: c['id']
                 });
-                edgeDic[c['id']].push(basicList[j]['id']);
             }
         }
     }
@@ -347,130 +320,7 @@ function makeBranchColor(oldResult) {
     return promise;
 }
 
-
 function makeBasicNode(c, column: number) {
-    let reference;
-    let name = getName(c.author().toString());
-    let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
-    let flag = true;
-    let count = 1;
-    let id;
-    let tagid;
-    let colors1 = JSON.stringify(bDict[c.toString()]);
-    for (let i = 0; i < basicList.length; i++) {
-        let colors2 = JSON.stringify(basicList[i]['colors']);
-        if (colors1 === colors2) {
-            flag = false;
-            id = basicList[i]['id'];
-            tagid = basicList[i]['id'] + 1;
-            basicList[i]['count'] += 1;
-            count = basicList[i]['count'];
-            bsNodes.update({id: i+1, title: "Number of Commits: " + count});
-            basicList[i]['sha'].push(c.toString());
-            basicList[i]['parents'] = basicList[i]['parents'].concat(c.parents());
-            break;
-        }
-    }
-
-    if (flag) {
-        id = basicNodeId++;
-        tagid = id + 1;
-
-        let title = "Number of Commits: " + count;
-        console.log(title);
-        bsNodes.add({
-            id: id,
-            shape: "circularImage",
-            title: title,
-            image: img4User(name),
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Basic
-        });
-
-        let shaList = [];
-        shaList.push(c.toString());
-
-        basicList.push({
-            sha: shaList,
-            id: id,
-            time: c.timeMs(),
-            column: column,
-            colors: bDict[c.toString()],
-            reference: reference,
-            parents: c.parents(),
-            count: 1,
-        });
-    }
-
-    if (c.toString() in bname) {
-        for (let i = 0; i < bname[c.toString()].length; i++) {
-            let branchName = bname[c.toString()][i];
-            let bp = branchName.name().split("/");
-            let shortName = bp[bp.length - 1];
-            console.log(shortName + " sub-branch: " + branchName.isHead().toString());
-            if (branchName.isHead()) {
-                shortName = "*" + shortName;
-            }
-            let bsnodeId = generateUniqueNumber();
-            bsNodes.add({
-                id: bsnodeId,
-                shape: "box",
-                title: branchName,
-                label: shortName,
-                physics: false,
-                fixed: false,
-                x: (column - 0.6 * (i + 1)) * spacingX,
-                y: (id - 0.3) * spacingY,
-                nodeType: NodeType.Branch
-            });
-
-            bsEdges.add({
-                from: bsnodeId,
-                to: id
-            });
-
-            branchIds[id] = bsnodeId;
-        }
-    }
-
-    // Initializing viewable tags in highest zoom graph level
-    if (c.toString() in tags) {
-        for (let i = 0; i < tags[c.toString()].length; i++) {
-            let tagName = tags[c.toString()][i];
-            let tp = tagName.name().split("/");
-            let shortTagName = tp[tp.length - 1];
-            console.log(shortTagName + " tag: " + tagName.isHead().toString());
-            if (tagName.isHead()) {
-                shortTagName = "*" + shortTagName;
-            }
-            let bsnodeId = generateUniqueNumber();
-            bsNodes.add({
-                id: bsnodeId,
-                shape: "ellipse",
-                // color: "teal",
-                title: tagName, // hover text
-                label: shortTagName, // shown under/in shape
-                physics: false,
-                fixed: false,
-                x: (column - 0.6 * (i + 1)) * tagSpacingX,
-                y: (id - 0.3) * tagSpacingY,
-            });
-
-            bsEdges.add({
-                from: bsnodeId,
-                to: id
-            });
-
-            tagIds[tagid] = bsnodeId;
-        }
-    }
-}
-
-function makeAbsNode(c, column: number) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -480,25 +330,25 @@ function makeAbsNode(c, column: number) {
     let nodeId;
     if (c.parents().length === 1) {
         let cp = c.parents()[0].toString();
-        for (let i = 0; i < abstractList.length; i++) {
-            let index = abstractList[i]['sha'].indexOf(cp);
-            if (index > -1 && abstractList[i]['email'] === email && abstractList[i]['column'] === column && !(c.toString() in bname)) {
+        for (let i = 0; i < basicList.length; i++) {
+            let index = basicList[i]['sha'].indexOf(cp);
+            if (index > -1 && basicList[i]['email'] === email && basicList[i]['column'] === column && !(c.toString() in bname)) {
                 flag = false;
-                abstractList[i]['count'] += 1;
-                count = abstractList[i]['count'];
-                abstractList[i]['sha'].push(c.toString());
+                basicList[i]['count'] += 1;
+                count = basicList[i]['count'];
+                basicList[i]['sha'].push(c.toString());
                 nodeId = i+1;
-                abNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
+                bsNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
                 break;
             }
         }
     }
 
     if (flag) {
-        nodeId = absNodeId++;
+        nodeId = basicNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
 
-        abNodes.add({
+        bsNodes.add({
             id: nodeId,
             shape: "circularImage",
             title: title,
@@ -508,13 +358,13 @@ function makeAbsNode(c, column: number) {
             x: (column - 1) * spacingX,
             y: (nodeId - 1) * spacingY,
             author: c.author(),
-            nodeType: NodeType.Abstract
+            nodeType: NodeType.Basic
         });
 
         let shaList = [];
         shaList.push(c.toString());
 
-        abstractList.push({
+        basicList.push({
             sha: shaList,
             id: nodeId,
             time: c.timeMs(),
@@ -537,7 +387,7 @@ function makeAbsNode(c, column: number) {
                 shortName = "*" + shortName;
             }
             let bsnodeId = generateUniqueNumber();
-            abNodes.add({
+            bsNodes.add({
                 id: bsnodeId,
                 shape: "box",
                 title: branchName,
@@ -549,7 +399,7 @@ function makeAbsNode(c, column: number) {
                 nodeType: NodeType.Branch
             });
 
-            abEdges.add({
+            bsEdges.add({
                 from: bsnodeId,
                 to: nodeId
             });
@@ -567,7 +417,7 @@ function makeAbsNode(c, column: number) {
                 shortTagName = "*" + shortTagName;
             }
             let bsnodeId = generateUniqueNumber();
-            abNodes.add({
+            bsNodes.add({
                 id: bsnodeId,
                 shape: "ellipse",
                 // color: "teal",
@@ -579,7 +429,7 @@ function makeAbsNode(c, column: number) {
                 y: (nodeId - 0.3) * tagSpacingY,
             });
 
-            abEdges.add({
+            bsEdges.add({
                 from: bsnodeId,
                 to: nodeId
             });

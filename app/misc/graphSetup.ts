@@ -2,7 +2,7 @@ import * as nodegit from "git";
 
 let vis = require("vis");
 let $ = require("jquery");
-let options, bsNodes, bsEdges, abNodes, abEdges, nodes, edges, network;
+let options, bsNodes, bsEdges, nodes, edges, network;
 let secP = null, fromNode = null, toNode;
 
 let GraphNodeID = 0;
@@ -20,9 +20,6 @@ function drawGraph() {
     bsNodes = new vis.DataSet([]);
     bsEdges = new vis.DataSet([]);
 
-    abNodes = new vis.DataSet([]);
-    abEdges = new vis.DataSet([]);
-
     nodes = new vis.DataSet([]);
     edges = new vis.DataSet([]);
 
@@ -33,11 +30,6 @@ function drawGraph() {
     let bsData = {
         nodes: bsNodes,
         edges: bsEdges
-    }
-
-    let abData = {
-        nodes: abNodes,
-        edges: abEdges
     }
 
     let data = {
@@ -185,21 +177,11 @@ function drawGraph() {
                 }
             };
 
-            if (network.getScale() > 1.5 && callback.direction === '+' && flag === 'abstract') {
+            if (network.getScale() > 1.5 && callback.direction === '+' && flag === 'basic') {
                 network.setData(data);
                 flag = 'node';
                 network.fit(moveOptions);
-                //network.redraw();
             } else if (network.getScale() < 0.4 && callback.direction === '-' && flag === 'node') {
-                network.setData(abData);
-                flag = 'abstract';
-                network.fit(moveOptions);
-                //network.redraw();
-            } else if (network.getScale() > 1.5 && callback.direction === '+' && flag === 'basic') {
-                network.setData(abData);
-                flag = 'abstract';
-                network.fit(moveOptions);
-            } else if (network.getScale() < 0.4 && callback.direction === '-' && flag === 'abstract') {
                 network.setData(bsData);
                 flag = 'basic';
                 network.fit(moveOptions);
@@ -245,8 +227,6 @@ function drawGraph() {
                 if (flag === 'node') {
                     clicknode = nodes.get(clicknode);
 					displaySelectedCommitDiffPanel(properties.nodes[0]);
-                } else if (flag === 'abstract') {
-                    clicknode = abNodes.get(clicknode);
                 } else if (flag === 'basic') {
                     clicknode = bsNodes.get(clicknode);
                 } else {
