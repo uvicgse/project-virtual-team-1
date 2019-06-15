@@ -437,11 +437,15 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" onclick="clearUpstreamModalText()" class="upstreamModalComponents">&times;</span>
         </button>
-        <h4 class="modal-title">Info</h4>
+        <h4 class="modal-title">Configure an Upstream Repository</h4>
+      </div>
+      <div class="modal-body" id="modal-text-box">
+        <h5 type="text">Upstream:</h5>
+        <p id="display-upstream"></p>
       </div>
       <div class="modal-body" id="modal-text-box">
         Please provide the HTTP path to the original repository:
-        <input type="text" id="remote-path" class="form-control" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
+        <input type="text" id="upstream-path" class="form-control" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="setUpstreamButton" onclick="setUpstreamRepo()">Confirm</button>

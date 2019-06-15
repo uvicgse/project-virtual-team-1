@@ -1622,13 +1622,23 @@ function cleanRepo() {
  */
 function setUpstreamModal() {
   $('#set-upstream-modal').modal('show');
+  let repository;
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        repository = repo;
+        Git.Remote.lookup(repository, 'upstream').then(function(remote) {
+          document.getElementById("display-upstream").innerText = remote.url();
+        }, function(err) {
+          document.getElementById("display-upstream").innerText = 'No upstream repository currently configured.';
+        });
+    };
 }
 
 /**
  * Clears the fields from the upstream repo modal.
  */
 function clearUpstreamModalText() {
-  document.getElementById("remote-path").value = "";
+  document.getElementById("upstream-path").value = "";
 }
 
 /**
@@ -1637,7 +1647,7 @@ function clearUpstreamModalText() {
  */
 function setUpstreamRepo() {
   let repository;
-  let upstreamRepoPath = document.getElementById("remote-path").value;
+  let upstreamRepoPath = document.getElementById("upstream-path").value;
   if(upstreamRepoPath != null) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
