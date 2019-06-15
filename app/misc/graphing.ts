@@ -49,6 +49,7 @@ function generateUniqueNumber() {
 }
 
 function processGraph(commits: nodegit.Commit[]) {
+    set_boolean();
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
         abstractList = [];
@@ -118,7 +119,7 @@ function sortCommits(commits) {
 
 function populateCommits(oldResult) {
     /*Issue 150: Store the Ahead commit Id hash on an array*/
-    set_boolean();
+
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
         nodeId = 1;
