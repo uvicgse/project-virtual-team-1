@@ -184,9 +184,19 @@ function populateCommits(oldResult) {
                 }
             }
 
-            makeNode(commitHistory[i], nodeColumn);
-            makeAbsNode(commitHistory[i], nodeColumn);
-            makeBasicNode(commitHistory[i], nodeColumn);
+            // findout current commit is a local only commit or not
+            let localCommitCount = 0;
+            localCommitCount = + (document.getElementById("ahead_count").innerHTML);
+            let isLocalCommit = false
+            if ( i >= commitHistory.length - localCommitCount )
+            {
+                //another logic could be comparing the commitHistory[i].sha() with the local commit hashes
+                //also we can set color here so dont have to do write same code 3 time
+                isLocalCommit=true
+            }
+            makeNode(commitHistory[i], nodeColumn, isLocalCommit);
+            makeAbsNode(commitHistory[i], nodeColumn, isLocalCommit);
+            makeBasicNode(commitHistory[i], nodeColumn, isLocalCommit);
         }
 
         // Add edges
@@ -352,7 +362,7 @@ function makeBranchColor(oldResult) {
 }
 
 
-function makeBasicNode(c, column: number) {
+function makeBasicNode(c, column: number, isLocalCommit : boolean) {
 
     let reference;
     let name = getName(c.author().toString());
@@ -384,12 +394,25 @@ function makeBasicNode(c, column: number) {
         tagid = id + 1;
 
         let title = "Number of Commits: " + count;
-        console.log(title);
+        console.log( title );
+        let colorData = {};
+        if ( isLocalCommit )
+        {
+        colorData= {
+            border: '#74FF53',
+            background: '#C642FF', //getting overriden by image
+            highlight: {
+                border: '#FF7042', // getting overridden by red highligter . can be fixed
+                background: '#FFD042' //getting overriden by image
+                }
+            }
+        }
         bsNodes.add({
             id: id,
             shape: "circularImage",
             title: title,
-            image: img4User(name),
+            image: img4User( name ),
+            color: colorData,
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
@@ -477,13 +500,15 @@ function makeBasicNode(c, column: number) {
     }
     //localCommitIDs();
 }
+
 function localCommitIDs() {
     let sGitRepo = sGit(repoFullPath);
     sGitRepo.silent(true).log(["@{u}.."]).then((result)=> {
-        for(var i = 0 ; i < result.all.length; i++){
-            console.log("node id of unpushed is :" +getNodeId(result.all[i].hash));
-
-            //console.log(result.all[i].hash);
+        for ( var i = 0; i < result.all.length; i++ )
+        {
+            let commit_id=result.all[ i ].hash
+            let nodeId = getNodeId( commit_id );
+            console.log("node id of unpushed is :" +nodeId);
         }
 
     }).catch(function(err) {
@@ -491,7 +516,7 @@ function localCommitIDs() {
     });
 }
 
-function makeAbsNode(c, column: number) {
+function makeAbsNode(c, column: number, isLocalCommit : boolean) {
 
     let reference;
     let name = getName(c.author().toString());
@@ -523,12 +548,24 @@ function makeAbsNode(c, column: number) {
     if (flag) {
         nodeId = absNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
-
+        let colorData = {};
+        if ( isLocalCommit )
+        {
+        colorData= {
+            border: '#74FF53',
+            background: '#C642FF', //getting overriden by image
+            highlight: {
+                border: '#FF7042', // getting overridden by red highligter . can be fixed
+                background: '#FFD042' //getting overriden by image
+                }
+            }
+        }
         abNodes.add({
             id: nodeId,
             shape: "circularImage",
             title: title,
-            image: img4User(name),
+            image: img4User( name ),
+            color: colorData,
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
@@ -613,7 +650,7 @@ function makeAbsNode(c, column: number) {
     }
 }
 
-function makeNode(c, column: number) {
+function makeNode(c, column: number, isLocalCommit : boolean) {
     let id = nodeId++;
     let reference;
     let name = getName(c.author().toString());
@@ -633,6 +670,18 @@ function makeNode(c, column: number) {
     }
 
     let flag = false;
+    let colorData = {}
+    if ( isLocalCommit )
+    {
+        colorData= {
+            border: '#74FF53',
+            background: '#C642FF', //getting overriden by image
+            highlight: {
+                border: '#FF7042', // getting overridden by red highligter . can be fixed
+                background: '#FFD042' //getting overriden by image
+            }
+        }
+    }
     nodes.add({
         id: id,
         shape: "circularImage",
@@ -640,6 +689,7 @@ function makeNode(c, column: number) {
         image: img4User(name),
         physics: false,
         fixed: false,
+        color: colorData,
         x: (column - 1) * spacingX,
         y: (id - 1) * spacingY,
         author: c.author(),
