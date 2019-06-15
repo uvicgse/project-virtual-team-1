@@ -23,7 +23,10 @@ let tagIds = [];
 let unumberPrev = 0;
 let selectedCommit: string;
 var ahead: any[] =[];
-/* 
+
+
+
+/*
 Types of nodes in the network.
     Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
     Abstract = Commit node in the second zoom level . Represents a collection of commits
@@ -229,6 +232,8 @@ function populateCommits(oldResult) {
         reCenter();
         resolve(oldResult);
     });
+    //empthy the array when we are done
+    ahead =[];
     return promise;
 }
 function set_boolean() {
@@ -239,9 +244,11 @@ function set_boolean() {
         for (let k = 0; k < result.all.length; k++) {
            // console.log("hash of unpushed is :" + (result.all[k].hash));
             ahead.push(result.all[k].hash);
-            //console.log("Ahead:"+ahead);
+            // console.log("Ahead:"+ahead);
         }
+
     })
+
 }
 
 function timeCompare(a, b) {

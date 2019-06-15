@@ -1681,9 +1681,13 @@ function unpushedCommitsModal() {
 
     console.log(status.ahead);
     console.log(status.behind);
+
   });
 
 
 }
+
+
+
 
 
