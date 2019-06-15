@@ -141,6 +141,11 @@ function displayFilePanel() {
     filePanel.style.zIndex = "10";
   }
 
+  let stashPanel = document.getElementById("stash-panel-wrapper");
+  if (stashPanel != null){
+    stashPanel.style.visibility = "visible";
+  }
+
   let commitMessageInput = document.getElementById("commit-message-input");
   if (commitMessageInput != null){
     commitMessageInput.style.visibility = "visible";
@@ -192,6 +197,11 @@ function hideFilePanel() {
   let filePanel = document.getElementById("file-panel");
   if (filePanel != null){
     filePanel.style.zIndex = "-10";
+  }
+
+  let stashPanel = document.getElementById("stash-panel-wrapper");
+  if (stashPanel != null){
+    stashPanel.style.visibility = "hidden";
   }
 
   let commitMessageInput = document.getElementById("commit-message-input");
@@ -371,7 +381,7 @@ function createRecentRepositories(file) {
 // Check if repos.json exists
 function useRecentRepositories() {
     let file = 'repos.json';
-    
+
     if (!fs.existsSync(file)) {
         console.log(file + ' does not exist');
         createRecentRepositories(file);
