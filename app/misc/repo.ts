@@ -181,17 +181,18 @@ function openRepository() {
   }
 
   hidePRPanel();
+  let fullLocalPath;
+  let localPath;
 
     // Full path is determined by either handwritten directory or selected by file browser
     if (document.getElementById("repoOpen").value == null || document.getElementById("repoOpen").value == "") {
-      let localPath = document.getElementById("dirPickerOpenLocal").files[0].webkitRelativePath;
-      let fullLocalPath = document.getElementById("dirPickerOpenLocal").files[0].path;
+      fullLocalPath = document.getElementById("dirPickerOpenLocal").files[0].path;
+      localPath = fullLocalPath.replace(/^.*[\\\/]/, '');
       previousOpen = document.getElementById("dirPickerOpenLocal").value;
       document.getElementById("repoOpen").value = fullLocalPath;
       document.getElementById("repoOpen").text = fullLocalPath;
     } else {
-      let localPath = document.getElementById("repoOpen").value;
-      let fullLocalPath;
+      localPath = document.getElementById("repoOpen").value;
       if (checkFile.existsSync(localPath)) {
         fullLocalPath = localPath;
       } else {
@@ -479,7 +480,7 @@ function refreshReferences(verbose, force) {
         }
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         // TODO: add a condition here to switch between tag and branch name string
-          document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
+        document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
         //Default values will be set for the branch labels
