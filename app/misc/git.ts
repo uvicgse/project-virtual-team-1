@@ -974,6 +974,10 @@ function displayStashes(){
         stashElement.className = "list-group-item stash-list-item";
         stashElement.innerHTML = element.message;
 
+        stashElement.onclick = function () {
+          showStashInfo(key);
+        }
+
         let button = document.createElement("i");
         button.className = "fa fa-camera";
         button.onclick = function (){
@@ -992,6 +996,17 @@ function displayStashes(){
       document.getElementById("stashed-files-message")!.hidden = false;
       document.getElementById("pop-stash-list")!.style.display = "none";
     }
+  });
+}
+
+function showStashInfo(index) {
+  let sGitRepo = sGit(repoFullPath);
+  let stashIndex = ("stash@{" + index + "}");
+  addCommand("git stash show" + stashIndex);
+  sGitRepo.silent(true).stash(["show", stashIndex]).then((result)=> {
+    updateModalText(result);
+  }).catch(function(err) {
+    handleStashError(err);
   });
 }
 
