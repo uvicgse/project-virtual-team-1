@@ -402,7 +402,7 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
             border: '#74FF53',
             background: '#C642FF', //getting overriden by image
             hover: {
-                border: '#FF7042', // getting overridden by red highligter . can be fixed
+                border: '#FF7042', 
                 background: '#FFD042' //getting overriden by image
                 }
             }
@@ -555,7 +555,7 @@ function makeAbsNode(c, column: number, isLocalCommit : boolean) {
             border: '#74FF53',
             background: '#C642FF', //getting overriden by image
             hover: {
-                border: '#FF7042', // getting overridden by red highligter . can be fixed
+                border: '#FF7042', 
                 background: '#FFD042' //getting overriden by image
                 }
             }
@@ -677,7 +677,7 @@ function makeNode(c, column: number, isLocalCommit : boolean) {
             border: '#74FF53',
             background: '#C642FF', //getting overriden by image
             hover: {
-                border: '#FF7042', // getting overridden by red highligter . can be fixed
+                border: '#FF7042',
                 background: '#FFD042' //getting overriden by image
             }
         }
