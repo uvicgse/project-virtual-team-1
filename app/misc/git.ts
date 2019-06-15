@@ -1631,7 +1631,7 @@ function setUpstreamModal() {
         }, function(err) {
           document.getElementById("display-upstream").innerText = 'No upstream repository currently configured.';
         });
-    };
+    });
 }
 
 /**
