@@ -401,7 +401,7 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
         colorData= {
             border: '#74FF53',
             background: '#C642FF', //getting overriden by image
-            highlight: {
+            hover: {
                 border: '#FF7042', // getting overridden by red highligter . can be fixed
                 background: '#FFD042' //getting overriden by image
                 }
@@ -554,7 +554,7 @@ function makeAbsNode(c, column: number, isLocalCommit : boolean) {
         colorData= {
             border: '#74FF53',
             background: '#C642FF', //getting overriden by image
-            highlight: {
+            hover: {
                 border: '#FF7042', // getting overridden by red highligter . can be fixed
                 background: '#FFD042' //getting overriden by image
                 }
@@ -676,7 +676,7 @@ function makeNode(c, column: number, isLocalCommit : boolean) {
         colorData= {
             border: '#74FF53',
             background: '#C642FF', //getting overriden by image
-            highlight: {
+            hover: {
                 border: '#FF7042', // getting overridden by red highligter . can be fixed
                 background: '#FFD042' //getting overriden by image
             }
