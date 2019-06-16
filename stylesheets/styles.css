@@ -1176,7 +1176,6 @@ body .pull-request-panel {
 
 .stash-drop-panel{
   padding: 0;
-  opacity: .2;
   font-size: 18pt;
   overflow: auto;
   width: 100%;
@@ -1187,16 +1186,16 @@ body .pull-request-panel {
   border-radius: 5px;
   vertical-align: middle;
   text-align: center;
-  color: green;
-  background: lightgreen;
-  border: 1px solid green;
+  color: rgb(57, 175, 57);
+  background: rgba(144, 238, 144, .2);
+  border: 1px solid #39C0B9;
 }
 
 .drop-stash-zone{
   border-radius: 5px;
   vertical-align: middle;
   text-align: center;
-  color: red;
-  background: lightcoral;
-  border: 1px solid red;
+  color: rgb(197, 75, 75);
+  background:  rgba(240,128,128,0.2);
+  border: 1px solid #39C0B9;
 }
