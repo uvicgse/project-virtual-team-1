@@ -1,11 +1,14 @@
 <div style="overflow: auto">
     <!-- STASH LIST -->
-    <div class="stash-list-header" id="stash-list-header">
-        <h4 style="color: white" id="stash-list-heading">Stashed Files</h4>
-        <button type="button" class="pop-stash-list-button" id="pop-stash-list" onclick="popStash()">Pop!</button>
+    <div class='page-header' id="stash-header">
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <button type='button' class='btn btn-primary' onclick="popStash()">Pop!</button>
+            </div>
+        </div>
+        <h3>Stash List</h3>
     </div>
     <div class="files-stashed" id="files-stashed">
-        <p class="stashed-files-message" id="stashed-files-message">Your stashed files will appear here</p>
         <ul id="stash-list" class="list-group">
         </ul>
     </div>
