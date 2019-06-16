@@ -442,6 +442,7 @@
       <div class="modal-body" id="modal-text-box">
         <h5 type="text">Upstream:</h5>
         <p id="display-upstream"></p>
+        <button type="button" class="btn btn-danger btn-sm" id="deleteUpstreamBtn" data-dismiss="modal" onclick="showUpstreamDelete()">Delete</button>
       </div>
       <div class="modal-body" id="modal-text-box">
         Please provide the HTTP path to the original repository:
@@ -449,6 +450,26 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="setUpstreamButton" onclick="setUpstreamRepo()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal for deleting upstream -->
+<div id="delete-upstream-modal" class="modal fade">
+  <!-- <input type="hidden" id="branch-to-delete" name="branch-to-delete" /> -->
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Confirmation</h4>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the upstream repository?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-warning" id="localDeleteButton" data-dismiss="modal" onClick="deleteUpstream()">Delete</button>
       </div>
     </div>
   </div>
