@@ -760,7 +760,7 @@ div.selected-commit-diff-panel button.close-button {
 .toolbar-Icons:hover {
   text-decoration: none;
   cursor: pointer;
-  padding-left: 5px;
+  /* padding-left: 5px; */
 }
 
 .fa-wikipedia-w:hover {
