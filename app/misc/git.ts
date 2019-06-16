@@ -1000,11 +1000,9 @@ function displayStashes(){
 
     // do this anyway, just to make sure we can see it.
     if(list.all.length > 0){
-      document.getElementById("stashed-files-message")!.hidden =true;
-      document.getElementById("pop-stash-list")!.style.display = "block";
+      document.getElementById("stash-panel-wrapper")!.hidden =false;
     } else {
-      document.getElementById("stashed-files-message")!.hidden = false;
-      document.getElementById("pop-stash-list")!.style.display = "none";
+      document.getElementById("stash-panel-wrapper")!.hidden = true;
     }
   });
 }

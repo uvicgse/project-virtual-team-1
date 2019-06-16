@@ -316,12 +316,8 @@ body .file-panel .staging-buttons:hover {
   opacity: 0.8;
 }
 
-body .file-panel .pop-stash-list-button {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
+.pop-stash-list-button {
+  float: right;
   height: 30px;
   border-radius: 10px;
   border: 0;
@@ -527,7 +523,6 @@ body .footer {
   border-top: 2px solid #181818;
   position: fixed;
   bottom: 0;
-  overflow-y: auto;
 }
 
 body .footer p {
@@ -576,6 +571,7 @@ body .footer .terminal .git-command {
 }
 
 body .footer .terminal{
+  height: 15vh;
   overflow-y: auto;
 }
 
@@ -1160,5 +1156,10 @@ body .pull-request-panel {
 }
 
 .stash-panel {
+  height: 15vh;
   overflow: auto;
+}
+
+#stash-header {
+  margin: 0;
 }
