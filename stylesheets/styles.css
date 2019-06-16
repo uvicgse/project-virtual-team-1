@@ -747,11 +747,13 @@ div.selected-commit-diff-panel button.close-button {
 /* Navbar/Toolbar Styles*/
 
 .container-fluid.row {
+    /* the header */
     max-height: 65px;
 }
 
 .fa {
     /* All font-awesome assets */
+    /* Would prefer to use font-awesome 5.0+ */
     color: white;
 }
 
@@ -759,7 +761,6 @@ div.selected-commit-diff-panel button.close-button {
   text-decoration: none;
   cursor: pointer;
   padding-left: 10px;
-  /* box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19); */
 }
 
 .fa-wikipedia-w:hover span{
@@ -811,12 +812,23 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .toolbar-Container {
-  position: relative;
-  padding: 5px;
-  max-height: 40px;
-  max-width: 400px;
+  /* position: absolute; */
+  width: 100%;
+  padding-top: 8px;
+  /* max-height: 40px;
+  max-width: 400px; */
   margin: auto;
+  border: 1px solid red;
 }
+
+.toolbar-Container span {
+  display: none;
+}
+
+/* .toolbar-Icons {
+    padding-left: 2px;
+    padding-right: 2px;
+} */
 
 .fa-github:hover {
     text-decoration: none;
@@ -824,7 +836,7 @@ div.selected-commit-diff-panel button.close-button {
 
 .navbar-nav.navbar-right {
     position: absolute;
-    bottom: 8px;
+    bottom: 5px;
     right: 20px;
 }
 /*http://bootsnipp.com/snippets/ZkpRl*/
@@ -839,10 +851,6 @@ div.selected-commit-diff-panel button.close-button {
   max-width: 400px;
   max-height: 50px;
   margin: auto;
-}
-
-.toolbar-Container span {
-  display: none;
 }
 
 .toolbar-Text {
