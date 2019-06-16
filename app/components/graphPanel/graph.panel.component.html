@@ -1,4 +1,4 @@
-<div class="graph-panel" id="graph-panel">
+<div class="graph-panel" id="graph-panel" ondragover="allowDrop(event)" ondrop="handleGraphDrop(event)">
   <!-- auto-detection box on commit graph -->
   <button id="refresh-button" type="button" class="btn btn-info refresh-graph-btn" (click)="refreshGraph()">Refresh Graph</button>
   <div id="refresh-graph-alert" class="alert alert-warning" role="alert" tabindex="-1">
