@@ -29,13 +29,13 @@ let password = "x-oauth-basic";
 
 // Configuration of Oauth Application Variables
 const OauthConfig = {
-  clientId: 'CLIENT_ID',
-  clientSecret: 'CLIENT_SECRET',
-  authorizationUrl: 'https://github.com/login/oauth/authorize',
-  tokenUrl: 'https://github.com/login/oauth/access_token',
-  useBasicAuthorizationHeader: false,
-  redirectUri: 'http://localhost'
-};
+ clientId: '7e4d055cfb9c017c6e1c',
+ clientSecret: 'e05c26a2d1e132c7922cae567946725cc74e6673',
+ authorizationUrl: 'https://github.com/login/oauth/authorize',
+ tokenUrl: 'https://github.com/login/oauth/access_token',
+ useBasicAuthorizationHeader: false,
+ redirectUri: 'http://localhost'
+}; 
 
 const windowParams = {
   alwaysOnTop: true,
@@ -82,7 +82,7 @@ function ModalSignIn(callback) {
         getUserInfo(callback);
 }
 
-// provide a fresh cred object. 
+// provide a fresh cred object.
 // previously we were trying to use same object again and again which was cauing issues
 function getCredentials(){
   //Note: might need to update with Oauth
@@ -112,7 +112,7 @@ function loginWithSaved(callback) {
     // Trigger next step in login process
     getUserInfo(callback);
   });
-  
+
 }
 
 function searchRepoName() {
@@ -172,7 +172,7 @@ function authenticateUser(callback) {
       client.get('/user', {}, function (err, status, body, headers) {
         // Set the account variable
         account = body;
-        
+
         // When user differs sign in, the sign in button must be hidden
         hideSignInButton();
 
@@ -531,7 +531,7 @@ function getUsername(){
   // Return null if the users account is not initialized
   if (!account)
     return null;
-    
+
   // Return the users username
   return account.login;
 }

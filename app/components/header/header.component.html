@@ -105,9 +105,10 @@
 
       <!-- Sign in/sign out button -->
       <div class="navbar-nav navbar-right hidden-xs">
-          <label id="githubname" style="color:white"></label>
+          <!-- <label class ="logout-label" id="githubname" style="color:white"></label> -->
           <div id="Button_Sign_out">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()">Sign out</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()" title="Sign out">Sign out</a>
+              <label class ="logout-label" id="githubname" style="color:white"></label>
           </div>
           <div id="Button_Sign_in">
               <a class="fa fa-github fa-2x"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()" title="Sign in with GitHub"></a>

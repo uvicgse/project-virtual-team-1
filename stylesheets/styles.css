@@ -747,20 +747,24 @@ div.selected-commit-diff-panel button.close-button {
 /* Navbar/Toolbar Styles*/
 
 .container-fluid.row {
-    /* the header */
-    max-height: 65px;
+  /* the header */
+  max-height: 65px;
 }
 
 .fa {
-    /* All font-awesome assets */
-    /* Would prefer to use font-awesome 5.0+ */
-    color: white;
+  /* All font-awesome assets */
+  /* Would prefer to use font-awesome 5.0+ */
+  color: white;
 }
 
 .toolbar-Icons:hover {
   text-decoration: none;
   cursor: pointer;
-  padding-left: 10px;
+  padding-left: 5px;
+}
+
+.fa-wikipedia-w:hover {
+    color: #C2E0FA;
 }
 
 .fa-wikipedia-w:hover span{
@@ -769,10 +773,18 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
+.fa-plus-circle:hover {
+    color: #99E29D;
+}
+
 .fa-plus-circle:hover span{
     display: block;
     position: absolute;
     font-family: sans-serif;
+}
+
+.fa-cloud-upload:hover {
+    color: #B9E2E0;
 }
 
 .fa-cloud-upload:hover span{
@@ -781,10 +793,18 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
+.fa-cloud-download:hover {
+    color: #E1B9E2;
+}
+
 .fa-cloud-download:hover span{
     display: block;
     position: absolute;
     font-family: sans-serif;
+}
+
+.fa-recycle:hover {
+    color: #1664FF;
 }
 
 .fa-recycle:hover span{
@@ -793,16 +813,28 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
+.fa-pagelines:hover {
+    color: #3B9880;
+}
+
 .fa-pagelines:hover span{
     display: block;
     position: absolute;
     font-family: sans-serif;
 }
 
+.fa-history:hover {
+    color: #B05D5D;
+}
+
 .fa-history:hover span{
     display: block;
     position: absolute;
     font-family: sans-serif;
+}
+
+.fa-star:hover {
+    color: #F7F47C;
 }
 
 .fa-star:hover span{
@@ -812,38 +844,49 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .toolbar-Container {
-  /* position: absolute; */
   width: 100%;
   padding-top: 8px;
-  /* max-height: 40px;
-  max-width: 400px; */
   margin: auto;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .toolbar-Container span {
   display: none;
 }
 
-/* .toolbar-Icons {
-    padding-left: 2px;
-    padding-right: 2px;
-} */
-
 .fa-github:hover {
     text-decoration: none;
 }
 
-.navbar-nav.navbar-right {
-    position: absolute;
-    bottom: 5px;
-    right: 20px;
+.navbar-nav.navbar-right .fa:hover {
+    filter: invert(.5);
 }
-/*http://bootsnipp.com/snippets/ZkpRl*/
+
+.navbar-nav.navbar-right .fa {
+    /* login */
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.navbar-nav.navbar-right .btn:hover {
+    filter: invert(1);
+}
+
 .navbar-nav.navbar-right .btn {
-  position: relative;
-  padding: 4px 15px;
+  /* logout */
+  position: absolute;
+  padding: 2px 10px;
+  top: 28px;
+  right: 5px;
   margin: 0 auto;
+}
+
+.navbar-nav.navbar-right .logout-label {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    margin: 0 auto;
 }
 
 .navbar-nav.col-md-5 {
