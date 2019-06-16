@@ -2,7 +2,6 @@ let Git = require("nodegit");
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
-let refList;
 let tags = {};
 let remoteName = {};
 let localBranches = [];
@@ -35,6 +34,7 @@ function getRecentRepositories() {
 
     // reverse for more understandable view
     displayList = repoList.recentRepos.reverse();
+    console.log("Collecting recently used repositories: " + displayList);
     return displayList;
 }
 
