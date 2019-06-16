@@ -1,4 +1,6 @@
 import * as nodegit from "git";
+import * as simplegit from 'simple-git/promise';
+let sGit = require( 'simple-git/promise' );
 
 let vis = require("vis");
 let $ = require("jquery");
@@ -148,8 +150,25 @@ function drawGraph() {
         },
     };
     network = new vis.Network(container, bsData, options);
-    getAllCommits(function(commits) {
-        processGraph(commits);
+    getAllCommits( function ( commits ){
+        // first fetching local commit so that we can mark them during processGraph
+
+        aheadCommitList=[]
+        let sGitRepo = sGit(repoFullPath);
+        sGitRepo.silent( true ).log( [ "@{u}.." ] ).then( ( result ) =>
+        {
+            for ( let k = 0; k < result.all.length; k++ )
+            {
+                // console.log("hash of unpushed is :" + (result.all[k].hash));
+                aheadCommitList.push( result.all[ k ].hash );
+                // console.log("Ahead:"+ahead);
+            }
+        } ).then( function (){
+            processGraph( commits );
+        } ).catch( function ( err ){ 
+            console.log(err)
+        } );
+        
 
         network.on("stabilizationIterationsDone", function () {
             network.setOptions({physics: false});

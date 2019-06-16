@@ -1679,15 +1679,8 @@ function unpushedCommitsModal() {
     document.getElementById("ahead_count").innerHTML = status.ahead;
     document.getElementById("behind_count").innerHTML = status.behind;
 
-    console.log(status.ahead);
-    console.log(status.behind);
-
+    // console.log(status.ahead); feature is working so commenting extra logs
+    // console.log(status.behind);
   });
-
-
+  
 }
-
-
-
-
-

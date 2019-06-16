@@ -1,6 +1,4 @@
 import * as nodegit from "git";
-import * as simplegit from 'simple-git/promise';
-let sGit = require('simple-git/promise');
 
 let nodeId = 1;
 let absNodeId = 1;
@@ -22,9 +20,7 @@ let branchIds = [];
 let tagIds = [];
 let unumberPrev = 0;
 let selectedCommit: string;
-var ahead: any[] =[];
-
-
+var aheadCommitList: any[] =[];
 
 /*
 Types of nodes in the network.
@@ -52,7 +48,6 @@ function generateUniqueNumber() {
 }
 
 function processGraph(commits: nodegit.Commit[]) {
-    set_boolean();
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
         abstractList = [];
@@ -121,8 +116,6 @@ function sortCommits(commits) {
 }
 
 function populateCommits(oldResult) {
-    /*Issue 150: Store the Ahead commit Id hash on an array*/
-
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
         nodeId = 1;
@@ -190,28 +183,19 @@ function populateCommits(oldResult) {
                 }
             }
 
-            // findout current commit is a local only commit or not
-            let localCommitCount = 0;
-            localCommitCount = + (document.getElementById("ahead_count").innerHTML);
-            let isLocalCommit = false
-            // if ( i >= commitHistory.length - localCommitCount )
-            // {
-            //     //another logic could be comparing the commitHistory[i].sha() with the local commit hashes
-            //     //also we can set color here so dont have to do write same code 3 time
-            //     isLocalCommit=true
-            // }
             /*Issue 150
-            * Iterate through the array of ahead commits ID And compare*/
-            for(var a = 0 ; a < ahead.length; a++){
-                if (commitHistory[i] == ahead[a]) {
-                    isLocalCommit=true;
+             * Iterate through the array of aheadCommitList commits ID And compare*/
+            let isUnpushCommit = false
+            for(var a = 0 ; a < aheadCommitList.length; a++){
+                if (commitHistory[i] == aheadCommitList[a]) {
+                    isUnpushCommit=true;
                     break;
 
                 }
             }
-            makeNode(commitHistory[i], nodeColumn, isLocalCommit);
-            makeAbsNode(commitHistory[i], nodeColumn, isLocalCommit);
-            makeBasicNode(commitHistory[i], nodeColumn, isLocalCommit);
+            makeNode(commitHistory[i], nodeColumn, isUnpushCommit);
+            makeAbsNode(commitHistory[i], nodeColumn, isUnpushCommit);
+            makeBasicNode(commitHistory[i], nodeColumn, isUnpushCommit);
         }
 
         // Add edges
@@ -232,23 +216,7 @@ function populateCommits(oldResult) {
         reCenter();
         resolve(oldResult);
     });
-    //empthy the array when we are done
-    ahead =[];
     return promise;
-}
-function set_boolean() {
-    let sGitRepo = sGit(repoFullPath);
-
-    var response = false
-    sGitRepo.silent(true).log(["@{u}.."]).then((result) => {
-        for (let k = 0; k < result.all.length; k++) {
-           // console.log("hash of unpushed is :" + (result.all[k].hash));
-            ahead.push(result.all[k].hash);
-            // console.log("Ahead:"+ahead);
-        }
-
-    })
-
 }
 
 function timeCompare(a, b) {
@@ -393,7 +361,7 @@ function makeBranchColor(oldResult) {
 }
 
 
-function makeBasicNode(c, column: number, isLocalCommit : boolean) {
+function makeBasicNode(c, column: number, isUnpushCommit : boolean) {
 
     let reference;
     let name = getName(c.author().toString());
@@ -403,7 +371,6 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
     let id;
     let tagid;
     let colors1 = JSON.stringify(bDict[c.toString()]);
-    let sGitRepo = sGit(repoFullPath);
     for (let i = 0; i < basicList.length; i++) {
         let colors2 = JSON.stringify(basicList[i]['colors']);
         if (colors1 === colors2) {
@@ -417,7 +384,6 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
             basicList[i]['parents'] = basicList[i]['parents'].concat(c.parents());
             break;
         }
-
     }
 
     if (flag) {
@@ -427,7 +393,7 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
         let title = "Number of Commits: " + count;
         console.log( title );
         let colorData = {};
-        if ( isLocalCommit )
+        if ( isUnpushCommit )
         {
         colorData= {
             border: '#FF3D24',
@@ -529,12 +495,9 @@ function makeBasicNode(c, column: number, isLocalCommit : boolean) {
             tagIds[tagid] = bsnodeId;
         }
     }
-
 }
 
-
-function makeAbsNode(c, column: number, isLocalCommit : boolean) {
-
+function makeAbsNode(c, column: number, isUnpushCommit : boolean) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -542,7 +505,6 @@ function makeAbsNode(c, column: number, isLocalCommit : boolean) {
     let flag = true;
     let count = 1;
     let nodeId;
-    let sGitRepo = sGit(repoFullPath);
     if (c.parents().length === 1) {
         let cp = c.parents()[0].toString();
         for (let i = 0; i < abstractList.length; i++) {
@@ -553,12 +515,9 @@ function makeAbsNode(c, column: number, isLocalCommit : boolean) {
                 count = abstractList[i]['count'];
                 abstractList[i]['sha'].push(c.toString());
                 nodeId = i+1;
-
                 abNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
-
                 break;
             }
-
         }
     }
 
@@ -566,7 +525,7 @@ function makeAbsNode(c, column: number, isLocalCommit : boolean) {
         nodeId = absNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
         let colorData = {};
-        if ( isLocalCommit )
+        if ( isUnpushCommit )
         {
             colorData= {
                 border: '#FF3D24',
@@ -667,7 +626,7 @@ function makeAbsNode(c, column: number, isLocalCommit : boolean) {
     }
 }
 
-function makeNode(c, column: number, isLocalCommit : boolean) {
+function makeNode(c, column: number, isUnpushCommit : boolean) {
     let id = nodeId++;
     let reference;
     let name = getName(c.author().toString());
@@ -688,7 +647,7 @@ function makeNode(c, column: number, isLocalCommit : boolean) {
 
     let flag = false;
     let colorData = {}
-    if ( isLocalCommit )
+    if ( isUnpushCommit )
     {
 
         colorData= {
