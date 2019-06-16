@@ -1,4 +1,4 @@
-<div class="stash-panel-contents">
+<div class="stash-panel-contents" id="stash-panel-contents">
     <!-- STASH LIST -->
     <div class='page-header' id="stash-header">
         <div class='btn-toolbar pull-right'>
@@ -13,4 +13,16 @@
         </ul>
     </div>
 </div>
+<table class="stash-drop-panel" id="stash-drop-panel" hidden>
+    <tr>
+        <td class="apply-stash-zone" ondragover="allowDrop(event)" ondrop="handleStashApplyZoneDrop(event)">
+            Apply
+        </td>
+    </tr>
+    <tr>
+        <td class="drop-stash-zone" ondragover="allowDrop(event)" ondrop="handleStashDropZoneDrop(event)">
+            Drop
+        </td>
+    </tr>
+</table>
  

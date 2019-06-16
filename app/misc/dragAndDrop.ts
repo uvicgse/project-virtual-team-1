@@ -7,7 +7,7 @@ function handleGraphDrop(event:DragEvent){
 
         //Perform specified operation
         switch (payload.operation){
-            case "stash pop":
+            case "stash":
                 popStash(payload.index);
                 break;
             default:
@@ -17,4 +17,28 @@ function handleGraphDrop(event:DragEvent){
 
 function allowDrop(event:DragEvent){
     event.preventDefault();
+}
+
+function handleStashApplyZoneDrop(event:DragEvent){
+    event.preventDefault();
+    if(event.dataTransfer){
+        //Retrieve payload and convert to JSON
+        let payload = JSON.parse(event.dataTransfer!.getData("text"));
+
+        if(payload.operation == "stash"){
+            applyStash(payload.index);
+        }
+    }
+}
+
+function handleStashDropZoneDrop(event:DragEvent){
+    event.preventDefault();
+    if(event.dataTransfer){
+        //Retrieve payload and convert to JSON
+        let payload = JSON.parse(event.dataTransfer!.getData("text"));
+
+        if(payload.operation == "stash"){
+            dropStash(payload.index);
+        }
+    }
 }

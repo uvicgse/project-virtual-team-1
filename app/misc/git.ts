@@ -1005,15 +1005,26 @@ function displayStashes(){
           event.dataTransfer!.effectAllowed = 'move';
           //generate data payload
           let payload = {
-            operation: "stash pop",
+            operation: "stash",
             index: key
           };
-          event.dataTransfer!.setData("text", JSON.stringify(payload))
+          event.dataTransfer!.setData("text", JSON.stringify(payload));
+
+          window.requestAnimationFrame(function(){
+            document.getElementById("stash-panel-contents")!.hidden = true;
+            document.getElementById("stash-drop-panel")!.hidden = false;
+          });
         }
 
         stashElement.ondragend = function (event){
           //remove dropzone styling
           document.getElementById("graph-panel")!.classList.remove("dropzone");
+
+          window.requestAnimationFrame(function(){
+            document.getElementById("stash-panel-contents")!.hidden = false;
+            document.getElementById("stash-drop-panel")!.hidden = true;
+          });
+          
           //required to prevent default drop handling
           event.preventDefault();
         };
