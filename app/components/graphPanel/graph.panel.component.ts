@@ -49,7 +49,7 @@ export class GraphPanelComponent {
     if dropdown.css("display") == "block" {
       dropdown.css("display", "none");
     } else {
-      dropdown.css("display", "block"); 
+      dropdown.css("display", "block");
     }
   }
 

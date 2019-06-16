@@ -35,7 +35,6 @@ function getRecentRepositories() {
 
     // reverse for more understandable view
     displayList = repoList.recentRepos.reverse();
-    console.log("Collecting recently used repositories: " + displayList);
     return displayList;
 }
 
@@ -564,7 +563,7 @@ function refreshReferences(verbose, force) {
     var selectMenuList = document.getElementsByClassName("select-menu-list");
     Array.prototype.forEach.call(selectMenuList, function (list) {
         list.innerHTML = '';
-    })
+    });
   }
 
 // Adding features to branch dropdown menu
@@ -654,7 +653,19 @@ function refreshReferences(verbose, force) {
     button.innerHTML = "Delete";
 
     // display tag in delete list on graph
-    displayTagDeleteList(name);
+    var deleteDropdownList = document.getElementById("deleteTagList");
+    var deleteChilds = deleteDropdownList.childNodes;
+    var createNewDelTag = true;
+    for(i = 0; i < deleteChilds.length; i++) {
+      if(deleteChilds[i].firstChild.innerHTML == name) {
+        createNewDelTag = false;
+      }
+    }
+
+    // if the tag is not in the delete list, create a new list item
+    if (createNewDelTag) {
+      displayTagDeleteList(name);
+    }
 
     // deleting a tag
     button.onclick = (event) => {
@@ -693,15 +704,11 @@ function refreshReferences(verbose, force) {
     var a = document.createElement("a");
 
     // set HTML attributes
-    li.setAttribute("class", "list-group-item");
-    a.setAttribute("href", "#");
+    li.setAttribute("class", "list-item delete-list-item");
     a.innerHTML = name;
 
     // deleting a tag
     li.onclick = () => {
-
-      console.log("deleting ... ");
-      console.log(name);
 
       let repo;
       Git.Repository.open(repoFullPath)
@@ -717,8 +724,10 @@ function refreshReferences(verbose, force) {
 
       var parentList = document.getElementById("deleteTagList");
       var deleteChildren = parentList.childNodes;
+      console.log("CHILLUN: ");
+      console.log(deleteChildren);
       for( i = 0; i < deleteChildren.length; i++ ) {
-        if (deleteChildren[i].getAttribute("id") == name) {
+        if (deleteChildren[i].firstChild.innerHTML == name) {
           deleteChildren[i].remove();
         }
       }
