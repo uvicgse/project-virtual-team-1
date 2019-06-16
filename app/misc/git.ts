@@ -978,12 +978,22 @@ function displayStashes(){
           showStashInfo(key);
         }
 
-        let button = document.createElement("i");
-        button.className = "fa fa-camera";
-        button.onclick = function (){
+        let applyButton = document.createElement("i");
+        applyButton.className = "fa fa-camera fa-2x";
+        applyButton.onclick = function (event){
+          event.stopPropagation();
           applyStash(key);
         };
-        stashElement.appendChild(button);
+
+        let dropButton = document.createElement("i");
+        dropButton.className = "fa fa-trash fa-2x";
+        dropButton.onclick = function (event){
+          event.stopPropagation();
+          dropStash(key);
+        };
+
+        stashElement.appendChild(dropButton);
+        stashElement.appendChild(applyButton);
         stashList.appendChild(stashElement);
       });
     }
@@ -1002,7 +1012,7 @@ function displayStashes(){
 function showStashInfo(index) {
   let sGitRepo = sGit(repoFullPath);
   let stashIndex = ("stash@{" + index + "}");
-  addCommand("git stash show" + stashIndex);
+  addCommand("git stash show " + stashIndex);
   sGitRepo.silent(true).stash(["show", stashIndex]).then((result)=> {
     updateModalText(result);
   }).catch(function(err) {
@@ -1017,9 +1027,16 @@ function applyStash(index){
   }).catch(function(err) {
     handleStashError(err);
   });;
-
 }
 
+function dropStash(index){
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.silent(true).stash(["drop",index]).then((result)=>{
+    addCommand("git stash drop " + index)
+  }).catch(function(err) {
+    handleStashError(err);
+  });;
+}
 function isStashListTheSame(list) {
   // get the list of hashes
   let currStashHashList = []
