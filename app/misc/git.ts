@@ -968,7 +968,6 @@ function displayStashes(){
         let stashElement = document.createElement("li");
         stashElement.className = "list-group-item stash-list-item list-group-item-action";
         stashElement.innerHTML = element.message;
-
         //allow showing of stash info on click
         stashElement.onclick = function () {
           showStashInfo(key);
@@ -976,7 +975,7 @@ function displayStashes(){
 
         //generate apply button
         let applyButton = document.createElement("i");
-        applyButton.className = "fa fa-arrow-circle-up fa-2x fa-pull-right";
+        applyButton.className = "fa fa-arrow-circle-up fa-2x";
         applyButton.onclick = function (event){
           //stop propgation required to not activate on show
           event.stopPropagation();
@@ -985,16 +984,21 @@ function displayStashes(){
 
         //generate drop button
         let dropButton = document.createElement("i");
-        dropButton.className = "fa fa-trash fa-2x fa-pull-right";
+        dropButton.className = "fa fa-trash fa-2x";
         dropButton.onclick = function (event){
           //stop propgation required to not activate on show
           event.stopPropagation();
           dropStash(key);
         };
 
+        let buttons = document.createElement("div");
+        buttons.className = "pull-right";
+        buttons.style.display = "inline-block";
+
         //add buttons to list element
-        stashElement.appendChild(dropButton);
-        stashElement.appendChild(applyButton);
+        buttons.appendChild(dropButton);
+        buttons.appendChild(applyButton);
+        stashElement.prepend(buttons);
 
         //allow drag and drop
         stashElement.draggable =true;
