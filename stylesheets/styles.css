@@ -862,6 +862,16 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
+.fa-refresh:hover {
+    color: #57FA9C;
+}
+
+.fa-refresh:hover span{
+    display: block;
+    position: absolute;
+    font-family: sans-serif;
+}
+
 .toolbar-Container {
   width: 100%;
   padding-top: 8px;
