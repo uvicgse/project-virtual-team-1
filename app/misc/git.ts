@@ -981,6 +981,7 @@ function displayStashes(){
           event.stopPropagation();
           applyStash(key);
         };
+        applyButton.title = "Apply Stash";
 
         //generate drop button
         let dropButton = document.createElement("i");
@@ -990,6 +991,7 @@ function displayStashes(){
           event.stopPropagation();
           dropStash(key);
         };
+        dropButton.title = "Drop Stash";
 
         let buttons = document.createElement("div");
         buttons.className = "pull-right";
