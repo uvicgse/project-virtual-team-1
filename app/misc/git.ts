@@ -1692,5 +1692,5 @@ function unpushedCommitsModal() {
     document.getElementById("behind_count").innerHTML = status.behind;
 
   });
-  
+
 }

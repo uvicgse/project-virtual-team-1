@@ -152,7 +152,6 @@ function drawGraph() {
     network = new vis.Network(container, bsData, options);
     getAllCommits( function ( commits ){
         // first fetching local commit so that we can mark them during processGraph
-
         aheadCommitList=[]
         let sGitRepo = sGit(repoFullPath);
         sGitRepo.silent( true ).log( { '--branches': null, '--not': null, '--remotes': null } ).then( ( result ) =>
@@ -160,18 +159,14 @@ function drawGraph() {
             //collect all branches unpush commits using:- git log --branches --not --remotes
             for ( let k = 0; k < result.all.length; k++ )
             {
-                // console.log("hash of unpushed is :" + (result.all[k].hash));
                 aheadCommitList.push( result.all[ k ].hash );
-                // console.log("Ahead:"+ahead);
             }
         } ).then(() => sGitRepo.silent( true ).log( { 'origin/master..master': null } )).then(( result ) =>
         {  
             //add unpush commit on master using:- git log origin/master..master
             for ( let k = 0; k < result.all.length; k++ )
             {
-                // console.log("hash of unpushed is :" + (result.all[k].hash));
                 aheadCommitList.push( result.all[ k ].hash );
-                // console.log("Ahead:"+ahead);
             }
         }).catch(function (err) {
             console.log("ERROR!! unable to load local Only commits becuase: "+err.message);
