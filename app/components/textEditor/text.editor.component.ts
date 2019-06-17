@@ -40,6 +40,24 @@ export class TextEditorComponent {
     }
   }
 
+  // This function is used to rename files.
+  renameFile(): void {
+    // Get the rename input element and then click it.
+    let fileRenameInput = document.getElementById("rename-filepicker-editor");
+    if (fileRenameInput != null) {
+      fileRenameInput.click();
+    }
+  }
+
+  // This function is used to move files.
+  moveFile(): void {
+    // Get the move input element and then click it.
+    let fileMoveInput = document.getElementById("move-filepicker-editor");
+    if (fileMoveInput != null) {
+      fileMoveInput.click();
+    }
+  }
+
   /*
     This function is called when a file is uploaded.
     It's purpose is to create a tab for the new file
@@ -310,33 +328,25 @@ export class TextEditorComponent {
   }
 
   /*
-
-
+    This function sets current and default filename for the file rename dialog before opening the modal dialog
    */
-  renameFileFromEditor():void {
-    if (this.filePaths[this.currentFileId] != ""){
-      document.getElementById("currentFilename")!.innerHTML = this.filePaths[this.currentFileId];
-      (<HTMLInputElement>document.getElementById("renameFilename")!).value = this.filePaths[this.currentFileId];
+  renameFileFromEditor(event?: Event):void {
+    if (event){
+      (<HTMLInputElement>document.getElementById("currentFilename")!).innerHTML = event.target.files[0].path;
+      (<HTMLInputElement>document.getElementById("renameFilename")!).value = event.target.files[0].path;
       $('#rename-file-modal').modal('show');
-
-    }
-    else {
-      displayModal("Please open a file first");
     }
   }
 
   /*
-
-
+This function sets current and default folder for the file move dialog before opening the modal dialog
  */
-  moveFileFromEditor():void {
-    if (this.filePaths[this.currentFileId] != ""){
-      document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
-      (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
+  moveFileFromEditor(event?: Event):void {
+    if (event) {
+      (<HTMLInputElement>document.getElementById("currentFilename")!).innerHTML = event.target.files[0].path;
+      (<HTMLInputElement>document.getElementById("currentFolderPath")!).innerHTML = repoFullPath;
+      (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value = repoFullPath;
       $('#move-file-modal').modal('show');
-    }
-    else {
-      displayModal("Please open a file first");
     }
   }
 
@@ -374,7 +384,6 @@ export class TextEditorComponent {
     let closingTab = false;
 
     let id = "" + this.latestFileId;
-
     let closeIcon = document.createElement("i");
     closeIcon.className = "fa fa-times"
     closeIcon.onclick = (e) => {
@@ -385,43 +394,8 @@ export class TextEditorComponent {
     }
     closeIcon.style.marginLeft = "5px";
 
-    // add file rename icon
-    let renameIcon = document.createElement("i");
-    renameIcon.className = "fa fa-edit"
-    renameIcon.onclick = (e) => {
-      document.getElementById("currentFilename")!.innerHTML = this.filePaths[this.currentFileId];
-      (<HTMLInputElement>document.getElementById("renameFilename")!).value = this.filePaths[this.currentFileId];
-      $('#rename-file-modal').modal('show');
-      // close tab after file rename
-      closingTab = true;
-      let fileEditor = document.getElementById(id)!;
-      fileEditor.remove();
-      newTab.remove();
-    }
-    renameIcon.style.marginLeft = "5px";
-
-    // add file move icon
-    let moveIcon = document.createElement("i");
-    moveIcon.className = "fa fa-caret-right"
-    moveIcon.onclick = (e) => {
-      document.getElementById("currentFilename")!.innerHTML = this.filePaths[this.currentFileId];
-      document.getElementById("currentFolderPath")!.innerHTML = repoFullPath;
-      (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value =repoFullPath;
-      $('#move-file-modal').modal('show');
-
-      // close tab after file move
-      closingTab = true;
-      let fileEditor = document.getElementById(id)!;
-      fileEditor.remove();
-      newTab.remove();
-    }
-    moveIcon.style.marginLeft = "5px";
-
-
     newTab.innerHTML = fileName;
     newTab.appendChild(closeIcon);
-    newTab.appendChild(renameIcon);
-    newTab.appendChild(moveIcon);
 
     // Store function to be called when the tab is clicked.
     let fileTabId = "tab-link-" + this.latestFileId;

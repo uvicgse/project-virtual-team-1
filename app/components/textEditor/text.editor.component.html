@@ -16,8 +16,10 @@
                 <option value="8">8</option>
             </select>
         </div>
-        <button id ="rename-modal-button-editor" class="open-editor-button" (click)="renameFileFromEditor()">Rename</button>
-        <button id ="move-modal-button-editor" class="open-editor-button" (click)="moveFileFromEditor()">Move</button>
+        <button id ="rename-modal-button-editor" class="open-editor-button" (click)="renameFile()">Rename</button>
+        <input type="file" id="rename-filepicker-editor" style="display: none;" (change)="renameFileFromEditor($event)"/>
+        <button id ="move-modal-button-editor" class="open-editor-button" (click)="moveFile()">Move</button>
+        <input type="file" id="move-filepicker-editor" style="display: none;" (change)="moveFileFromEditor($event)" />
         <button class="close-button" (click)="closeEditor()">Close</button>
         <button class="close-button" (click)="hideEditor()">Hide</button>
     </div>
