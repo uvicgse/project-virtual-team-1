@@ -32,6 +32,8 @@ export class GraphPanelComponent {
   disableContextMenu() {
     let contextMenu = $("#networkContext");
     contextMenu.hide();
+    var dropdown = $("#deleteTagList");
+    dropdown.css("display", "none");
   }
 
   // Shows the modal for creating a new tag
@@ -45,8 +47,8 @@ export class GraphPanelComponent {
 
   // Handler for deleting tags from the graph
   showDeleteTagList() {
-    let dropdown = $("#deleteTagList");
-    if dropdown.css("display") == "block" {
+    var dropdown = $("#deleteTagList");
+    if (dropdown.css("display") == "block" ) {
       dropdown.css("display", "none");
     } else {
       dropdown.css("display", "block");
