@@ -50,7 +50,6 @@ function processGraph(commits: nodegit.Commit[]) {
         numOfCommits = commits.length;
 
         sortCommits(commits)
-            .then(makeBranchColor)
             .then(populateCommits)
             .then(function(data) {
                 let textBox = document.getElementById("modal-text-box");
@@ -268,58 +267,6 @@ function sortBasicGraph() {
     }
 }
 
-function makeBranchColor(oldResult) {
-    var promise = new Promise((resolve, reject) => {
-        let bcList = [];
-
-        for (let i = 0; i < commitHistory.length; i++) {
-            if (commitHistory[i].toString() in bname) {
-                bcList.push({
-                    oid: commitHistory[i],
-                    cid: i
-                });
-            }
-        }
-
-        var chunk = 10;
-
-        function computeChunk() {
-            var count = chunk;
-            while (bcList.length > 0 && count--) {
-                let commit = bcList.pop();
-                let oid = commit.oid.toString();
-                let cid = commit.cid;
-                if (oid in bDict) {
-                    bDict[oid].push(cid);
-                } else {
-                    bDict[oid] = [cid];
-                }
-
-                let parents = commit.oid.parents();
-
-                for (let i = 0; i < parents.length; i++) {
-                    for (let j = 0; j < commitHistory.length; j++) {
-                        if (commitHistory[j].toString() === parents[i].toString()) {
-                            bcList.push({
-                                oid: commitHistory[j],
-                                cid: cid
-                            });
-                        }
-                    }
-                }
-            }
-            if(bcList.length > 0){
-                setTimeout(computeChunk, 1);
-            } else {
-				resolve(oldResult);
-			}
-
-        }
-        computeChunk();
-    });
-    return promise;
-}
-
 function makeBasicNode(c, column: number) {
     let reference;
     let name = getName(c.author().toString());
@@ -332,7 +279,7 @@ function makeBasicNode(c, column: number) {
         let cp = c.parents()[0].toString();
         for (let i = 0; i < basicList.length; i++) {
             let index = basicList[i]['sha'].indexOf(cp);
-            if (index > -1 && basicList[i]['email'] === email && basicList[i]['column'] === column && !(c.toString() in bname)) {
+            if (index > -1 && basicList[i]['column'] === column && !(c.toString() in tags) && !(c.toString() in bname)) {
                 flag = false;
                 basicList[i]['count'] += 1;
                 count = basicList[i]['count'];
