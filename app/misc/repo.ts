@@ -15,6 +15,7 @@ let previousOpen;
 let repoName : string = "";
 let lastRefList = [];
 let jsonfile = require('jsonfile');
+let refreshAllFlagRef = false;
 
 // Issue 6
 // Retrieve repos from repos.json
@@ -353,8 +354,11 @@ function refreshReferences(verbose, force) {
           return repo.getReferences(Git.Reference.TYPE.LISTALL);
         })
         .then(function (refList) {
+          // ignore stash hidden branch
           // sort refList alphabetically to get uniform order of the list
-          refList.sort();
+          refList = refList.filter(function (value, index, arr) {
+            return value.name() !== "refs/stash";
+          }).sort();
 
           // Always update if forced
           if (!force) {
@@ -368,11 +372,16 @@ function refreshReferences(verbose, force) {
           // detects changes, refresh the lists
           console.log("branch or tag changes detected... refreshing branch and tag list");
 
-          if (lastRefList.length !== 0 && !refreshAllFlag) {
+          if (!refreshAllFlagRef) {
             // show refresh graph alert
             $("#refresh-graph-alert").show();
             $("#refresh-button").hide();
+          } else {
+            $("#refresh-graph-alert").hide();
+            $("#refresh-button").show();
           }
+
+          refreshAllFlagRef = false;
 
           bname = {};
           tags = {};
@@ -450,7 +459,11 @@ function refreshReferences(verbose, force) {
         branch = branchParts[branchParts.length - 1];
       })
       .then(function () {
+        // suppress commit detection alert
+        refreshAllFlagRef = true;
+        refreshAllFlagCommit = true;
         refreshReferences(true, true);
+        checkCommitChange();
       })
       .then(function () {
         console.log("Updating the graph and the labels");
@@ -481,8 +494,6 @@ function refreshReferences(verbose, force) {
         // TODO: add a condition here to switch between tag and branch name string
         document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
-    // suppress commit detection alert
-    refreshAllFlag = true;
   }
 
   // Displaying branches in a dropdown menu
