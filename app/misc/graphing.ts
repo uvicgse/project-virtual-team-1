@@ -84,7 +84,6 @@ function processGraph(commits: nodegit.Commit[]) {
                 }
             });
     });
-
     return promise;
 }
 
@@ -147,8 +146,7 @@ function populateCommits(oldResult) {
         columns = [];
         branchIds = [];
         tagIds = [];
-
-
+        
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
             let parents: string[] = commitHistory[i].parents();
@@ -214,6 +212,7 @@ function populateCommits(oldResult) {
 
                 }
             }
+            // Create the three levels nodes for zoom in the graph
             makeNode(commitHistory[i], nodeColumn, isUnpushCommit);
             makeAbsNode(commitHistory[i], nodeColumn, isUnpushCommit);
             makeBasicNode(commitHistory[i], nodeColumn, isUnpushCommit);
@@ -393,11 +392,8 @@ function makeBranchColor(oldResult) {
     return promise;
 }
 
-
 // Create highest level of the graph's zoom. This is the first graph displayed upon launch.
 function makeBasicNode(c, column: number, isUnpushCommit : boolean) {
-
-
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -566,9 +562,7 @@ function makeBasicNode(c, column: number, isUnpushCommit : boolean) {
     }
 }
 // Create second level of the graph's zoom.
-
 function makeAbsNode(c, column: number, isUnpushCommit : boolean) {
-
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -727,9 +721,7 @@ function makeAbsNode(c, column: number, isUnpushCommit : boolean) {
     }
 }
 // Create lowest level of the graph's zoom.
- 
 function makeNode(c, column: number, isUnpushCommit : boolean) {
-
     let id = nodeId++;
     let reference;
     let name = getName(c.author().toString());
@@ -869,8 +861,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
         }
         flag = true;
     }
-
-
+    // Update node list
     commitList.push({
         sha: c.sha(),
         id: id,
