@@ -163,6 +163,8 @@ function drawGraph() {
                 aheadCommitList.push( result.all[ k ].hash );
                 // console.log("Ahead:"+ahead);
             }
+        } ).catch(function (err) {
+            console.log("ERROR!! unable to load local Only commits becuase: "+err.message);
         } ).then( function (){
             processGraph( commits );
         } ).catch( function ( err ){ 
