@@ -44,34 +44,42 @@ function generateUniqueNumber() {
 }
 
 function processGraph(commits: nodegit.Commit[]) {
+    
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
         basicList = [];
         numOfCommits = commits.length;
-
+        
         sortCommits(commits)
             .then(populateCommits)
             .then(function(data) {
                 let textBox = document.getElementById("modal-text-box");
                 if (textBox != null) {
-                    document.getElementById('spinner').style.display = 'none';
-                } else {
-                    console.log("Modal-text-box is missing");
-                }
-            });
+                        document.getElementById('progress').style.display = 'none';
+                    } else {
+                        console.log("Modal-text-box is missing");
+                    }
+                });
     });
     return promise;
 }
-
+    
 function sortCommits(commits) {
     var promise = new Promise((resolve, reject) => {
+        let stageStartProgress = 0; 
+        let stageEndProgress = 80; 
+
+        updateGraphProgress(stageStartProgress);
 
         var chunk = 100;
+        var numCommits = commits.length;
 
         function computeChunk() {
             var count = chunk;
-
+            
             while (commits.length > 0 && count--) {
+                updateGraphProgress((commitHistory.length / numCommits) * stageEndProgress);  
+
                 let commit = commits.shift();
                 let parents = commit.parents();
                 if (parents === null || parents.length === 0) {
@@ -101,6 +109,7 @@ function sortCommits(commits) {
             if (commits.length > 0){
                 setTimeout(computeChunk, 1);
             } else {
+                updateGraphProgress(stageEndProgress);
                 resolve();
             }
         }
@@ -110,6 +119,11 @@ function sortCommits(commits) {
 }
 
 function populateCommits(oldResult) {
+    let stageStartProgress = 80; 
+    let stageEndProgress = 100; 
+
+    updateGraphProgress(stageStartProgress);    
+
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
         nodeId = 1;
@@ -122,6 +136,8 @@ function populateCommits(oldResult) {
         
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
+            updateGraphProgress((i / commitHistory.length) * stageEndProgress);  
+
             let parents: string[] = commitHistory[i].parents();
             let nodeColumn;
             for (let j = 0; j < parents.length; j++) {
@@ -188,6 +204,8 @@ function populateCommits(oldResult) {
             addBasicEdge(basicList[i]);
         }
         //sortBasicGraph();
+        
+        updateGraphProgress(stageEndProgress);
 
         commitList = commitList.sort(timeCompare);
         reCenter();
@@ -524,4 +542,10 @@ function reCenter() {
 
 function getSelectedCommit() {
     return selectedCommit;
+}
+
+// Updates the graph progress bar to a specified percentage
+function updateGraphProgress(percentage: number) {
+    let progressBar = $("#graph-progress-bar");
+    progressBar.css("width", percentage + "%");
 }

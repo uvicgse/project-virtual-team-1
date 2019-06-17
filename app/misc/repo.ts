@@ -150,13 +150,13 @@ function downloadFunc(cloneURL, fullLocalPath) {
       progressDiv.style.visibility = 'collapse';
       updateProgressBar(0);
       console.log("Repo successfully cloned");
-      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('progress').style.display = 'block';
       refreshAll(repository);
       updateModalText("Clone Successful, repository saved under: " + fullLocalPath);
       addCommand("git clone " + cloneURL + " " + fullLocalPath);
       repoFullPath = fullLocalPath;
       repoLocalPath = fullLocalPath;
-      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('progress').style.display = 'block';
       refreshAll(repository);
       switchToMainPanel();
     },
@@ -262,7 +262,7 @@ function openRepository() {
         }
 
       }
-      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('progress').style.display = 'block';
       refreshAll(repository);
       console.log("Repo successfully opened");
       updateModalText("Repository successfully opened");
@@ -446,7 +446,7 @@ function refreshReferences(verbose, force) {
 }
 
   function refreshAll(repository) {
-    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('progress').style.display = 'block';
     let branch;
     lastRefList = [];
     
@@ -735,7 +735,7 @@ function refreshReferences(verbose, force) {
     console.log("name of branch being checked out: " + bn);
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
-        document.getElementById('spinner').style.display = 'block';
+        document.getElementById('progress').style.display = 'block';
         addCommand("git checkout " + bn);
         repo.checkoutBranch("refs/heads/" + bn)
           .then(function () {
@@ -779,7 +779,7 @@ function refreshReferences(verbose, force) {
         console.log("name of local branch " + bn);
         repos.mergeBranches(bn, "origin/" + bn)
           .then(function () {
-            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('progress').style.display = 'block';
             refreshAll(repos);
             console.log("Pull successful");
           });

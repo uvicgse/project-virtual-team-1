@@ -15,7 +15,8 @@ let GraphNodeID = 0;
     return returnValue;
   }
 function drawGraph() {
-    document.getElementById('spinner').style.display = 'block';
+    updateGraphProgress(0);    
+    document.getElementById('progress').style.display = 'block';
     $('#modal').modal('show');
     bsNodes = new vis.DataSet([]);
     bsEdges = new vis.DataSet([]);
@@ -140,6 +141,7 @@ function drawGraph() {
         },
     };
     network = new vis.Network(container, bsData, options);
+    
     getAllCommits(function(commits) {
         processGraph(commits);
 
