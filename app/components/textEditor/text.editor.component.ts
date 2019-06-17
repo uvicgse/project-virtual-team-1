@@ -45,8 +45,8 @@ export class TextEditorComponent {
     // Get the rename input element and then click it.
     let fileRenameInput = document.getElementById("rename-filepicker-editor");
     if (fileRenameInput != null) {
+      fileRenameInput.value = "";
       fileRenameInput.click();
-      fileRenameInput.setAttribute("value","");
     }
   }
 
@@ -55,8 +55,8 @@ export class TextEditorComponent {
     // Get the move input element and then click it.
     let fileMoveInput = document.getElementById("move-filepicker-editor");
     if (fileMoveInput != null) {
+      fileMoveInput.value = "";
       fileMoveInput.click();
-      fileMoveInput.setAttribute("value","");
     }
   }
 
