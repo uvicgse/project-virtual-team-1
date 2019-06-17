@@ -46,6 +46,7 @@ export class TextEditorComponent {
     let fileRenameInput = document.getElementById("rename-filepicker-editor");
     if (fileRenameInput != null) {
       fileRenameInput.click();
+      fileRenameInput.setAttribute("value","");
     }
   }
 
@@ -55,6 +56,7 @@ export class TextEditorComponent {
     let fileMoveInput = document.getElementById("move-filepicker-editor");
     if (fileMoveInput != null) {
       fileMoveInput.click();
+      fileMoveInput.setAttribute("value","");
     }
   }
 
