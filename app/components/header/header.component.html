@@ -483,10 +483,8 @@
                       </div>
                       <div>
                         <label>Onto: </label>
-                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary" id="rebaseOntoBranches">
-                            <option value="1">issue-70-unpushedcommits-PR</option>
-                            <option value="2">feature-110-rebase-ui-popup-fresh</option>
-                            <option value="3">issue-6-recent-repository</option> 
+                        <select>
+                            <option *ngFor="let branch of getEveryBranch()">{{branch}}</option>
                         </select>
                       </div>
                         <div class="form-check form-check-inline">

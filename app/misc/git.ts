@@ -771,11 +771,28 @@ function mergeCommits(from) {
 function showRebaseModal() {
   $('#rebase-modal').modal('show');
   getRebaseFromBranch();
+  let branches = getEveryBranch();
+  console.log('out of method: ' + branches);
 }
 
 function getRebaseFromBranch() {
     let rebaseFromBranch = document.getElementById("currentBranch");
     rebaseFromBranch.innerText = repoCurrentBranch;
+}
+
+async function getEveryBranch() {
+  async function fetchBranches() {
+      let repos;
+      return Git.Repository.open(repoFullPath)
+        .then(function (repo) {
+          repos = repo;
+          return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
+      });
+  }
+
+  let branches = await fetchBranches();
+  console.log('In method: ' + branches);
+  return branches;
 }
 
 function rebaseCommits(from: string, to: string) {
