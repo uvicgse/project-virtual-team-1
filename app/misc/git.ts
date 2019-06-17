@@ -1,6 +1,7 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
 import * as simplegit from 'simple-git/promise';
+import { ViewChild } from "@angular/core";
 
 let $ = require("jquery");
 let Git = require("nodegit");
@@ -779,15 +780,25 @@ async function showRebaseModal() {
   //console.log('out of method: ' + branches);
 }
 
-function getRebaseFromBranch() {
+function getRebaseFromBranch(): void {
   let rebaseFromBranch = document.getElementById("currentBranch");
   rebaseFromBranch.innerText = repoCurrentBranch;
 }
 
-async function getRebaseOntoBranch() {
+async function getRebaseOntoBranch(): void {
   let branches = await getEveryBranch();
-  let rebaseOntoBranch = document.getElementById("showOntoBranches");
-  rebaseOntoBranch.innerHTML = branches;
+  //let rebaseOntoBranch = document.getElementById("showOntoBranches");
+  //rebaseOntoBranch.innerHTML = branches;
+  let rebaseOntoBranches = document.getElementById("ontoBranches");
+  let valueCounter = 1;
+  
+  for(let branch of branches){
+    let option = document.createElement("option");
+    option.setAttribute("value", valueCounter);
+    option.setAttribute("text", branch);
+    rebaseOntoBranches.appendChild(option);
+    valueCounter++;
+  }
 }
 
 async function getEveryBranch() {
