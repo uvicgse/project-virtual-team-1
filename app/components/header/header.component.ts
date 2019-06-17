@@ -16,6 +16,7 @@ export class HeaderComponent   {
 
   // If 'branch' is the selected tab in the dropdown of references. False means that 'tag' is the selected tab. 
   branchSelectedInRefDropdown: boolean = true;
+  //ontoBranches: array = [];
 
   promptUserToAddRepository(): void {
     switchToAddRepositoryPanel();
@@ -60,7 +61,14 @@ export class HeaderComponent   {
   }
 
   // Retrieves listof available branches for rebasing onto.
-  showRebaseOntoBranches() {
-    return getEveryBranch();
+  async showRebaseOntoBranches(): void {
+    let ontoBranches = await getEveryBranch();
+    console.log("in rebase UI" + ontoBranches);
+    let rebaseOntoBranch = document.getElementById("showOntoBranches");
+    rebaseOntoBranch.innerText = ontoBranches;
+    // return ontoBranches;
+  }
+  getRepos() {
+    return getRecentRepositories();
   }
 }

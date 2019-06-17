@@ -775,23 +775,19 @@ function mergeCommits(from) {
 async function showRebaseModal() {
   $('#rebase-modal').modal('show');
   getRebaseFromBranch();
-  let branches = await getEveryBranch();
-  console.log('out of method: ' + branches);
-  // getRebaseOntoBranches();
+  getRebaseOntoBranch();
+  //console.log('out of method: ' + branches);
 }
 
 function getRebaseFromBranch() {
-  // let sGitRepo = sGit(repoFullPath);
-
   let rebaseFromBranch = document.getElementById("currentBranch");
   rebaseFromBranch.innerText = repoCurrentBranch;
-  
-  // sGitRepo.getRemotes(['verbose'], (err, data) => {
-  //           if(!err){
-  //           console.log('Try 1: Remote url for repository at ' + sGitRepo + ':');
-  //           console.log(data);
-  //           }
-  //         });
+}
+
+async function getRebaseOntoBranch() {
+  let branches = await getEveryBranch();
+  let rebaseOntoBranch = document.getElementById("showOntoBranches");
+  rebaseOntoBranch.innerHTML = branches;
 }
 
 async function getEveryBranch() {

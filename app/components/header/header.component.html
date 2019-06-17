@@ -468,20 +468,15 @@
                     <div class="col-md-9" select-outline>
                       <div>
                         <label for="currentBranch">From: </label>
-                        <b><i id="currentBranch" onclick="getRebaseFromBranch()">{{branch}}</i></b>
+                        <b><i id="currentBranch">{{branch}}</i></b>
                       </div>
                       <div>
                         <label>Onto: </label>
-                        <input type="text" name="branchesRemote" class = "branches-textbox" id="ontoBranchesOpen" list="rebaseOntoBranches"/>
-                        <datalist id="rebaseOntoBranches">
-                          <option *ngFor="let branch of showRebaseOntoBranches">{{branch}}></option>
-                        </datalist>
-                        <!-- <select> -->
-                          <!-- <option *ngFor="let branch of getEveryBranch()">{{branch}}</option> -->
-                          <!-- <ul> -->
-                            <!-- <li *ngFor="let branch of showRebaseOntoBranches">{{branch}}</li> -->
-                          <!-- </ul> -->
-                        <!-- </select> -->
+                        <!-- <option *ngFor="let branch of getEveryBranch()">{{branch}}</option> -->
+                        <select>
+                          <!-- <b><i id="showOntoBranches">{{branch}}</i></b> -->
+                          <option *ngFor="let branch of getRepos()">{{branch}}</option>
+                        </select>
                       </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
