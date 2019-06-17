@@ -1030,7 +1030,7 @@ function displayStashes(){
             document.getElementById("stash-panel-contents")!.hidden = false;
             document.getElementById("stash-drop-panel")!.hidden = true;
           });
-          
+
           //required to prevent default drop handling
           event.preventDefault();
         };
@@ -1062,20 +1062,22 @@ function showStashInfo(index) {
 
 function applyStash(index){
   let sGitRepo = sGit(repoFullPath);
+  addCommand("git stash apply " + index)
   sGitRepo.silent(true).stash(["apply",index]).then((result)=>{
-    addCommand("git stash apply " + index)
+    // no op
   }).catch(function(err) {
     handleStashError(err);
-  });;
+  });
 }
 
 function dropStash(index){
   let sGitRepo = sGit(repoFullPath);
+  addCommand("git stash drop " + index)
   sGitRepo.silent(true).stash(["drop",index]).then((result)=>{
-    addCommand("git stash drop " + index)
+    // no op
   }).catch(function(err) {
     handleStashError(err);
-  });;
+  });
 }
 function isStashListTheSame(list) {
   // get the list of hashes
