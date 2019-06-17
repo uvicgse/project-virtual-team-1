@@ -60,6 +60,7 @@
       </div>
 
       <!--Toolbar-->
+
       <div class="navbar-nav-toolbar hidden-xs toolbar-Container">
           <a class="toolbar-Icons" onclick="openWiki()">
             <i class="fa fa-wikipedia-w fa-lg" title="Open Wiki">
@@ -120,7 +121,6 @@
 
       <!-- Sign in/sign out button -->
       <div class="navbar-nav navbar-right hidden-xs">
-          <!-- <label class ="logout-label" id="githubname" style="color:white"></label> -->
           <div id="Button_Sign_out">
               <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()" title="Sign out">Sign out</a>
               <label class ="logout-label" id="githubname" style="color:white"></label>
@@ -167,7 +167,6 @@
         <li class="download" onclick="pullFromRemote()"><a href="#">&nbsp;&nbsp;push</a></li>
         <li class="clone" onclick="cloneFromRemote()"><a href="#">&nbsp;&nbsp;clone</a></li>
         <li class="clean" onclick="cleanRepo()"><a href="#">&nbsp;&nbsp;clean</a></li>
-        <li class="sync" onclick="requestLinkModal()"><a href="#">&nbsp;&nbsp;sync</a></li>
       </ul>
     </div>
     <div id="cloneProgressDiv" class="progress" style="visibility: collapse">
@@ -342,28 +341,6 @@
   </div><!-- /.modal-dialog -->
 </div>
 
-<div id="fetch-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content" style=" width: 602px !important">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Info</h4>
-      </div>
-      <div class="modal-body" id="modal-text-box">
-        Please provide the HTTP path to the original repository:
-        <input type="text" id="origin-path" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="fetchFromOrigin()">Confirm</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!--Modal for creating a new branch-->
 <div id="branch-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
@@ -448,4 +425,26 @@
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
+</div>
+
+<!--Modal for adding remote upstream repository-->
+<div id="set-upstream-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content" style=" width: 602px !important">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" onclick="clearUpstreamModalText()" class="upstreamModalComponents">&times;</span>
+        </button>
+        <h4 class="modal-title">Info</h4>
+      </div>
+      <div class="modal-body" id="modal-text-box">
+        Please provide the HTTP path to the original repository:
+        <input type="text" id="remote-path" class="form-control" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="setUpstreamButton" onclick="setUpstreamRepo()">Confirm</button>
+      </div>
+    </div>
+  </div>
 </div>

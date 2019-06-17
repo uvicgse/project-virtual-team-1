@@ -376,6 +376,7 @@ function makeBasicNode(c, column: number) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
+    let email = stringer.split("%")[1];
     let flag = true;
     let count = 1;
     let id;
@@ -399,23 +400,30 @@ function makeBasicNode(c, column: number) {
     if (flag) {
         id = basicNodeId++;
         tagid = id + 1;
-
         let title = "Number of Commits: " + count;
         console.log(title);
-        // Add commit nodes to graph
-        bsNodes.add({
-            id: id,
-            shape: "circularImage",
-            title: title,
-            image: img4User(name),
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Basic
-        });
-        // Update node list
+        let imageUrl;
+        
+        // Get the image URL, then create and add the node for the commmit
+        imageForUser(name, email, function (pic) {
+            imageUrl = pic;
+
+            bsNodes.add({
+                id: id,
+                shape: "circularImage",
+                title: title,
+                image: imageUrl,
+                physics: false,
+                fixed: false,
+                x: (column - 1) * spacingX,
+                y: (id - 1) * spacingY,
+                author: c.author(),
+                nodeType: NodeType.Basic
+            });
+
+        });        
+
+
         let shaList = [];
         shaList.push(c.toString());
 
@@ -556,18 +564,25 @@ function makeAbsNode(c, column: number) {
     if (flag) {
         nodeId = absNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
-        // Add commit nodes
-        abNodes.add({
-            id: nodeId,
-            shape: "circularImage",
-            title: title,
-            image: img4User(name),
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (nodeId - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Abstract
+        let imageUrl;
+        
+        // Get the image URL, then create and add the node for the commmit
+        imageForUser(name, email, function (pic) {
+            imageUrl = pic;
+            
+            abNodes.add({
+                id: nodeId,
+                shape: "circularImage",
+                title: title,
+                image: imageUrl,
+                physics: false,
+                fixed: false,
+                x: (column - 1) * spacingX,
+                y: (nodeId - 1) * spacingY,
+                author: c.author(),
+                nodeType: NodeType.Abstract
+            });
+
         });
 
         // Update node list
@@ -695,19 +710,26 @@ function makeNode(c, column: number) {
     }
 
     let flag = false;
-    // Add commit nodes to the graph
-    nodes.add({
-        id: id,
-        shape: "circularImage",
-        title: title,
-        image: img4User(name),
-        physics: false,
-        fixed: false,
-        x: (column - 1) * spacingX,
-        y: (id - 1) * spacingY,
-        author: c.author(),
-        nodeType: NodeType.Node,
-        commitSha: c.sha()
+    let imageUrl;
+    
+    // Get the image URL, then create and add the node for the commmit
+    imageForUser(name, email, function (pic) {
+        imageUrl = pic;
+
+        nodes.add({
+            id: id,
+            shape: "circularImage",
+            title: title,
+            image: imageUrl,
+            physics: false,
+            fixed: false,
+            x: (column - 1) * spacingX,
+            y: (id - 1) * spacingY,
+            author: c.author(),
+            nodeType: NodeType.Node,
+            commitSha: c.sha()
+        });
+
     });
 
     // Add branches to commits, if any exist
