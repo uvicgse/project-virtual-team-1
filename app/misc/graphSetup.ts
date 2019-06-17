@@ -155,8 +155,8 @@ function drawGraph() {
 
         aheadCommitList=[]
         let sGitRepo = sGit(repoFullPath);
-        sGitRepo.silent( true ).log( [ "@{u}.." ] ).then( ( result ) =>
-        {
+        sGitRepo.silent( true ).log( {'--all': null, '@{u}..':null}).then( ( result ) =>
+        {  
             for ( let k = 0; k < result.all.length; k++ )
             {
                 // console.log("hash of unpushed is :" + (result.all[k].hash));
