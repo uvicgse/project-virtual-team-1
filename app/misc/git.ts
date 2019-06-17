@@ -772,31 +772,46 @@ function mergeCommits(from) {
 }
 
 // Rebase modal functionality starts here!
-function showRebaseModal() {
+async function showRebaseModal() {
   $('#rebase-modal').modal('show');
   getRebaseFromBranch();
-  let branches = getEveryBranch();
+  let branches = await getEveryBranch();
   console.log('out of method: ' + branches);
+  // getRebaseOntoBranches();
 }
 
 function getRebaseFromBranch() {
-    let rebaseFromBranch = document.getElementById("currentBranch");
-    rebaseFromBranch.innerText = repoCurrentBranch;
+  // let sGitRepo = sGit(repoFullPath);
+
+  let rebaseFromBranch = document.getElementById("currentBranch");
+  rebaseFromBranch.innerText = repoCurrentBranch;
+  
+  // sGitRepo.getRemotes(['verbose'], (err, data) => {
+  //           if(!err){
+  //           console.log('Try 1: Remote url for repository at ' + sGitRepo + ':');
+  //           console.log(data);
+  //           }
+  //         });
 }
 
 async function getEveryBranch() {
   async function fetchBranches() {
-      let repos;
-      return Git.Repository.open(repoFullPath)
-        .then(function (repo) {
-          repos = repo;
-          return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
-      });
+    let repos;
+    return Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        repos = repo;
+        return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
+    });
   }
-
+  
   let branches = await fetchBranches();
   console.log('In method: ' + branches);
   return branches;
+}
+
+async function getRebaseOntoBranches() {
+  // ontoBranches = await getEveryBranch();
+  // console.log("maybe this works");
 }
 
 function rebaseCommits(from: string, to: string) {

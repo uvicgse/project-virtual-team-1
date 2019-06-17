@@ -58,4 +58,9 @@ export class HeaderComponent   {
   showTagList(): void {
     this.branchSelectedInRefDropdown = false
   }
+
+  // Retrieves listof available branches for rebasing onto.
+  showRebaseOntoBranches() {
+    return getEveryBranch();
+  }
 }
