@@ -1762,6 +1762,7 @@ function setUpstreamRepo() {
       .then(function (repo) {
       repository = repo;
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
+      addCommand("git remote add upstream " + upstreamRepoPath);
       console.log(result)
       result.catch(function(error) {
       if (error.message == "cannot set empty URL"){ //Checking for empty URL in the upstream modal
@@ -1778,6 +1779,42 @@ function setUpstreamRepo() {
     });
   }
   clearUpstreamModalText();
+}
+
+/**
+* This function is called when the user clicks the "Sync" button on the navbar. It syncs from the upstream repository
+* configured in addRemoteRepo()
+*/
+function syncFromFork() {
+  let repository;
+  let commitRef;
+  var fetchOptions = {
+    callbacks: {
+      credentials: function () { return getCredentials(); },
+      certificateCheck: function () { return 1; }
+    }
+  }
+  Git.Repository.open(repoFullPath)
+  .then(function (repo) {
+    repository = repo;
+    var result = Git.Remote.addFetch(repository, 'upstream', 'remotes/upstream/master');
+    return repository.fetch('upstream',fetchOptions) //fetch from upstream
+  }, function (err) {
+    displayModal("Error fetching:"+ err)
+  })
+  .then(function() {
+    return repository.checkoutBranch("master") //checkout master
+  }, function (err) {
+    displayModal("Error checking out branch:"+ err)
+  })
+  .then(function() {
+    return repository.mergeBranches("master", "upstream/master"); //merge upstream/master into master
+  }, function (err) {
+    displayModal("Error merging:"+ err)
+  })
+  .then(function(oid){
+    displayModal("Sync complete!")
+  });
 }
 
 /**
