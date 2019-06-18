@@ -129,6 +129,7 @@
           </div>
       </div>
 
+
       <!-- Hamburger menu -->
       <ul class="nav navbar-nav visible-xs">
         <li (click)="promptUserToAddRepository()"><a>&nbsp;&nbsp;add repository</a></li>
@@ -447,3 +448,150 @@
     </div>
   </div>
 </div>
+
+<!--rebase-->
+<div id="rebase-modal" class="modal fade  " tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg " >
+        <div class="modal-content" >
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Rebase Branch </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-9" select-outline>
+                <div>
+                  <label for="currentBranch">From: </label>
+                  <b><i id="currentBranch">{{branch}}</i></b>
+                </div>
+                <div>
+                  <label>Onto: </label>
+                  <!-- <option *ngFor="let branch of getEveryBranch()">{{branch}}</option> -->
+                  <select id="ontoBranches">
+                    <!-- <b><i id="showOntoBranches">{{branch}}</i></b> -->
+                    <option>{{branch}}</option>
+                  </select>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                  <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+            <div class="modal-footer">
+<!--                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg">Apply Rebase</button>-->
+                <button type="button" class="btn btn-success" data-toggle="modal" data-dismiss="modal" href="#exampleModal">Apply Rebase</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Abort</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  "  style="height: 100%">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Rebasing Commits</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="table-responsive table-hover">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Action</th>
+              <th>Commit</th>
+              <th>Comments</th>
+            </tr>
+            </thead>
+            <tbody class="draggable">
+            <tr>
+              <td><div class="btn-group">
+                <button type="button" class="btn btn-danger">Action</button>
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">squash</a></li>
+                  <li><a href="#">pick</a></li>
+                  <li><a href="#">reword</a></li>
+
+
+                </ul>
+              </div></td>
+              <td>96411f7</td>
+              <td>Reword *_ restore EI Update to use library</td>
+
+
+            </tr>
+            <tr>
+              <td><div class="btn-group">
+                <button type="button" class="btn btn-danger">Action</button>
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">squash</a></li>
+                  <li><a href="#">pick</a></li>
+                  <li><a href="#">reword</a></li>
+
+
+                </ul>
+              </div></td>
+              <td>5425d73</td>
+              <td>On-attach spec file new line removed</td>
+
+
+            </tr>
+            <tr>
+              <td><div class="btn-group">
+                <button type="button" class="btn btn-danger">Action</button>
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">squash</a></li>
+                  <li><a href="#">pick</a></li>
+                  <li><a href="#">reword</a></li>
+
+
+                </ul>
+              </div></td>
+              <td>0d68911</td>
+              <td>Test did not show usage</td>
+
+
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue Rebase </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
