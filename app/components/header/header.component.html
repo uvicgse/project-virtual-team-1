@@ -463,27 +463,30 @@
             </div>
 
             <!-- Modal body -->
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-9" select-outline>
-                      <div>
-                        <label for="currentBranch">From: </label>
-                        <b><i id="currentBranch" onclick="getRebaseFromBranch()">{{branch}}</i></b>
-                      </div>
-                      <div>
-                        <label>Onto: </label>
-                        <select>
-                            <option *ngFor="let branch of getEveryBranch()">{{branch}}</option>
-                        </select>
-                      </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                            <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
-                        </div>
-                    </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-9" select-outline>
+                <div>
+                  <label for="currentBranch">From: </label>
+                  <b><i id="currentBranch">{{branch}}</i></b>
                 </div>
+                <div>
+                  <label>Onto: </label>
+                  <!-- <option *ngFor="let branch of getEveryBranch()">{{branch}}</option> -->
+                  <select id="ontoBranches">
+                    <!-- <b><i id="showOntoBranches">{{branch}}</i></b> -->
+                    <option>{{branch}}</option>
+                  </select>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                  <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
+                </div>
+              </div>
             </div>
-            <!-- Modal footer -->
+          </div>
+
+          <!-- Modal footer -->
             <div class="modal-footer">
 <!--                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg">Apply Rebase</button>-->
                 <button type="button" class="btn btn-success" data-toggle="modal" data-dismiss="modal" href="#exampleModal">Apply Rebase</button>
