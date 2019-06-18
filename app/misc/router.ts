@@ -18,6 +18,7 @@ function switchToClonePanel() {
   hideFilePanel();
   hidePullRequestPanel();
   hideGraphPanel();
+  hideFooter();
   displayClonePanel();
 }
 
@@ -26,6 +27,7 @@ function switchToMainPanel() {
   hideAddRepositoryPanel();
   displayFilePanel();
   displayPullRequestPanel();
+  displayFooter();
   displayGraphPanel();
 
   openDisabled = false;
@@ -74,7 +76,7 @@ function switchToAddRepositoryPanel() {
   inTheApp = true
   console.log("Switching to add repo panel");
   useRecentRepositories();
-
+  hideFooter();
   hideAuthenticatePanel();
   hideFilePanel();
   hidePullRequestPanel();
@@ -319,6 +321,15 @@ function hideDiffPanelButtons() {
   disableDiffPanelEditOnHide();
 }
 
+function hideFooter(){
+  document.getElementById("terminal")!.style.visibility = "hidden";
+  document.getElementById("stash-panel")!.style.visibility = "hidden";
+}
+function displayFooter(){
+  document.getElementById("terminal")!.style.visibility = "visible";
+  document.getElementById("stash-panel")!.style.visibility = "visible";
+}
+
 function disableSaveCancelButton() {
   let saveButton = <HTMLInputElement>document.getElementById("save-button");
   let cancelButton = <HTMLInputElement>document.getElementById("cancel-button");
@@ -371,7 +382,7 @@ function createRecentRepositories(file) {
 // Check if repos.json exists
 function useRecentRepositories() {
     let file = 'repos.json';
-    
+
     if (!fs.existsSync(file)) {
         console.log(file + ' does not exist');
         createRecentRepositories(file);

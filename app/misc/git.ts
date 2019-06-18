@@ -969,24 +969,18 @@ function stashChanges() {
 /**
  * Pop a single stashed state from the top of the stash list
  */
-function popStash() {
-  Git.Repository.open(repoFullPath)
-  .then(function (repo) {
-    addCommand("git stash pop")
-
-    let stashIndex = 0; // 0 --> top of the stack
-    Git.Stash.pop(repo, stashIndex)
-    .then(function(result) {
-      // unfortunately the result is ALWAYS undefined
-    }).catch(function(err) {
-      handleStashError(err)
-    }).done(function() {
-      doneStash()
-    });
+function popStash(index) {
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.silent(true).stash(["pop",index]).then((result)=>{
+    addCommand("git stash pop " + index)
+  }).catch(function(err) {
+    handleStashError(err);
   });
 }
 
-
+/**
+ * Queries for stash list and displays it
+ */
 function displayStashes(){
   let sGitRepo = sGit(repoFullPath);
 
@@ -997,25 +991,122 @@ function displayStashes(){
       let stashList = document.getElementById("stash-list")!;
       stashList.innerHTML = "";
       // update the list
-      list.all.forEach(element => {
+      list.all.forEach((element,key) => {
+        //generate list element
         let stashElement = document.createElement("li");
-        stashElement.className = "list-group-item stash-list-item";
+        stashElement.className = "list-group-item stash-list-item list-group-item-action";
         stashElement.innerHTML = element.message;
+        //allow showing of stash info on click
+        stashElement.onclick = function () {
+          showStashInfo(key);
+        }
+
+        //generate apply button
+        let applyButton = document.createElement("i");
+        applyButton.className = "fa fa-arrow-circle-up fa-2x";
+        applyButton.onclick = function (event){
+          //stop propgation required to not activate on show
+          event.stopPropagation();
+          applyStash(key);
+        };
+        applyButton.title = "Apply Stash";
+
+        //generate drop button
+        let dropButton = document.createElement("i");
+        dropButton.className = "fa fa-trash fa-2x";
+        dropButton.onclick = function (event){
+          //stop propgation required to not activate on show
+          event.stopPropagation();
+          dropStash(key);
+        };
+        dropButton.title = "Drop Stash";
+
+        let buttons = document.createElement("div");
+        buttons.className = "pull-right";
+        buttons.style.display = "inline-block";
+
+        //add buttons to list element
+        buttons.appendChild(dropButton);
+        buttons.appendChild(applyButton);
+        stashElement.prepend(buttons);
+
+        //allow drag and drop
+        stashElement.draggable =true;
+
+        stashElement.ondragstart = function (event){
+          //visually show drop zone
+          document.getElementById("graph-panel")!.classList.add("dropzone");
+          event.dataTransfer!.effectAllowed = 'move';
+          //generate data payload
+          let payload = {
+            operation: "stash",
+            index: key
+          };
+          event.dataTransfer!.setData("text", JSON.stringify(payload));
+
+          window.requestAnimationFrame(function(){
+            document.getElementById("stash-panel-contents")!.hidden = true;
+            document.getElementById("stash-drop-panel")!.hidden = false;
+          });
+        }
+
+        stashElement.ondragend = function (event){
+          //remove dropzone styling
+          document.getElementById("graph-panel")!.classList.remove("dropzone");
+
+          window.requestAnimationFrame(function(){
+            document.getElementById("stash-panel-contents")!.hidden = false;
+            document.getElementById("stash-drop-panel")!.hidden = true;
+          });
+
+          //required to prevent default drop handling
+          event.preventDefault();
+        };
+
+        //add list element to list
         stashList.appendChild(stashElement);
       });
     }
 
-    // do this anyway, just to make sure we can see it.
+    //hide stash list panel if there are no stashes to show
     if(list.all.length > 0){
-      document.getElementById("stashed-files-message")!.hidden =true;
-      document.getElementById("pop-stash-list")!.style.display = "block";
+      document.getElementById("stash-panel-wrapper")!.hidden =false;
     } else {
-      document.getElementById("stashed-files-message")!.hidden = false;
-      document.getElementById("pop-stash-list")!.style.display = "none";
+      document.getElementById("stash-panel-wrapper")!.hidden = true;
     }
   });
 }
 
+function showStashInfo(index) {
+  let sGitRepo = sGit(repoFullPath);
+  let stashIndex = ("stash@{" + index + "}");
+  addCommand("git stash show " + stashIndex);
+  sGitRepo.silent(true).stash(["show", stashIndex]).then((result)=> {
+    updateModalText(result);
+  }).catch(function(err) {
+    handleStashError(err);
+  });
+}
+
+function applyStash(index){
+  let sGitRepo = sGit(repoFullPath);
+  addCommand("git stash apply " + index)
+  sGitRepo.silent(true).stash(["apply",index]).then((result)=>{
+    // no op
+  }).catch(function(err) {
+    handleStashError(err);
+  });
+}
+
+function dropStash(index){
+  let sGitRepo = sGit(repoFullPath);
+  addCommand("git stash drop " + index)
+  sGitRepo.silent(true).stash(["drop",index]).then((result)=>{
+    // no op
+  }).catch(function(err) {
+    handleStashError(err);
+  });
+}
 function isStashListTheSame(list) {
   // get the list of hashes
   let currStashHashList = []
