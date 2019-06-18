@@ -1719,9 +1719,6 @@ function unpushedCommitsModal() {
     document.getElementById("ahead_count").innerHTML = status.ahead;
     document.getElementById("behind_count").innerHTML = status.behind;
 
-    //we don't need to log these on a continuous basis
-    //console.log(status.ahead);
-    //console.log(status.behind);
   });
 
 }

@@ -32,11 +32,21 @@ let branchIds = [];
 let tagIds = [];
 let unumberPrev = 0;
 let selectedCommit: string;
+var aheadCommitList: any[] =[];
+
+
+/*
+Types of nodes in the network.
+    Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
+    Node = Commit node in the lowest zoom level (2rd level). Represents a a single commit
+    Branch = Represents a branch reference. Is linked to a single commit node
+    Tag = Represents a tag reference. Is linked to a single commit node
+*/
 
 /* 
 Types of nodes in the network.
     Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
-    Node = Commit node in the lowest zoom level (3rd level). Represents a a single commit
+    Node = Commit node in the lowest zoom level (2rd level). Represents a a single commit
     Branch = Represents a branch reference. Is linked to a single commit node
     Tag = Represents a tag reference. Is linked to a single commit node
 */
@@ -208,9 +218,19 @@ function populateCommits(oldResult) {
                 }
             }
 
+            /*Issue 150
+             * Iterate through the array of aheadCommitList commits ID And compare*/
+            let isUnpushCommit = false
+            for(var a = 0 ; a < aheadCommitList.length; a++){
+                if (commitHistory[i] == aheadCommitList[a]) {
+                    isUnpushCommit=true;
+                    break;
+
+                }
+            }
             // Create the three levels nodes for zoom in the graph
-            makeNode(commitHistory[i], nodeColumn);
-            makeBasicNode(commitHistory[i], nodeColumn);
+            makeNode(commitHistory[i], nodeColumn, isUnpushCommit);
+            makeBasicNode(commitHistory[i], nodeColumn, isUnpushCommit);
         }
 
         // Add edges
@@ -311,14 +331,14 @@ function sortBasicGraph() {
     }
 }
 
-function makeBasicNode(c, column: number) {
+function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
     let email = stringer.split("%")[1];
     let flag = true;
     let count = 1;
-    let nodeId;
+    let id;
     if (c.parents().length === 1) {
         let cp = c.parents()[0].toString();
         for (let i = 0; i < basicList.length; i++) {
@@ -328,32 +348,60 @@ function makeBasicNode(c, column: number) {
                 basicList[i]['count'] += 1;
                 count = basicList[i]['count'];
                 basicList[i]['sha'].push(c.toString());
-                nodeId = i+1;
-                bsNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
+                id = i+1;
+                bsNodes.update({id: id, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
                 break;
             }
         }
     }
 
     if (flag) {
-        nodeId = basicNodeId++;
+        id = basicNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
         console.log(title);
         let imageUrl;
-        
-        // Get the image URL, then create and add the node for the commmit
+        let colorData = {};
+        if ( isUnpushCommit )
+        {
+        colorData= {
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
+            hover: {
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
+                }
+            }
+        }
+
+        // Create node with default icon
+        bsNodes.add({
+            id: id,
+            shape: "circularImage",
+            title: title,
+            image: getLetterIcon(name),
+            color: colorData,
+            physics: false,
+            fixed: false,
+            x: (column - 1) * spacingX,
+            y: (id - 1) * spacingY,
+            author: c.author(),
+            nodeType: NodeType.Basic
+        });
+
+        // Get the image URL, then update the node for the commmit
         imageForUser(name, email, function (pic) {
             imageUrl = pic;
 
-            bsNodes.add({
-                id: nodeId,
+            bsNodes.update({
+                id: id,
                 shape: "circularImage",
                 title: title,
                 image: imageUrl,
+                color: colorData,
                 physics: false,
                 fixed: false,
                 x: (column - 1) * spacingX,
-                y: (nodeId - 1) * spacingY,
+                y: (id - 1) * spacingY,
                 author: c.author(),
                 nodeType: NodeType.Basic
             });
@@ -365,7 +413,7 @@ function makeBasicNode(c, column: number) {
 
         basicList.push({
             sha: shaList,
-            id: nodeId,
+            id: id,
             time: c.timeMs(),
             column: column,
             email: email,
@@ -385,7 +433,7 @@ function makeBasicNode(c, column: number) {
             if (branchName.isHead()) {
                 shortName = "*" + shortName;
             }
-            let bsnodeId = generateUniqueNumber();
+            let bsnodeId = shortName;
             bsNodes.add({
                 id: bsnodeId,
                 shape: "icon",
@@ -403,13 +451,13 @@ function makeBasicNode(c, column: number) {
                 physics: false,
                 fixed: false,
                 x: (column - 0.6 * (i + 1)) * spacingX,
-                y: (nodeId - 0.3) * spacingY,
+                y: (id - 0.3) * spacingY,
                 nodeType: NodeType.Branch
             });
 
             bsEdges.add({
                 from: bsnodeId,
-                to: nodeId,
+                to: id,
                 color: '#3399ff'
             });
         }
@@ -425,7 +473,7 @@ function makeBasicNode(c, column: number) {
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }
-            let bsnodeId = generateUniqueNumber();
+            let bsnodeId = shortTagName;
             bsNodes.add({
                 id: bsnodeId,
                 // shape: "ellipse", // old shape
@@ -445,12 +493,12 @@ function makeBasicNode(c, column: number) {
                 physics: false,
                 fixed: false,
                 x: (column - 0.6 * (i + 1)) * tagSpacingX,
-                y: (nodeId - 0.3) * tagSpacingY,
+                y: (id - 0.3) * tagSpacingY,
             });
 
             bsEdges.add({
                 from: bsnodeId,
-                to: nodeId,
+                to: id,
                 dashes: true,
                 color: '#ff8080',
                 arrows: {
@@ -462,9 +510,8 @@ function makeBasicNode(c, column: number) {
         }
     }
 }
-
 // Create lowest level of the graph's zoom.
-function makeNode(c, column: number) {
+function makeNode(c, column: number, isUnpushCommit : boolean) {
     let id = nodeId++;
     let reference;
     let name = getName(c.author().toString());
@@ -484,26 +531,34 @@ function makeNode(c, column: number) {
     }
 
     let flag = false;
-    let imageUrl;
+  
+    let colorData = {}
+    if ( isUnpushCommit )
+    {
+
+        colorData= {
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
+            hover: {
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
+            }
+        }
+    }
     
-    // Get the image URL, then create and add the node for the commmit
-    imageForUser(name, email, function (pic) {
-        imageUrl = pic;
-
-        nodes.add({
-            id: id,
-            shape: "circularImage",
-            title: title,
-            image: imageUrl,
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Node,
-            commitSha: c.sha()
-        });
-
+    nodes.add({
+        id: id,
+        shape: "circularImage",
+        title: title,
+        image: img4User(name),
+        physics: false,
+        fixed: false,
+        color: colorData,
+        x: (column - 1) * spacingX,
+        y: (id - 1) * spacingY,
+        author: c.author(),
+        nodeType: NodeType.Node,
+        commitSha: c.sha()
     });
 
     // Add branches to commits, if any exist

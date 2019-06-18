@@ -563,7 +563,7 @@ function refreshReferences(verbose, force) {
     var selectMenuList = document.getElementsByClassName("select-menu-list");
     Array.prototype.forEach.call(selectMenuList, function (list) {
         list.innerHTML = '';
-    })
+    });
   }
 
 // Adding features to branch dropdown menu
@@ -652,6 +652,21 @@ function refreshReferences(verbose, force) {
     button.setAttribute("class", "btn btn-danger");
     button.innerHTML = "Delete";
 
+    // display tag in delete list on graph
+    var deleteDropdownList = document.getElementById("deleteTagList");
+    var deleteChilds = deleteDropdownList.childNodes;
+    var createNewDelTag = true;
+    for(i = 0; i < deleteChilds.length; i++) {
+      if(deleteChilds[i].firstChild.innerHTML == name) {
+        createNewDelTag = false;
+      }
+    }
+
+    // if the tag is not in the delete list, create a new list item
+    if (createNewDelTag) {
+      displayTagDeleteList(name);
+    }
+
     // deleting a tag
     button.onclick = (event) => {
 
@@ -678,6 +693,47 @@ function refreshReferences(verbose, force) {
     a.appendChild(span);
     li.appendChild(a);
     tagList.appendChild(li);
+  }
+
+  // populate delete tag dropdown
+  function displayTagDeleteList(name) {
+
+    // create HTML element for tag list dropdown
+    var parentDropdownList = document.getElementById("deleteTagList");
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+
+    // set HTML attributes
+    li.setAttribute("class", "list-item delete-list-item");
+    a.innerHTML = name;
+
+    // deleting a tag
+    li.onclick = () => {
+
+      updateModalText("Tag sucessfully deleted - refresh to see the updated graph. ");
+
+      let repo;
+      Git.Repository.open(repoFullPath)
+        .then(function(repoParam) {
+          repo = repoParam;
+        })
+        .then(function(){
+          return Git.Tag.delete(repo, name);
+        }
+      ).catch(function(msg) {
+        let errorMessage = "Error: " + msg.message;
+      });
+
+      var parentList = document.getElementById("deleteTagList");
+      var deleteChildren = parentList.childNodes;
+      for( i = 0; i < deleteChildren.length; i++ ) {
+        if (deleteChildren[i].firstChild.innerHTML == name) {
+          deleteChildren[i].remove();
+        }
+      }
+    }
+    li.appendChild(a);
+    parentDropdownList.appendChild(li);
   }
 
   function createDropDownFork(name, id) {
