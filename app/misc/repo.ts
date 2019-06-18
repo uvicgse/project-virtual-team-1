@@ -710,6 +710,8 @@ function refreshReferences(verbose, force) {
     // deleting a tag
     li.onclick = () => {
 
+      updateModalText("Tag sucessfully deleted - refresh to see the updated graph. ");
+
       let repo;
       Git.Repository.open(repoFullPath)
         .then(function(repoParam) {
@@ -724,8 +726,6 @@ function refreshReferences(verbose, force) {
 
       var parentList = document.getElementById("deleteTagList");
       var deleteChildren = parentList.childNodes;
-      console.log("CHILLUN: ");
-      console.log(deleteChildren);
       for( i = 0; i < deleteChildren.length; i++ ) {
         if (deleteChildren[i].firstChild.innerHTML == name) {
           deleteChildren[i].remove();
