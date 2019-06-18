@@ -748,13 +748,17 @@ div.selected-commit-diff-panel button.close-button {
 
 .container-fluid.row {
   /* the header */
-  max-height: 65px;
+  max-height: 55px;
 }
 
 .fa {
   /* All font-awesome assets */
   /* Would prefer to use font-awesome 5.0+ */
   color: white;
+}
+
+.toolbar-Icons{
+    padding: 3px;
 }
 
 .toolbar-Icons:hover {
@@ -769,6 +773,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-wikipedia-w:hover span{
     display: block;
     position: absolute;
+    transform: translate(15%, -5%);
     font-family: sans-serif;
 }
 
@@ -779,6 +784,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-plus-circle:hover span{
     display: block;
     position: absolute;
+    transform: translate(-27%, -5%);
     font-family: sans-serif;
 }
 
@@ -789,6 +795,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-cloud-upload:hover span{
     display: block;
     position: absolute;
+    transform: translate(-2%, -5%);
     font-family: sans-serif;
 }
 
@@ -799,6 +806,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-cloud-download:hover span{
     display: block;
     position: absolute;
+    transform: translate(10%, -5%);
     font-family: sans-serif;
 }
 
@@ -809,6 +817,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-recycle:hover span{
     display: block;
     position: absolute;
+    transform: translate(-15%, -5%);
     font-family: sans-serif;
 }
 
@@ -819,6 +828,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-pagelines:hover span{
     display: block;
     position: absolute;
+    transform: translate(-27%, -5%);
     font-family: sans-serif;
 }
 
@@ -829,6 +839,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-history:hover span{
     display: block;
     position: absolute;
+    transform: translate(-27%, -5%);
     font-family: sans-serif;
 }
 
@@ -839,6 +850,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-star:hover span{
     display: block;
     position: absolute;
+    transform: translate(-15%, -5%);
     font-family: sans-serif;
 }
 
@@ -849,6 +861,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-chevron-up:hover span{
     display: block;
     position: absolute;
+    transform: translate(-27%, -5%);
     font-family: sans-serif;
 }
 
@@ -859,6 +872,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-share-alt:hover span{
     display: block;
     position: absolute;
+    transform: translate(-15%, -5%);
     font-family: sans-serif;
 }
 
@@ -869,6 +883,7 @@ div.selected-commit-diff-panel button.close-button {
 .fa-refresh:hover span{
     display: block;
     position: absolute;
+    transform: translate(-27%, -5%);
     font-family: sans-serif;
 }
 
@@ -926,7 +941,7 @@ div.selected-commit-diff-panel button.close-button {
 
 .toolbar-Text {
   font-size: 14px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   color: white;
 }
 
