@@ -640,6 +640,7 @@ function refreshReferences(verbose, force) {
     let a = document.createElement("a");
     let span = document.createElement("span");
     let button = document.createElement("span");
+    let checkoutButton = document.createElement("span");
 
     // set HTML attributes
     a.setAttribute("href", "#");
@@ -651,6 +652,7 @@ function refreshReferences(verbose, force) {
     button.setAttribute("id", name);
     button.setAttribute("class", "btn btn-danger");
     button.innerHTML = "Delete";
+    checkoutButton.setAttribute
 
     // deleting a tag
     button.onclick = (event) => {
@@ -670,6 +672,8 @@ function refreshReferences(verbose, force) {
         let errorMessage = "Error: " + msg.message;
       });
     }
+
+    // TODO: checkout a tag
 
     // create tag element in list
     span.appendChild(button);
@@ -748,11 +752,36 @@ function refreshReferences(verbose, force) {
 
   // TODO: fully impelement
   function checkoutLocalTag(element) {
-
+    let button;   // entry in branch drop-down
+    let img = "<img"
+    if (typeof element === "string") {
+      button = element;
+    } else {
+      button = element.innerHTML;
+    }
+    if (button.includes(img)) {
+      button = button.substr(0, button.lastIndexOf(img)) // remove local branch <img> tag from branch name string
+      if (button.includes(img)) {
+        button = button.substr(0, button.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
+      }
+    }
+    console.log("name of tag being checked out: " + button);
+    Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        document.getElementById('spinner').style.display = 'block';
+        addCommand("git checkout " + button);
+        repo.checkoutBranch("refs/tags/" + button)
+          .then(function () {
+            refreshAll(repo);
+          }, function (err) {
+            console.log("repo.ts, cannot checkout local tag: " + err);
+          });
+      })
   }
 
   // TODO: implement
   function checkoutRemoteTag(element) {
+
   }
 
   function checkoutRemoteBranch(element) {
