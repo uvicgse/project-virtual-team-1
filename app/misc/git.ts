@@ -1648,6 +1648,7 @@ function clearUpstreamModalText() {
  */
 function showUpstreamDelete() {
   $('#delete-upstream-modal').modal('show');
+  clearUpstreamModalText();
 }
 
 /**
