@@ -48,6 +48,9 @@ function changeColor(color) {
   let editorIndentSelector = document.getElementById('indent-selector-p');
   let editorIndentDropdown = document.getElementById('selected-indent');
 
+  let stashTitle = document.getElementById("stash-list-title");
+  let stashes = document.getElementsByClassName("stash-list-item");
+
   if (color === 'white') {
     for (let i = 0; i < head.length; i++) {
       console.log(head[i]);
@@ -71,6 +74,10 @@ function changeColor(color) {
     for (let i = 0; i < h1.length; i++) {
       h1[i].style.color = '#5E5E5E';
     }
+    for (let i = 0; i < stashes.length; i++){
+      stashes[i].style.color = "#000000";
+      stashes[i].style.borderColor = "#000000";
+    }
 
     changeTextColor('#fff');
 
@@ -87,6 +94,7 @@ function changeColor(color) {
     stagedTitle.style.color = '#000000';
     diffChangePopUp.style.backgroundColor = '#E3E3E3';
     commitDiffPanel.style.backgroundColor = '#302f2f';
+    stashTitle.style.color = '#000000';
 
     if (modifiedMessageColor != null) {
       modifiedMessageColor.style.color = '#000000';
@@ -118,6 +126,10 @@ function changeColor(color) {
         for (var i = 0; i < h1.length; i++) {
             h1[i].style.color = '#FFA3A3'; 
         }
+        for (let i = 0; i < stashes.length; i++){
+          stashes[i].style.color = "#000000";
+          stashes[i].style.borderColor = "#000000";
+        }
 
         changeTextColor('#000000');
 
@@ -135,6 +147,7 @@ function changeColor(color) {
         stagedTitle.style.color = '#fff';
         diffChangePopUp.style.backgroundColor = '#FFD7D7';
         commitDiffPanel.style.backgroundColor = '#fff';
+        stashTitle.style.color = '#000000';
 
         if (modifiedMessageColor != null) {
           modifiedMessageColor.style.color = '#fff';
@@ -166,6 +179,10 @@ function changeColor(color) {
           for (var i = 0; i < h1.length; i++) {
               h1[i].style.color = '#4EAFFE'; 
           }
+          for (let i = 0; i < stashes.length; i++){
+            stashes[i].style.color = "#000000";
+            stashes[i].style.borderColor = "#000000";
+          }
 
           changeTextColor('#000000');
 
@@ -183,6 +200,7 @@ function changeColor(color) {
           stagedTitle.style.color = '#fff';
           diffChangePopUp.style.backgroundColor = '#B6DEFF';
           commitDiffPanel.style.backgroundColor = '#fff';
+          stashTitle.style.color = '#000000';
          
           if (modifiedMessageColor != null) {
             modifiedMessageColor.style.color = '#fff';
@@ -214,6 +232,10 @@ function changeColor(color) {
           for (var i = 0; i < h1.length; i++) {
               h1[i].style.color = '#001C83';
           }
+          for (let i = 0; i < stashes.length; i++){
+            stashes[i].style.color = "#000000";
+            stashes[i].style.borderColor = "#000000";
+          }
 
           changeTextColor('#000000');
 
@@ -232,6 +254,7 @@ function changeColor(color) {
           stagedTitle.style.color = '#fff';
           diffChangePopUp.style.backgroundColor = '#0066FF';
           commitDiffPanel.style.backgroundColor = '#fff';
+          stashTitle.style.color = '#000000';
           
           if (modifiedMessageColor != null) {
             modifiedMessageColor.style.color = '#fff';
@@ -263,6 +286,10 @@ function changeColor(color) {
           for (var i = 0; i < h1.length; i++) {
               h1[i].style.color = '#00990d'; 
           }
+          for (let i = 0; i < stashes.length; i++){
+            stashes[i].style.color = "#000000";
+            stashes[i].style.borderColor = "#000000";
+          }
 
           changeTextColor('#000000');
 
@@ -280,6 +307,7 @@ function changeColor(color) {
           stagedTitle.style.color = '#fff';
           diffChangePopUp.style.backgroundColor = '#ADEBAD';
           commitDiffPanel.style.backgroundColor = '#fff';
+          stashTitle.style.color = '#000000';
           
           if (modifiedMessageColor != null) {
           modifiedMessageColor.style.color = '#fff';
@@ -313,6 +341,10 @@ function changeColor(color) {
     for (let i = 0; i < h1.length; i++) {
       h1[i].style.color = '#ccc';
     }
+    for (let i = 0; i < stashes.length; i++){
+      stashes[i].style.color = "lightgray";
+      stashes[i].style.borderColor = "lightgray";
+    }
 
     changeTextColor('#fff');
 
@@ -329,6 +361,7 @@ function changeColor(color) {
     stagedTitle.style.color = '#fff';
     diffChangePopUp.style.backgroundColor = '#282828';
     commitDiffPanel.style.backgroundColor = '#282828';
+    stashTitle.style.color = 'lightgray';
 
     if (modifiedMessageColor != null) {
       modifiedMessageColor.style.color = '#fff';

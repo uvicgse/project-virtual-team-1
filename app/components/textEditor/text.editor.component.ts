@@ -40,6 +40,26 @@ export class TextEditorComponent {
     }
   }
 
+  // This function is used to rename files.
+  renameFile(): void {
+    // Get the rename input element and then click it.
+    let fileRenameInput = document.getElementById("rename-filepicker-editor");
+    if (fileRenameInput != null) {
+      fileRenameInput.value = "";
+      fileRenameInput.click();
+    }
+  }
+
+  // This function is used to move files.
+  moveFile(): void {
+    // Get the move input element and then click it.
+    let fileMoveInput = document.getElementById("move-filepicker-editor");
+    if (fileMoveInput != null) {
+      fileMoveInput.value = "";
+      fileMoveInput.click();
+    }
+  }
+
   /*
     This function is called when a file is uploaded.
     It's purpose is to create a tab for the new file
@@ -55,6 +75,10 @@ export class TextEditorComponent {
       let files = (<HTMLInputElement>fileOpenInput).files!;
 
       if (files != null) {
+        // Set current filename for file rename modal dialog
+        document.getElementById("currentFilename")!.innerHTML = (<HTMLInputElement>fileOpenInput).files[0].webkitRelativePath;
+        (<HTMLInputElement>document.getElementById("renameFilename")!).value = (<HTMLInputElement>fileOpenInput).files[0].webkitRelativePath;
+
         // This runs when the reader has finished reading the file.
         reader.onload = (e) => {
           this.latestFileId++;
@@ -302,6 +326,29 @@ export class TextEditorComponent {
       }
     } else if (saveButton != null) {
       saveButton.innerHTML = "Save";
+    }
+  }
+
+  /*
+    This function sets current and default filename for the file rename dialog before opening the modal dialog
+   */
+  renameFileFromEditor(event?: Event):void {
+    if (event){
+      (<HTMLInputElement>document.getElementById("currentFilename")!).innerHTML = event.target.files[0].path;
+      (<HTMLInputElement>document.getElementById("renameFilename")!).value = event.target.files[0].path;
+      $('#rename-file-modal').modal('show');
+    }
+  }
+
+  /*
+This function sets current and default folder for the file move dialog before opening the modal dialog
+ */
+  moveFileFromEditor(event?: Event):void {
+    if (event) {
+      (<HTMLInputElement>document.getElementById("currentFilename")!).innerHTML = event.target.files[0].path;
+      (<HTMLInputElement>document.getElementById("currentFolderPath")!).innerHTML = repoFullPath;
+      (<HTMLInputElement>document.getElementById("moveFileToFolder")!).value = repoFullPath;
+      $('#move-file-modal').modal('show');
     }
   }
 
