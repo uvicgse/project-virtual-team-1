@@ -1,4 +1,6 @@
 import * as nodegit from "git";
+import * as simplegit from 'simple-git/promise';
+let sGit = require( 'simple-git/promise' );
 
 let vis = require("vis");
 let $ = require("jquery");
@@ -148,8 +150,32 @@ function drawGraph() {
         },
     };
     network = new vis.Network(container, bsData, options);
-    getAllCommits(function(commits) {
-        processGraph(commits);
+    getAllCommits( function ( commits ){
+        // first fetching local commit so that we can mark them during processGraph
+        aheadCommitList=[]
+        let sGitRepo = sGit(repoFullPath);
+        sGitRepo.silent( true ).log( { '--branches': null, '--not': null, '--remotes': null } ).then( ( result ) =>
+        {  
+            //collect all branches unpush commits using:- git log --branches --not --remotes
+            for ( let k = 0; k < result.all.length; k++ )
+            {
+                aheadCommitList.push( result.all[ k ].hash );
+            }
+        } ).then(() => sGitRepo.silent( true ).log( { 'origin/master..master': null } )).then(( result ) =>
+        {  
+            //add unpush commit on master using:- git log origin/master..master
+            for ( let k = 0; k < result.all.length; k++ )
+            {
+                aheadCommitList.push( result.all[ k ].hash );
+            }
+        }).catch(function (err) {
+            console.log("ERROR!! unable to load local Only commits becuase: "+err.message);
+        } ).then( function (){
+            processGraph( commits );
+        } ).catch( function ( err ){ 
+            console.log(err)
+        } );
+        
 
         network.on("stabilizationIterationsDone", function () {
             network.setOptions({physics: false});

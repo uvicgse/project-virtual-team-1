@@ -36,6 +36,17 @@ let branchIds = [];
 let tagIds = [];
 let unumberPrev = 0;
 let selectedCommit: string;
+var aheadCommitList: any[] =[];
+
+
+/*
+Types of nodes in the network.
+    Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
+    Abstract = Commit node in the second zoom level . Represents a collection of commits
+    Node = Commit node in the lowest zoom level (3rd level). Represents a a single commit
+    Branch = Represents a branch reference. Is linked to a single commit node
+    Tag = Represents a tag reference. Is linked to a single commit node
+*/
 
 enum NodeType{Basic, Abstract, Node, Branch, Tag}
 
@@ -191,10 +202,20 @@ function populateCommits(oldResult) {
                 }
             }
 
+            /*Issue 150
+             * Iterate through the array of aheadCommitList commits ID And compare*/
+            let isUnpushCommit = false
+            for(var a = 0 ; a < aheadCommitList.length; a++){
+                if (commitHistory[i] == aheadCommitList[a]) {
+                    isUnpushCommit=true;
+                    break;
+
+                }
+            }
             // Create the three levels nodes for zoom in the graph
-            makeNode(commitHistory[i], nodeColumn);
-            makeAbsNode(commitHistory[i], nodeColumn);
-            makeBasicNode(commitHistory[i], nodeColumn);
+            makeNode(commitHistory[i], nodeColumn, isUnpushCommit);
+            makeAbsNode(commitHistory[i], nodeColumn, isUnpushCommit);
+            makeBasicNode(commitHistory[i], nodeColumn, isUnpushCommit);
         }
 
         // Add edges
@@ -372,7 +393,7 @@ function makeBranchColor(oldResult) {
 }
 
 // Create highest level of the graph's zoom. This is the first graph displayed upon launch.
-function makeBasicNode(c, column: number) {
+function makeBasicNode(c, column: number, isUnpushCommit : boolean) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -401,28 +422,33 @@ function makeBasicNode(c, column: number) {
         id = basicNodeId++;
         tagid = id + 1;
         let title = "Number of Commits: " + count;
-        console.log(title);
-        let imageUrl;
-        
-        // Get the image URL, then create and add the node for the commmit
-        imageForUser(name, email, function (pic) {
-            imageUrl = pic;
 
-            bsNodes.add({
-                id: id,
-                shape: "circularImage",
-                title: title,
-                image: imageUrl,
-                physics: false,
-                fixed: false,
-                x: (column - 1) * spacingX,
-                y: (id - 1) * spacingY,
-                author: c.author(),
-                nodeType: NodeType.Basic
-            });
-
-        });        
-
+        console.log( title );
+        let colorData = {};
+        if ( isUnpushCommit )
+        {
+        colorData= {
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
+            hover: {
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
+                }
+            }
+        }
+        bsNodes.add({
+            id: id,
+            shape: "circularImage",
+            title: title,
+            image: img4User( name ),
+            color: colorData,
+            physics: false,
+            fixed: false,
+            x: (column - 1) * spacingX,
+            y: (id - 1) * spacingY,
+            author: c.author(),
+            nodeType: NodeType.Basic
+        });
 
         let shaList = [];
         shaList.push(c.toString());
@@ -535,9 +561,8 @@ function makeBasicNode(c, column: number) {
         }
     }
 }
-
 // Create second level of the graph's zoom.
-function makeAbsNode(c, column: number) {
+function makeAbsNode(c, column: number, isUnpushCommit : boolean) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
@@ -564,24 +589,31 @@ function makeAbsNode(c, column: number) {
     if (flag) {
         nodeId = absNodeId++;
         let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
-        let imageUrl;
-        
-        // Get the image URL, then create and add the node for the commmit
-        imageForUser(name, email, function (pic) {
-            imageUrl = pic;
-            
-            abNodes.add({
-                id: nodeId,
-                shape: "circularImage",
-                title: title,
-                image: imageUrl,
-                physics: false,
-                fixed: false,
-                x: (column - 1) * spacingX,
-                y: (nodeId - 1) * spacingY,
-                author: c.author(),
-                nodeType: NodeType.Abstract
-            });
+
+        let colorData = {};
+        if ( isUnpushCommit )
+        {
+            colorData= {
+                border: '#FF3D24',
+                background: '#E82034', //getting overriden by image
+                hover: {
+                    border: '#FF31AC',
+                    background: '#DD20E8' //getting overriden by image
+                }
+            }
+        }
+        abNodes.add({
+            id: nodeId,
+            shape: "circularImage",
+            title: title,
+            image: img4User( name ),
+            color: colorData,
+            physics: false,
+            fixed: false,
+            x: (column - 1) * spacingX,
+            y: (nodeId - 1) * spacingY,
+            author: c.author(),
+            nodeType: NodeType.Abstract
 
         });
 
@@ -688,9 +720,8 @@ function makeAbsNode(c, column: number) {
         }
     }
 }
-
 // Create lowest level of the graph's zoom.
-function makeNode(c, column: number) {
+function makeNode(c, column: number, isUnpushCommit : boolean) {
     let id = nodeId++;
     let reference;
     let name = getName(c.author().toString());
@@ -710,25 +741,33 @@ function makeNode(c, column: number) {
     }
 
     let flag = false;
-    let imageUrl;
-    
-    // Get the image URL, then create and add the node for the commmit
-    imageForUser(name, email, function (pic) {
-        imageUrl = pic;
+  
+    let colorData = {}
+    if ( isUnpushCommit )
+    {
 
-        nodes.add({
-            id: id,
-            shape: "circularImage",
-            title: title,
-            image: imageUrl,
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Node,
-            commitSha: c.sha()
-        });
+        colorData= {
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
+            hover: {
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
+            }
+        }
+    }
+    nodes.add({
+        id: id,
+        shape: "circularImage",
+        title: title,
+        image: img4User(name),
+        physics: false,
+        fixed: false,
+        color: colorData,
+        x: (column - 1) * spacingX,
+        y: (id - 1) * spacingY,
+        author: c.author(),
+        nodeType: NodeType.Node,
+        commitSha: c.sha()
 
     });
 
