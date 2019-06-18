@@ -316,12 +316,8 @@ body .file-panel .staging-buttons:hover {
   opacity: 0.8;
 }
 
-body .file-panel .pop-stash-list-button {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
+.pop-stash-list-button {
+  float: right;
   height: 30px;
   border-radius: 10px;
   border: 0;
@@ -527,16 +523,12 @@ body .footer {
   border-top: 2px solid #181818;
   position: fixed;
   bottom: 0;
-  overflow-y: auto;
 }
 
 body .footer p {
   margin: 0;
 }
 
-body .footer .commit-panel {
-  width: 20%;
-}
 
 body .footer .commit-panel .commit-message-input {
   resize: none;
@@ -545,7 +537,6 @@ body .footer .commit-panel .commit-message-input {
   margin-left: auto;
   margin-right: auto;
   margin-top: 5px;
-  margin-bottom: 5px;
   height: 50px;
   border-radius: 5px;
   padding: 5px;
@@ -555,19 +546,17 @@ body .footer .commit-panel .commit-button-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
 }
 
 body .footer .commit-panel .commit-button-wrapper .commit-button {
   display: block;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
   height: 30px;
   border-radius: 10px;
   border: 0;
-  padding: 0 15px;
+  padding: 0 14px;
   background-color: #39c0ba;
   color: #fff;
   white-space: nowrap;
@@ -582,13 +571,12 @@ body .footer .terminal .git-command {
 }
 
 body .footer .terminal{
+  height: 15vh;
   overflow-y: auto;
-  width: 80%;
 }
 
 body .footer{
   display: flex;
-  flex-flow: row wrap;
 }
 
 .file-created {
@@ -897,7 +885,7 @@ div.wiki-header button.close-button, div.wiki-header button.open-button {
   top: 50%;
 }
 
-.spinner {
+.graph-loading {
   top: 0;
   left: 0;
   width: 100%;
@@ -910,25 +898,34 @@ div.wiki-header button.close-button, div.wiki-header button.open-button {
   display: none;
 }
 
-.spinnerGraph {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-  position: fixed;
-  left: 50%;
-  margin-left: -60px;
-  top: 50%;
-  margin-top: -120px;
-}
-
 #loadingGraph{
   position: relative;
   font-size: 20px;
   color: white;
+  top: 100%;
+}
+
+#graph-progress-frame {
+  width:  300px;
+  height: 10px;
+  position: absolute;
+  left: 50%;
+  margin-left: -60px;
   top: 50%;
+}
+
+#graph-progress-container {
+  width: 100%;
+  display: block;
+  height: 100%;
+  background-color: #ddd;
+}
+
+#graph-progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #3498db;
+  position: absolute;
 }
 
 .branchModalHeader {
@@ -1157,12 +1154,73 @@ body .pull-request-panel {
 }
 
 .stash-list-item{
-  background-color: slategray;
-  color: white;
+  background-color: transparent;
+  color: lightgray;
 }
 
-.dropzone {  
+.dropzone {
   border-style: solid;
   border-color: #39C0B9;
   border-width: 1px;
+}
+
+.stash-panel {
+  height: 15vh;
+  padding: 0px;
+  overflow: auto;
+}
+
+#stash-header {
+  margin-bottom: 0;
+  margin-top: -10px;
+  border: 0;
+}
+
+.stash-panel-contents{
+  overflow: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-left: 1px solid #404040;
+}
+
+.stash-drop-panel{
+  padding: 0;
+  font-size: 18pt;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.apply-stash-zone{
+  border-radius: 5px;
+  vertical-align: middle;
+  text-align: center;
+  color: rgb(57, 175, 57);
+  background: rgba(144, 238, 144, .2);
+  border: 1px solid #39C0B9;
+}
+
+.drop-stash-zone{
+  border-radius: 5px;
+  vertical-align: middle;
+  text-align: center;
+  color: rgb(197, 75, 75);
+  background:  rgba(240,128,128,0.2);
+  border: 1px solid #39C0B9;
+}
+
+ul li {
+  cursor: pointer;
+}
+
+#deleteTagList {
+  display: none;
+}
+
+.list-item {
+  position: relative ;
+  display: block;
+  padding: 5px 10px;
+  margin-bottom: -1px;
+  border: 0.5px solid #ddd;
 }

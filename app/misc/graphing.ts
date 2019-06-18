@@ -3,23 +3,19 @@
 
    Types of nodes in the network.
        Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
-       Abstract = Commit node in the second zoom level . Represents a collection of commits
        Node = Commit node in the lowest zoom level (3rd level). Represents a a single commit
        Branch = Represents a branch reference. Is linked to a single commit node
        Tag = Represents a tag reference. Is linked to a single commit node
 
     Levels of zoom in the graph:
        Basic: Highest level of zoom (1st level), graph's initial state upon launch
-       Abstract/abs: Second highest level of zoom
        Node:  Lowest level of zoom (3rd level)
 */
 
 import * as nodegit from "git";
 
 let nodeId = 1;
-let absNodeId = 1;
 let basicNodeId = 1;
-let abstractList = [];
 let basicList = [];
 let bDict = {};
 let commitHistory = [];
@@ -36,8 +32,25 @@ let branchIds = [];
 let tagIds = [];
 let unumberPrev = 0;
 let selectedCommit: string;
+var aheadCommitList: any[] =[];
 
-enum NodeType{Basic, Abstract, Node, Branch, Tag}
+
+/*
+Types of nodes in the network.
+    Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
+    Node = Commit node in the lowest zoom level (2rd level). Represents a a single commit
+    Branch = Represents a branch reference. Is linked to a single commit node
+    Tag = Represents a tag reference. Is linked to a single commit node
+*/
+
+/* 
+Types of nodes in the network.
+    Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
+    Node = Commit node in the lowest zoom level (2rd level). Represents a a single commit
+    Branch = Represents a branch reference. Is linked to a single commit node
+    Tag = Represents a tag reference. Is linked to a single commit node
+*/
+enum NodeType{Basic, Node, Branch, Tag}
 
 // In order to allow tags, branches, and nodes to have unique numerical id's
 // reference: https://stackoverflow.com/questions/8012002/create-a-unique-number-with-javascript-time
@@ -56,22 +69,22 @@ function generateUniqueNumber() {
 
 // Process and populate the initial graph
 function processGraph(commits: nodegit.Commit[]) {
+    
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
-        abstractList = [];
+        basicList = [];
         numOfCommits = commits.length;
-
+        
         sortCommits(commits)
-            .then(makeBranchColor)
             .then(populateCommits)
             .then(function(data) {
                 let textBox = document.getElementById("modal-text-box");
                 if (textBox != null) {
-                    document.getElementById('spinner').style.display = 'none';
-                } else {
-                    console.log("Modal-text-box is missing");
-                }
-            });
+                        document.getElementById('graph-loading').style.display = 'none';
+                    } else {
+                        console.log("Modal-text-box is missing");
+                    }
+                });
     });
     return promise;
 }
@@ -79,13 +92,20 @@ function processGraph(commits: nodegit.Commit[]) {
 // Sort the commit nodes in order to better populate the graph
 function sortCommits(commits) {
     var promise = new Promise((resolve, reject) => {
+        let stageStartProgress = 0; 
+        let stageEndProgress = 80; 
+
+        updateGraphProgress(stageStartProgress);
 
         var chunk = 100;
+        var numCommits = commits.length;
 
         function computeChunk() {
             var count = chunk;
-
+            
             while (commits.length > 0 && count--) {
+                updateGraphProgress((commitHistory.length / numCommits) * stageEndProgress);  
+
                 let commit = commits.shift();
                 let parents = commit.parents();
                 if (parents === null || parents.length === 0) {
@@ -115,6 +135,7 @@ function sortCommits(commits) {
             if (commits.length > 0){
                 setTimeout(computeChunk, 1);
             } else {
+                updateGraphProgress(stageEndProgress);
                 resolve();
             }
         }
@@ -125,10 +146,14 @@ function sortCommits(commits) {
 
 // Populate the graph nodes and add edges where appropriate
 function populateCommits(oldResult) {
+    let stageStartProgress = 80; 
+    let stageEndProgress = 100; 
+
+    updateGraphProgress(stageStartProgress);    
+
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
         nodeId = 1;
-        absNodeId = 1;
         basicNodeId = 1;
         commitList = [];
         parentCount = {};
@@ -138,6 +163,8 @@ function populateCommits(oldResult) {
         
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
+            updateGraphProgress((i / commitHistory.length) * stageEndProgress);  
+
             let parents: string[] = commitHistory[i].parents();
             let nodeColumn;
             for (let j = 0; j < parents.length; j++) {
@@ -191,10 +218,19 @@ function populateCommits(oldResult) {
                 }
             }
 
+            /*Issue 150
+             * Iterate through the array of aheadCommitList commits ID And compare*/
+            let isUnpushCommit = false
+            for(var a = 0 ; a < aheadCommitList.length; a++){
+                if (commitHistory[i] == aheadCommitList[a]) {
+                    isUnpushCommit=true;
+                    break;
+
+                }
+            }
             // Create the three levels nodes for zoom in the graph
-            makeNode(commitHistory[i], nodeColumn);
-            makeAbsNode(commitHistory[i], nodeColumn);
-            makeBasicNode(commitHistory[i], nodeColumn);
+            makeNode(commitHistory[i], nodeColumn, isUnpushCommit);
+            makeBasicNode(commitHistory[i], nodeColumn, isUnpushCommit);
         }
 
         // Add edges
@@ -202,16 +238,13 @@ function populateCommits(oldResult) {
             addEdges(commitHistory[i]);
         }
 
-        for (let i = 0; i < abstractList.length; i++) {
-            addAbsEdge(abstractList[i]);
-        }
-
         for (let i = 0; i < basicList.length; i++) {
             addBasicEdge(basicList[i]);
         }
-
-        // Ensure the graph stays in a proper timeline, and recenter
-        sortBasicGraph();
+        
+        //sortBasicGraph();
+        
+        updateGraphProgress(stageEndProgress);
 
         commitList = commitList.sort(timeCompare);
         reCenter();
@@ -245,35 +278,15 @@ function addEdges(c) {
     }
 }
 
-// Add edges to the middle level of the graph
-function addAbsEdge(c) {
-    let parents = c['parents'];
-    for (let i = 0; i < parents.length; i++) {
-        for (let j = 0; j < abstractList.length; j++) {
-            if (abstractList[j]['sha'].indexOf(parents[i].toString()) > -1) {
-                abEdges.add({
-                    from: abstractList[j]['id'],
-                    to: c['id']
-                });
-            }
-        }
-    }
-}
-
-// Add edges to the highest level of the graph
 function addBasicEdge(c) {
-    let flag = true;
     let parents = c['parents'];
-    edgeDic[c['id']] = [];
     for (let i = 0; i < parents.length; i++) {
         for (let j = 0; j < basicList.length; j++) {
-            if (basicList[j]['sha'].indexOf(parents[i].toString()) > -1 && basicList[j] !== c) {
-                flag = false;
+            if (basicList[j]['sha'].indexOf(parents[i].toString()) > -1) {
                 bsEdges.add({
                     from: basicList[j]['id'],
                     to: c['id']
                 });
-                edgeDic[c['id']].push(basicList[j]['id']);
             }
         }
     }
@@ -318,96 +331,55 @@ function sortBasicGraph() {
     }
 }
 
-// Creates the branches to associate with commit nodes
-function makeBranchColor(oldResult) {
-    var promise = new Promise((resolve, reject) => {
-        let bcList = [];
-
-        for (let i = 0; i < commitHistory.length; i++) {
-            if (commitHistory[i].toString() in bname) {
-                bcList.push({
-                    oid: commitHistory[i],
-                    cid: i
-                });
-            }
-        }
-
-        var chunk = 10;
-
-        function computeChunk() {
-            var count = chunk;
-            while (bcList.length > 0 && count--) {
-                let commit = bcList.pop();
-                let oid = commit.oid.toString();
-                let cid = commit.cid;
-                if (oid in bDict) {
-                    bDict[oid].push(cid);
-                } else {
-                    bDict[oid] = [cid];
-                }
-
-                let parents = commit.oid.parents();
-
-                for (let i = 0; i < parents.length; i++) {
-                    for (let j = 0; j < commitHistory.length; j++) {
-                        if (commitHistory[j].toString() === parents[i].toString()) {
-                            bcList.push({
-                                oid: commitHistory[j],
-                                cid: cid
-                            });
-                        }
-                    }
-                }
-            }
-            if(bcList.length > 0){
-                setTimeout(computeChunk, 1);
-            } else {
-				resolve(oldResult);
-			}
-
-        }
-        computeChunk();
-    });
-    return promise;
-}
-
-// Create highest level of the graph's zoom. This is the first graph displayed upon launch.
-function makeBasicNode(c, column: number) {
+function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
     let reference;
     let name = getName(c.author().toString());
     let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
+    let email = stringer.split("%")[1];
     let flag = true;
     let count = 1;
     let id;
-    let tagid;
-    let colors1 = JSON.stringify(bDict[c.toString()]);
-    for (let i = 0; i < basicList.length; i++) {
-        let colors2 = JSON.stringify(basicList[i]['colors']);
-        if (colors1 === colors2) {
-            flag = false;
-            id = basicList[i]['id'];
-            tagid = basicList[i]['id'] + 1;
-            basicList[i]['count'] += 1;
-            count = basicList[i]['count'];
-            bsNodes.update({id: i+1, title: "Number of Commits: " + count});
-            basicList[i]['sha'].push(c.toString());
-            basicList[i]['parents'] = basicList[i]['parents'].concat(c.parents());
-            break;
+    if (c.parents().length === 1) {
+        let cp = c.parents()[0].toString();
+        for (let i = 0; i < basicList.length; i++) {
+            let index = basicList[i]['sha'].indexOf(cp);
+            if (index > -1 && basicList[i]['column'] === column && !(c.toString() in tags) && !(c.toString() in bname)) {
+                flag = false;
+                basicList[i]['count'] += 1;
+                count = basicList[i]['count'];
+                basicList[i]['sha'].push(c.toString());
+                id = i+1;
+                bsNodes.update({id: id, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
+                break;
+            }
         }
     }
 
     if (flag) {
         id = basicNodeId++;
-        tagid = id + 1;
-
-        let title = "Number of Commits: " + count;
+        let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
         console.log(title);
-        // Add commit nodes to graph
+        let imageUrl;
+        let colorData = {};
+        if ( isUnpushCommit )
+        {
+        colorData= {
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
+            hover: {
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
+                }
+            }
+        }
+
+        // Create node with default icon
         bsNodes.add({
             id: id,
             shape: "circularImage",
             title: title,
-            image: img4User(name),
+            image: getLetterIcon(name),
+            color: colorData,
             physics: false,
             fixed: false,
             x: (column - 1) * spacingX,
@@ -415,6 +387,26 @@ function makeBasicNode(c, column: number) {
             author: c.author(),
             nodeType: NodeType.Basic
         });
+
+        // Get the image URL, then update the node for the commmit
+        imageForUser(name, email, function (pic) {
+            imageUrl = pic;
+
+            bsNodes.update({
+                id: id,
+                shape: "circularImage",
+                title: title,
+                image: imageUrl,
+                color: colorData,
+                physics: false,
+                fixed: false,
+                x: (column - 1) * spacingX,
+                y: (id - 1) * spacingY,
+                author: c.author(),
+                nodeType: NodeType.Basic
+            });
+        });   
+
         // Update node list
         let shaList = [];
         shaList.push(c.toString());
@@ -424,7 +416,7 @@ function makeBasicNode(c, column: number) {
             id: id,
             time: c.timeMs(),
             column: column,
-            colors: bDict[c.toString()],
+            email: email,
             reference: reference,
             parents: c.parents(),
             count: 1,
@@ -436,27 +428,23 @@ function makeBasicNode(c, column: number) {
         for (let i = 0; i < bname[c.toString()].length; i++) {
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
-            let shortName = bp[bp.length - 1]; // Get the branch's name instead of ref/origin/branch
+            let shortName = bp[bp.length - 1];
             console.log(shortName + " sub-branch: " + branchName.isHead().toString());
             if (branchName.isHead()) {
                 shortName = "*" + shortName;
             }
-            let bsnodeId = generateUniqueNumber();
-
-            // Add branch nodes
+            let bsnodeId = shortName;
             bsNodes.add({
                 id: bsnodeId,
-                // shape: "box", // old shape
-                // Create and display fork icon
                 shape: "icon",
-                icon: {
-                  face: "FontAwesome",
-                  code: "\uf126",
-                  color: '#3399ff'
+                  icon: {
+                    face: "FontAwesome",
+                    code: "\uf126",
+                    color: '#3399ff'
                 },
                 // Make text visible beneath icon
                 font: {
-                  color: '#3399ff',
+                    color: '#3399ff',
                 },
                 title: branchName,
                 label: shortName,
@@ -466,14 +454,12 @@ function makeBasicNode(c, column: number) {
                 y: (id - 0.3) * spacingY,
                 nodeType: NodeType.Branch
             });
-            // Add an edge from the bracnh to the commit
+
             bsEdges.add({
                 from: bsnodeId,
                 to: id,
                 color: '#3399ff'
             });
-            // Update the branch list
-            branchIds[id] = bsnodeId;
         }
     }
 
@@ -482,13 +468,12 @@ function makeBasicNode(c, column: number) {
         for (let i = 0; i < tags[c.toString()].length; i++) {
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
-            let shortTagName = tp[tp.length - 1]; // Get the tag's name instead of ref/origin/tag
+            let shortTagName = tp[tp.length - 1];
             console.log(shortTagName + " tag: " + tagName.isHead().toString());
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }
-            let bsnodeId = generateUniqueNumber();
-            // Add tag nodes
+            let bsnodeId = shortTagName;
             bsNodes.add({
                 id: bsnodeId,
                 // shape: "ellipse", // old shape
@@ -510,7 +495,7 @@ function makeBasicNode(c, column: number) {
                 x: (column - 0.6 * (i + 1)) * tagSpacingX,
                 y: (id - 0.3) * tagSpacingY,
             });
-            // Create edges between tags and commits using dashed lines for differenciation
+
             bsEdges.add({
                 from: bsnodeId,
                 to: id,
@@ -522,160 +507,11 @@ function makeBasicNode(c, column: number) {
                     from: false,
                 },
             });
-            // Update tag list
-            tagIds[tagid] = bsnodeId;
         }
     }
 }
-
-// Create second level of the graph's zoom.
-function makeAbsNode(c, column: number) {
-    let reference;
-    let name = getName(c.author().toString());
-    let stringer = c.author().toString().replace(/</, "%").replace(/>/, "%");
-    let email = stringer.split("%")[1];
-    let flag = true;
-    let count = 1;
-    let nodeId;
-    if (c.parents().length === 1) {
-        let cp = c.parents()[0].toString();
-        for (let i = 0; i < abstractList.length; i++) {
-            let index = abstractList[i]['sha'].indexOf(cp);
-            if (index > -1 && abstractList[i]['email'] === email && abstractList[i]['column'] === column && !(c.toString() in bname)) {
-                flag = false;
-                abstractList[i]['count'] += 1;
-                count = abstractList[i]['count'];
-                abstractList[i]['sha'].push(c.toString());
-                nodeId = i+1;
-                abNodes.update({id: nodeId, title: "Author: " + name + "<br>" + "Number of Commits: " + count});
-                break;
-            }
-        }
-    }
-
-    if (flag) {
-        nodeId = absNodeId++;
-        let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
-        // Add commit nodes
-        abNodes.add({
-            id: nodeId,
-            shape: "circularImage",
-            title: title,
-            image: img4User(name),
-            physics: false,
-            fixed: false,
-            x: (column - 1) * spacingX,
-            y: (nodeId - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Abstract
-        });
-
-        // Update node list
-        let shaList = [];
-        shaList.push(c.toString());
-
-        abstractList.push({
-            sha: shaList,
-            id: nodeId,
-            time: c.timeMs(),
-            column: column,
-            email: email,
-            reference: reference,
-            parents: c.parents(),
-            count: 1,
-        });
-    }
-
-    // Add branches to commits, if any exist
-    if (c.toString() in bname) {
-        for (let i = 0; i < bname[c.toString()].length; i++) {
-            let branchName = bname[c.toString()][i];
-            let bp = branchName.name().split("/");
-            let shortName = bp[bp.length - 1];
-            console.log(shortName + " sub-branch: " + branchName.isHead().toString());
-            if (branchName.isHead()) {
-                shortName = "*" + shortName;
-            }
-            let bsnodeId = generateUniqueNumber();
-            abNodes.add({
-                id: bsnodeId,
-                shape: "icon",
-                  icon: {
-                    face: "FontAwesome",
-                    code: "\uf126",
-                    color: '#3399ff'
-                },
-                // Make text visible beneath icon
-                font: {
-                    color: '#3399ff',
-                },
-                title: branchName,
-                label: shortName,
-                physics: false,
-                fixed: false,
-                x: (column - 0.6 * (i + 1)) * spacingX,
-                y: (nodeId - 0.3) * spacingY,
-                nodeType: NodeType.Branch
-            });
-            // Add an edge from the branch to the commit
-            abEdges.add({
-                from: bsnodeId,
-                to: nodeId,
-                color: '#3399ff'
-            });
-        }
-    }
-
-    // Initializing viewable tags, if any exist
-    if (c.toString() in tags) {
-        for (let i = 0; i < tags[c.toString()].length; i++) {
-            let tagName = tags[c.toString()][i];
-            let tp = tagName.name().split("/");
-            let shortTagName = tp[tp.length - 1];
-            console.log(shortTagName + " tag: " + tagName.isHead().toString());
-            if (tagName.isHead()) {
-                shortTagName = "*" + shortTagName;
-            }
-            let bsnodeId = generateUniqueNumber();
-            abNodes.add({
-                id: bsnodeId,
-                // shape: "ellipse", // old shape
-                // Create and display tag icon
-                shape: "icon",
-                icon: {
-                  face: "FontAwesome",
-                  code: "\uf02b",
-                  color: '#ff8080'
-                },
-                // Make text visible beneath icon
-                font: {
-                  color: '#ff8080',
-                },
-                title: tagName, // hover text
-                label: shortTagName, // shown under/in shape
-                physics: false,
-                fixed: false,
-                x: (column - 0.6 * (i + 1)) * tagSpacingX,
-                y: (nodeId - 0.3) * tagSpacingY,
-            });
-            // Create edges between tags and commits using dashed lines for differenciation
-            abEdges.add({
-                from: bsnodeId,
-                to: nodeId,
-                dashes: true,
-                color: '#ff8080',
-                arrows: {
-                    to: false,
-                    middle: false,
-                    from: false,
-                },
-            });
-        }
-    }
-}
-
 // Create lowest level of the graph's zoom.
-function makeNode(c, column: number) {
+function makeNode(c, column: number, isUnpushCommit : boolean) {
     let id = nodeId++;
     let reference;
     let name = getName(c.author().toString());
@@ -695,7 +531,21 @@ function makeNode(c, column: number) {
     }
 
     let flag = false;
-    // Add commit nodes to the graph
+  
+    let colorData = {}
+    if ( isUnpushCommit )
+    {
+
+        colorData= {
+            border: '#FF3D24',
+            background: '#E82034', //getting overriden by image
+            hover: {
+                border: '#FF31AC',
+                background: '#DD20E8' //getting overriden by image
+            }
+        }
+    }
+    
     nodes.add({
         id: id,
         shape: "circularImage",
@@ -703,6 +553,7 @@ function makeNode(c, column: number) {
         image: img4User(name),
         physics: false,
         fixed: false,
+        color: colorData,
         x: (column - 1) * spacingX,
         y: (id - 1) * spacingY,
         author: c.author(),
@@ -850,4 +701,10 @@ function reCenter() {
 // Open a specific commit's dialog box
 function getSelectedCommit() {
     return selectedCommit;
+}
+
+// Updates the graph progress bar to a specified percentage
+function updateGraphProgress(percentage: number) {
+    let progressBar = $("#graph-progress-bar");
+    progressBar.css("width", percentage + "%");
 }

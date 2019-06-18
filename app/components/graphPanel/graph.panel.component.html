@@ -1,4 +1,4 @@
-<div class="graph-panel" id="graph-panel">
+<div class="graph-panel" id="graph-panel" ondragover="allowDrop(event)" ondrop="handleGraphDrop(event)">
   <!-- auto-detection box on commit graph -->
   <button id="refresh-button" type="button" class="btn btn-info refresh-graph-btn" (click)="refreshGraph()">Refresh Graph</button>
   <div id="refresh-graph-alert" class="alert alert-warning" role="alert" tabindex="-1">
@@ -13,8 +13,12 @@
   <div id="networkContext" class="context-menu" tabindex="-1" (blur)="disableContextMenu()">
     <ul class="dropdown-menu">
       <li>
-        <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create Tag</a>
+        <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create tag</a>
       </li>
+      <li>
+        <a (click)="showDeleteTagList()">Delete a tag</a>
+      </li>
+      <li id="deleteTagList"></li>
     </ul>
   </div>
 
@@ -100,7 +104,11 @@
     </div><!-- /.modal-dialog -->
   </div>
 </div>
-<div class="spinner" id="spinner">
-  <div class="spinnerGraph"></div>
-  <div id="loadingGraph">Loading Graph</div>
+<div class="graph-loading" id="graph-loading">
+  <div id="graph-progress-frame">
+      <div id=graph-progress-container>
+        <div id="graph-progress-bar"></div>
+      </div>
+      <div id="loadingGraph">Loading Graph</div>
+  </div>
 </div>
