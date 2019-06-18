@@ -1,27 +1,26 @@
 import * as nodegit from "git";
+import * as simplegit from 'simple-git/promise';
+let sGit = require( 'simple-git/promise' );
 
 let vis = require("vis");
 let $ = require("jquery");
-let options, bsNodes, bsEdges, abNodes, abEdges, nodes, edges, network;
+let options, bsNodes, bsEdges, nodes, edges, network;
 let secP = null, fromNode = null, toNode;
 
 let GraphNodeID = 0;
-
-
  
- function returnSelectedNodeValue():number{
+function returnSelectedNodeValue():number{
     let returnValue = GraphNodeID;
     GraphNodeID = 0;
     return returnValue;
-  }
+}
+
 function drawGraph() {
-    document.getElementById('spinner').style.display = 'block';
+    updateGraphProgress(0);    
+    document.getElementById('graph-loading').style.display = 'block';
     $('#modal').modal('show');
     bsNodes = new vis.DataSet([]);
     bsEdges = new vis.DataSet([]);
-
-    abNodes = new vis.DataSet([]);
-    abEdges = new vis.DataSet([]);
 
     nodes = new vis.DataSet([]);
     edges = new vis.DataSet([]);
@@ -33,11 +32,6 @@ function drawGraph() {
     let bsData = {
         nodes: bsNodes,
         edges: bsEdges
-    }
-
-    let abData = {
-        nodes: abNodes,
-        edges: abEdges
     }
 
     let data = {
@@ -148,8 +142,32 @@ function drawGraph() {
         },
     };
     network = new vis.Network(container, bsData, options);
-    getAllCommits(function(commits) {
-        processGraph(commits);
+    getAllCommits( function ( commits ){
+        // first fetching local commit so that we can mark them during processGraph
+        aheadCommitList=[]
+        let sGitRepo = sGit(repoFullPath);
+        sGitRepo.silent( true ).log( { '--branches': null, '--not': null, '--remotes': null } ).then( ( result ) =>
+        {  
+            //collect all branches unpush commits using:- git log --branches --not --remotes
+            for ( let k = 0; k < result.all.length; k++ )
+            {
+                aheadCommitList.push( result.all[ k ].hash );
+            }
+        } ).then(() => sGitRepo.silent( true ).log( { 'origin/master..master': null } )).then(( result ) =>
+        {  
+            //add unpush commit on master using:- git log origin/master..master
+            for ( let k = 0; k < result.all.length; k++ )
+            {
+                aheadCommitList.push( result.all[ k ].hash );
+            }
+        }).catch(function (err) {
+            console.log("ERROR!! unable to load local Only commits becuase: "+err.message);
+        } ).then( function (){
+            processGraph( commits );
+        } ).catch( function ( err ){ 
+            console.log(err)
+        } );
+        
 
         network.on("stabilizationIterationsDone", function () {
             network.setOptions({physics: false});
@@ -185,21 +203,11 @@ function drawGraph() {
                 }
             };
 
-            if (network.getScale() > 1.5 && callback.direction === '+' && flag === 'abstract') {
+            if (network.getScale() > 1.5 && callback.direction === '+' && flag === 'basic') {
                 network.setData(data);
                 flag = 'node';
                 network.fit(moveOptions);
-                //network.redraw();
             } else if (network.getScale() < 0.4 && callback.direction === '-' && flag === 'node') {
-                network.setData(abData);
-                flag = 'abstract';
-                network.fit(moveOptions);
-                //network.redraw();
-            } else if (network.getScale() > 1.5 && callback.direction === '+' && flag === 'basic') {
-                network.setData(abData);
-                flag = 'abstract';
-                network.fit(moveOptions);
-            } else if (network.getScale() < 0.4 && callback.direction === '-' && flag === 'abstract') {
                 network.setData(bsData);
                 flag = 'basic';
                 network.fit(moveOptions);
@@ -245,8 +253,6 @@ function drawGraph() {
                 if (flag === 'node') {
                     clicknode = nodes.get(clicknode);
 					displaySelectedCommitDiffPanel(properties.nodes[0]);
-                } else if (flag === 'abstract') {
-                    clicknode = abNodes.get(clicknode);
                 } else if (flag === 'basic') {
                     clicknode = bsNodes.get(clicknode);
                 } else {

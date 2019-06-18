@@ -771,6 +771,34 @@ function mergeCommits(from) {
     });
 }
 
+// Rebase modal functionality starts here!
+function showRebaseModal() {
+  $('#rebase-modal').modal('show');
+  getRebaseFromBranch();
+  let branches = getEveryBranch();
+  console.log('out of method: ' + branches);
+}
+
+function getRebaseFromBranch() {
+    let rebaseFromBranch = document.getElementById("currentBranch");
+    rebaseFromBranch.innerText = repoCurrentBranch;
+}
+
+async function getEveryBranch() {
+  async function fetchBranches() {
+      let repos;
+      return Git.Repository.open(repoFullPath)
+        .then(function (repo) {
+          repos = repo;
+          return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
+      });
+  }
+
+  let branches = await fetchBranches();
+  console.log('In method: ' + branches);
+  return branches;
+}
+
 function rebaseCommits(from: string, to: string) {
   let repos;
   let index;
@@ -1761,12 +1789,12 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
   addCommand("git mv " + filesource + " " + filedestination);
 
   // test if file destination already exists or if test is to be skipped
-  if(fs.existsSync(filedestination) || skipFileExistTest){
+  if(fs.existsSync(filedestination) || skipFileExistTest) {
     let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
     sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
-            .mv(filesource, filedestination)  //perform GIT MV operation
-            .then(() => console.log('move completed'))
-            .catch((err) => displayModal('move failed: ' + err));
+        .mv(filesource, filedestination)  //perform GIT MV operation
+        .then(() => console.log('move completed'))
+        .catch((err) => displayModal('move failed: ' + err));
   }
   else{
     displayModal("Destination directory does not exist");
@@ -1782,9 +1810,6 @@ function unpushedCommitsModal() {
     document.getElementById("ahead_count").innerHTML = status.ahead;
     document.getElementById("behind_count").innerHTML = status.behind;
 
-    //we don't need to log these on a continuous basis
-    //console.log(status.ahead);
-    //console.log(status.behind);
   });
 
 }

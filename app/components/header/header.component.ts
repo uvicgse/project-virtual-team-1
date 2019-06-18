@@ -58,5 +58,4 @@ export class HeaderComponent   {
   showTagList(): void {
     this.branchSelectedInRefDropdown = false
   }
-
 }
