@@ -717,27 +717,27 @@ function refreshReferences(verbose, force) {
     }
 
   }
-
+  
   function checkoutLocalBranch(element) {
-    let bn;
+    let button;   // entry in branch drop-down
     let img = "<img"
     if (typeof element === "string") {
-      bn = element;
+      button = element;
     } else {
-      bn = element.innerHTML;
+      button = element.innerHTML;
     }
-    if (bn.includes(img)) {
-      bn = bn.substr(0, bn.lastIndexOf(img)) // remove local branch <img> tag from branch name string
-      if (bn.includes(img)) {
-        bn = bn.substr(0, bn.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
+    if (button.includes(img)) {
+      button = button.substr(0, button.lastIndexOf(img)) // remove local branch <img> tag from branch name string
+      if (button.includes(img)) {
+        button = button.substr(0, button.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
       }
     }
-    console.log("name of branch being checked out: " + bn);
+    console.log("name of branch being checked out: " + button);
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
         document.getElementById('spinner').style.display = 'block';
-        addCommand("git checkout " + bn);
-        repo.checkoutBranch("refs/heads/" + bn)
+        addCommand("git checkout " + button);
+        repo.checkoutBranch("refs/heads/" + button)
           .then(function () {
             refreshAll(repo);
           }, function (err) {
@@ -746,38 +746,47 @@ function refreshReferences(verbose, force) {
       })
   }
 
+  // TODO: fully impelement
+  function checkoutLocalTag(element) {
+
+  }
+
+  // TODO: implement
+  function checkoutRemoteTag(element) {
+  }
+
   function checkoutRemoteBranch(element) {
-    let bn;
+    let button;   // entry in branch drop-down
     let img = "<img"
     if (typeof element === "string") {
-      bn = element;
+      button = element;
     } else {
-      bn = element.innerHTML;
+      button = element.innerHTML;
     }
-    if (bn.includes(img)) {
-      bn = bn.substr(0, bn.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
-      if (bn.includes(img)) {
-        bn = bn.substr(0, bn.lastIndexOf(img))  // remove local branch <img> tag from branch name string
+    if (button.includes(img)) {
+      button = button.substr(0, button.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
+      if (button.includes(img)) {
+        button = button.substr(0, button.lastIndexOf(img))  // remove local branch <img> tag from branch name string
       }
     }
-    console.log("current branch name: " + bn);
+    console.log("current branch name: " + button);
     let repos;
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
         repos = repo;
         addCommand("git fetch");
-        addCommand("git checkout -b " + bn);
-        let cid = remoteName[bn];
+        addCommand("git checkout -b " + button);
+        let cid = remoteName[button];
         console.log("name of remote branch:  " + cid);
         return Git.Commit.lookup(repo, cid);
       })
       .then(function (commit) {
         console.log("commiting");
-        return Git.Branch.create(repos, bn, commit, 0);
+        return Git.Branch.create(repos, button, commit, 0);
       })
       .then(function (code) {
-        console.log("name of local branch " + bn);
-        repos.mergeBranches(bn, "origin/" + bn)
+        console.log("name of local branch " + button);
+        repos.mergeBranches(button, "origin/" + button)
           .then(function () {
             document.getElementById('spinner').style.display = 'block';
             refreshAll(repos);
