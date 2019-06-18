@@ -771,6 +771,34 @@ function mergeCommits(from) {
     });
 }
 
+// Rebase modal functionality starts here!
+function showRebaseModal() {
+  $('#rebase-modal').modal('show');
+  getRebaseFromBranch();
+  let branches = getEveryBranch();
+  console.log('out of method: ' + branches);
+}
+
+function getRebaseFromBranch() {
+    let rebaseFromBranch = document.getElementById("currentBranch");
+    rebaseFromBranch.innerText = repoCurrentBranch;
+}
+
+async function getEveryBranch() {
+  async function fetchBranches() {
+      let repos;
+      return Git.Repository.open(repoFullPath)
+        .then(function (repo) {
+          repos = repo;
+          return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
+      });
+  }
+
+  let branches = await fetchBranches();
+  console.log('In method: ' + branches);
+  return branches;
+}
+
 function rebaseCommits(from: string, to: string) {
   let repos;
   let index;
@@ -1618,39 +1646,47 @@ function cleanRepo() {
 }
 
 /**
- * This method is called when the sync button is pressed, and causes the fetch-modal
- * to appear on the screen.
+ * This method is called when the user clicks the "Remote" button on the navbar.
  */
-function requestLinkModal() {
-  $("#fetch-modal").modal();
+function setUpstreamModal() {
+  $('#set-upstream-modal').modal('show');
 }
 
 /**
- * This method is called when a valid URL is given via the fetch-modal, and runs the
- * series of git commands which fetch and merge from an upstream repository.
+ * Clears the fields from the upstream repo modal.
  */
-function fetchFromOrigin() {
-  console.log("begin fetching");
-  let upstreamRepoPath = document.getElementById("origin-path").value;
-  if (upstreamRepoPath != null) {
+function clearUpstreamModalText() {
+  document.getElementById("remote-path").value = "";
+}
+
+/**
+ This function is called after the user enters the address of the upstream repo to sync from. It sets the
+ entered address as the upstream repo of the forked repository.
+ */
+function setUpstreamRepo() {
+  let repository;
+  let upstreamRepoPath = document.getElementById("remote-path").value;
+  if(upstreamRepoPath != null) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
-        console.log("fetch path valid")
-        displayModal("Beginning Synchronisation...");
-        addCommand("git remote add upstream " + upstreamRepoPath);
-        addCommand("git fetch upstream");
-        addCommand("git merge upstrean/master");
-        console.log("fetch successful")
-        updateModalText("Synchronisation Successful");
-        refreshAll(repo);
-      },
-        function (err) {
-          console.log("Waiting for repo to be initialised");
-          displayModal("Please select a valid repository");
-        });
-  } else {
-    displayModal("No Path Found.")
+      repository = repo;
+      var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
+      console.log(result)
+      result.catch(function(error) {
+      if (error.message == "cannot set empty URL"){ //Checking for empty URL in the upstream modal
+        displayModal("Please enter a valid path to the original branch");
+      }
+      else if (error.message == "remote 'upstream' already exists"){ //Checking for existing upstream branch
+        displayModal("Upstream branch already exists");
+      }
+      addCommand("git remote add upstream " + upstreamRepoPath);
+      });
+    }, function(err) {
+      console.log("Error adding remote upstream repository:" + err) //Checking if a repo is opened before setting an upstream
+      displayModal("Please open a valid repository first");
+    });
   }
+  clearUpstreamModalText();
 }
 
 /**
