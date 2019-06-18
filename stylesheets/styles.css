@@ -897,7 +897,7 @@ div.wiki-header button.close-button, div.wiki-header button.open-button {
   top: 50%;
 }
 
-.progress {
+.graph-loading {
   top: 0;
   left: 0;
   width: 100%;

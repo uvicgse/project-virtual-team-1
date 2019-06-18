@@ -16,7 +16,7 @@ let GraphNodeID = 0;
   }
 function drawGraph() {
     updateGraphProgress(0);    
-    document.getElementById('progress').style.display = 'block';
+    document.getElementById('graph-loading').style.display = 'block';
     $('#modal').modal('show');
     bsNodes = new vis.DataSet([]);
     bsEdges = new vis.DataSet([]);

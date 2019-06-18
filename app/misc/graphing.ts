@@ -55,7 +55,7 @@ function processGraph(commits: nodegit.Commit[]) {
             .then(function(data) {
                 let textBox = document.getElementById("modal-text-box");
                 if (textBox != null) {
-                        document.getElementById('progress').style.display = 'none';
+                        document.getElementById('graph-loading').style.display = 'none';
                     } else {
                         console.log("Modal-text-box is missing");
                     }
