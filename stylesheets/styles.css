@@ -1170,8 +1170,9 @@ body .pull-request-panel {
   color: white;
 }
 
-.dropzone {  
+.dropzone {
   border-style: solid;
   border-color: #39C0B9;
   border-width: 1px;
 }
+

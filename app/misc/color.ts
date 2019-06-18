@@ -29,7 +29,6 @@ function changeColor(color) {
   let footer = document.getElementById('footer');
   let arp = document.getElementById('add-repository-panel');
   let auth = document.getElementById('authenticate');
-  let rememberLogin = document.getElementById('checkboxText');
   let repoName = document.getElementById ('repo-name');
   let branchName = document.getElementById('branch-name');
   let modifiedMessageColor = document.getElementById('modified-files-message');
@@ -82,7 +81,6 @@ function changeColor(color) {
     footer.style.backgroundColor = '#E3E3E3';
     arp.style.backgroundColor = '#D1D1D1';
     auth.style.backgroundColor = '#D6D6D6';
-    rememberLogin.style.color = '#5E5E5E';
     repoName.style.color = '#000000';
     branchName.style.color = '#000000';
     modifiedTitle.style.color = '#000000';
@@ -131,7 +129,6 @@ function changeColor(color) {
         footer.style.border = '#FFD7D7';
         arp.style.backgroundColor = '#FFD7D7';
         auth.style.backgroundColor = '#FFE5E5';
-        rememberLogin.style.color = '#FFA3A3';
         repoName.style.color = '#fff';
         branchName.style.color = '#fff';
         modifiedTitle.style.color = '#fff';
@@ -180,7 +177,6 @@ function changeColor(color) {
           footer.style.border = '#B6DEFF'; 
           arp.style.backgroundColor = '#DAEEFF'; 
           auth.style.backgroundColor = '#DAEEFF';
-          rememberLogin.style.color = '#4EAFFE';
           repoName.style.color = '#fff';
           branchName.style.color = '#fff';
           modifiedTitle.style.color = '#fff';
@@ -230,7 +226,6 @@ function changeColor(color) {
           footer.style.border = '#4D94FF'; 
           arp.style.backgroundColor = '#4D94FF'; 
           auth.style.backgroundColor = '#4D94FF';
-          rememberLogin.style.color = '#001C83';
           repoName.style.color = '#fff';
           branchName.style.color = '#fff';
           modifiedTitle.style.color = '#fff';
@@ -279,7 +274,6 @@ function changeColor(color) {
           footer.style.border = '#ADEBAD'; 
           arp.style.backgroundColor = '#ADEBAD'; 
           auth.style.backgroundColor = '#ADEBAD'; 
-          rememberLogin.style.color = '#00990d';
           repoName.style.color = '#fff';
           branchName.style.color = '#fff';
           modifiedTitle.style.color = '#fff';
@@ -329,7 +323,6 @@ function changeColor(color) {
     footer.style.backgroundColor = '#282828';
     arp.style.backgroundColor = '#282828';
     auth.style.backgroundColor = '#282828';
-    rememberLogin.style.color = '#ccc';
     repoName.style.color = '#fff';
     branchName.style.color = '#fff';
     modifiedTitle.style.color = '#fff';

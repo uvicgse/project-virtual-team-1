@@ -6,14 +6,13 @@ let options, bsNodes, bsEdges, nodes, edges, network;
 let secP = null, fromNode = null, toNode;
 
 let GraphNodeID = 0;
-
-
  
- function returnSelectedNodeValue():number{
+function returnSelectedNodeValue():number{
     let returnValue = GraphNodeID;
     GraphNodeID = 0;
     return returnValue;
-  }
+}
+
 function drawGraph() {
     updateGraphProgress(0);    
     document.getElementById('graph-loading').style.display = 'block';
