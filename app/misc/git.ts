@@ -1698,12 +1698,12 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
   addCommand("git mv " + filesource + " " + filedestination);
 
   // test if file destination already exists or if test is to be skipped
-  if(fs.existsSync(filedestination) || skipFileExistTest){
+  if(fs.existsSync(filedestination) || skipFileExistTest) {
     let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
     sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
-            .mv(filesource, filedestination)  //perform GIT MV operation
-            .then(() => console.log('move completed'))
-            .catch((err) => displayModal('move failed: ' + err));
+        .mv(filesource, filedestination)  //perform GIT MV operation
+        .then(() => console.log('move completed'))
+        .catch((err) => displayModal('move failed: ' + err));
   }
   else{
     displayModal("Destination directory does not exist");
