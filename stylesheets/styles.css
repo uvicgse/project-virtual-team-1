@@ -1167,3 +1167,18 @@ body .pull-request-panel {
   border-width: 1px;
 }
 
+ul li {
+  cursor: pointer;
+}
+
+#deleteTagList {
+  display: none;
+}
+
+.list-item {
+  position: relative ;
+  display: block;
+  padding: 5px 10px;
+  margin-bottom: -1px;
+  border: 0.5px solid #ddd;
+}
