@@ -943,7 +943,6 @@ div.selected-commit-diff-panel button.close-button {
     float:left;
     margin:auto;
     overflow: hidden;
-    border: 1px solid red;
 }
 
 #wiki-icon {
