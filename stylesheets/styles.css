@@ -887,12 +887,6 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
-.toolbar-Container {
-  width: 100%;
-  padding-top: 8px;
-  margin: auto;
-}
-
 .toolbar-Container span {
   display: none;
 }
@@ -932,17 +926,24 @@ div.selected-commit-diff-panel button.close-button {
     margin: 0 auto;
 }
 
-.navbar-nav.col-md-5 {
-  position: relative;
-  max-width: 400px;
-  max-height: 50px;
-  margin: auto;
-}
-
 .toolbar-Text {
   font-size: 14px;
-  /* margin: 0 auto; */
   color: white;
+}
+
+.toolbar-Container {
+  margin: auto;
+  float:left;
+  overflow: hidden;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.nav.navbar-nav {
+    float:left;
+    margin:auto;
+    overflow: hidden;
+    border: 1px solid red;
 }
 
 #wiki-icon {
