@@ -12,7 +12,9 @@
           class="add-repository-button" title="Add Repository"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar">
-      <ul class="nav navbar-nav col-md-5 hidden-xs">
+
+       <!-- Repo/branch/tag     -->
+      <div class="nav navbar-nav col-md-5 hidden-xs">
         <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
         <li class="repo-name dropdown-toggle">
           <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal"
@@ -55,89 +57,80 @@
             <div id="branch-item-list" class="select-menu-list" role="tabpanel" tabindex="0" [ngClass]="{'hidden' : !branchSelectedInRefDropdown}"></div>
           </ul>
         </li>
-      </ul>
+      </div>
 
       <!--Toolbar-->
-      <ul class="navbar-nav col hidden-xs toolbar-Container">
-        <li class="toolbar-Icons" onclick="openWiki()">
-          <i id="wiki-icon" class="fa fa-wikipedia-w fa-2x"></i>
-          <span class="toolbar-Text">Wiki</span>
-        </li>
-        <!--Commit-->
-        <li class="toolbar-Icons" onclick="commitModal()">
-          <a href="#"><img src="./assets/Plus.svg" height="40" width="48" class="add-repository-button"
-              title="Commit"></a>
-          <span class="toolbar-Text">Commit</span>
-        </li>
+      <div class="navbar-nav-toolbar hidden-xs toolbar-Container">
+          <a class="toolbar-Icons" onclick="openWiki()">
+            <i class="fa fa-wikipedia-w fa-lg">
+                <span class="toolbar-Text">Wiki</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons text-center" onclick="commitModal()">
+            <i class="fa fa-plus-circle fa-lg">
+            <span class="toolbar-Text">Commit</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="pushToRemote()">
+            <i class="fa fa-cloud-upload fa-lg">
+                <span class="toolbar-Text">Push</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="pullFromRemote()">
+            <i class="fa fa-cloud-download fa-lg">
+                <span class="toolbar-Text">Pull</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="cleanRepo()">
+            <i class="fa fa-recycle fa-lg">
+                <span class="toolbar-Text">Clean</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="openBranchModal()">
+            <i class="fa fa-pagelines fa-lg">
+                <span class="toolbar-Text">Branch</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="revertCommit()">
+            <i class="fa fa-history fa-lg">
+                <span class="toolbar-Text">Revert</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="showStashModal()">
+            <i class="fa fa-star fa-lg">
+                <span class="toolbar-Text">Stash</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="setUpstreamModal()">
+            <i class="fa fa-chevron-up fa-lg">
+                <span class="toolbar-Text">Upstream</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="syncFromFork()">
+            <i class="fa fa-share-alt fa-lg">
+                <span class="toolbar-Text">Sync</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="showRebaseModal()">
+            <i class="fa fa-refresh fa-lg">
+                <span class="toolbar-Text">Rebase</span>
+            </i>
+          </a>
+      </div>
 
-        <!--Push-->
-        <li class="toolbar-Icons" onclick="pushToRemote()">
-          <a href="#"><img src="./assets/Push.svg" height="40" width="48"class="upload" title="Push"></a>
-          <span class="toolbar-Text">Push</span>
-        </li>
-
-        <!--Pull-->
-        <li class="toolbar-Icons" onclick="pullFromRemote()">
-          <a href='#'><img src="./assets/Pull.svg" height="40" width="48" class="download" title="Sync"></a>
-          <span class="toolbar-Text">Pull</span>
-        </li>
-
-        <!--Clean-->
-        <li class="toolbar-Icons" onclick="cleanRepo()">
-          <a href="#"><img src="./assets/Clean-Dark.svg" height="40" width="48" class="add-repository-button"
-              title="Clean"></a>
-          <span class="toolbar-Text">Clean</span>
-        </li>
-
-        <!--Branch-->
-        <li class="toolbar-Icons" onclick="openBranchModal()">
-          <a href="#"><img src="./assets/Branch.svg" height="40" width="48"  class="add-repository-button" title="Branch"></a>
-          <span class="toolbar-Text">Branch</span>
-        </li>
-
-        <!--Revert-->
-        <li class="toolbar-Icons" onclick="revertCommit()">
-            <a href="#"><img src="./assets/Revert.svg" height="40" width="48" class="add-repository-button" title="Revert"></a>
-            <span class="toolbar-Text">Revert</span>
-        </li>
-
-        <!--Stash-->
-        <li class="toolbar-Icons" onclick="showStashModal()">
-            <a href="#"><img src="./assets/stash.png" height="40" width="48" class="add-repository-button" title="Stash"></a>
-            <span class="toolbar-Text">Stash</span>
-        </li>
-
-        <!--Add Upstream Remote Respository-->
-        <li class="toolbar-Icons" onclick="setUpstreamModal()">
-            <a href="#"><img src="./assets/addremote.png" height="40" width="48" class="add-repository-button" title="Set Upstream"></a>
-            <span class="toolbar-Text">Upstream</span>
-        </li>
-        <!--Sync-->
-        <li class="toolbar-Icons" onclick="syncFromFork()">
-          <a href="#"><img src="./assets/sync.png" height="40" width="48" class="add-repository-button" title="Sync"></a>
-          <span class="toolbar-Text">Sync</span>
-          </li>
-
-        <!--Rebase-->
-        <li class="toolbar-Icons" onclick="showRebaseModal()">
-            <a href="#"><img src="./assets/Rebase.png" height="40" width="48" class="add-repository-button" title="Rebase"></a>
-            <span class="toolbar-Text">Rebase</span>
-        </li>
-      </ul>
-
-      <ul class="navbar-nav navbar-right hidden-xs">
-        <li>
-          <label id="githubname" style="color:white"></label>
+      <!-- Sign in/sign out button -->
+      <div class="navbar-nav navbar-right hidden-xs">
           <div id="Button_Sign_out">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()">Sign out</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()" title="Sign out">Sign out</a>
+              <label class ="logout-label" id="githubname" style="color:white"></label>
           </div>
           <div id="Button_Sign_in">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()">Sign In Using Github</a>
+              <a class="fa fa-github fa-2x"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()" title="Sign in with GitHub"></a>
           </div>
-          </li>
-      </ul>
+      </div>
 
 
+      <!-- Hamburger menu -->
       <ul class="nav navbar-nav visible-xs">
         <li (click)="promptUserToAddRepository()"><a>&nbsp;&nbsp;add repository</a></li>
         <li class="dropdown">
