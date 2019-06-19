@@ -452,7 +452,7 @@
 </div>
 
 <!--rebase-->
-<div id="rebase-modal" class="modal fade  " tabindex="-1" role="dialog" aria-hidden="true">
+<div id="rebase-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg " style="height: 100%">
         <div class="modal-content" >
 
@@ -467,8 +467,8 @@
                 <div class="row">
                     <div class="col-md-9" select-outline>
                       <div>
-                        <label for="currentBranch">From: </label>
-                        <b><i id="currentBranch">{{branch}}</i></b>
+                        <label>From: </label>
+                        <b><i id="rebaseBranch">{{branch}}</i></b>
                       </div>
                       <div>
                         <label>Onto: </label>
@@ -488,7 +488,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
 <!--                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg">Apply Rebase</button>-->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Apply Rebase</button>
+                <button type="button" onclick="applyRebase()" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Apply Rebase</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Abort</button>
             </div>
 
@@ -591,5 +591,3 @@
         </div>
     </div>
 </div>
-
-

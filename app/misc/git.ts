@@ -25,7 +25,7 @@ let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
 let refreshAllFlagCommit = false;
-
+let updateRebaseSelection = true;
 
 
 
@@ -777,27 +777,45 @@ async function showRebaseModal() {
   $('#rebase-modal').modal('show');
   getRebaseFromBranch();
   getRebaseOntoBranch();
-  //console.log('out of method: ' + branches);
+}
+
+// A helper function that gets the strings selected for the rebase
+function applyRebase() {
+    let fromBranch = document.getElementById("rebaseBranch").innerText;
+    let tempToBranch = document.getElementById("ontoBranches");
+    let toBranch = tempToBranch.options[tempToBranch.selectedIndex].value;
+    console.log('Branches to rebase from: ' + fromBranch + ', to: ' + toBranch);
+
+    // Ok, start the real rebase
+    rebaseCommits(fromBranch, toBranch);
 }
 
 function getRebaseFromBranch(): void {
-  let rebaseFromBranch = document.getElementById("currentBranch");
+  let rebaseFromBranch = document.getElementById("rebaseBranch");
   rebaseFromBranch.innerText = repoCurrentBranch;
 }
 
 async function getRebaseOntoBranch(): void {
-  let branches = await getEveryBranch();
-  //let rebaseOntoBranch = document.getElementById("showOntoBranches");
-  //rebaseOntoBranch.innerHTML = branches;
-  let rebaseOntoBranches = document.getElementById("ontoBranches");
-  let valueCounter = 1;
-  
-  for(let branch of branches){
-    let option = document.createElement("option");
-    option.setAttribute("value", valueCounter);
-    option.setAttribute("text", branch);
-    rebaseOntoBranches.appendChild(option);
-    valueCounter++;
+  if (updateRebaseSelection) {
+    updateRebaseSelection = false;
+
+    let branches = await getEveryBranch();
+    let rebaseOntoBranches = document.getElementById("ontoBranches");
+    // we need to filter out the remote branches
+    // so use regex to find what we don't want
+    let reMatch = /refs\/remotes/gi;
+    // we need to remove some text from the branch name to clean things up
+    let reRemove = /refs\/heads\//gi;
+
+    for(let branch of branches){
+      if (branch.search(reMatch) == -1) {
+          let displayBranch = branch.replace(reRemove, "");
+          let option = document.createElement("option");
+          option.setAttribute("value", displayBranch);
+          option.setAttribute("text", displayBranch);
+          rebaseOntoBranches.appendChild(option);
+      }
+    }
   }
 }
 
@@ -810,15 +828,9 @@ async function getEveryBranch() {
         return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
     });
   }
-  
-  let branches = await fetchBranches();
-  console.log('In method: ' + branches);
-  return branches;
-}
 
-async function getRebaseOntoBranches() {
-  // ontoBranches = await getEveryBranch();
-  // console.log("maybe this works");
+  let branches = await fetchBranches();
+  return branches;
 }
 
 function rebaseCommits(from: string, to: string) {
