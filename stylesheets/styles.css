@@ -942,7 +942,7 @@ div.selected-commit-diff-panel button.close-button {
 .nav.navbar-nav {
     float:left;
     margin:auto;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #wiki-icon {
