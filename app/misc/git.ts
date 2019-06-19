@@ -1741,13 +1741,48 @@ function cleanRepo() {
  */
 function setUpstreamModal() {
   $('#set-upstream-modal').modal('show');
+  let repository;
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        repository = repo;
+        Git.Remote.lookup(repository, 'upstream').then(function(remote) {
+          document.getElementById("display-upstream").innerText = remote.url();
+          document.getElementById("deleteUpstreamBtn").style.display = "block";
+        }, function(err) {
+          document.getElementById("display-upstream").innerText = 'No upstream repository currently configured.';
+          document.getElementById("deleteUpstreamBtn").style.display = "none";
+        });
+    });
 }
 
 /**
  * Clears the fields from the upstream repo modal.
  */
 function clearUpstreamModalText() {
-  document.getElementById("remote-path").value = "";
+  document.getElementById("upstream-path").value = "";
+}
+
+/**
+ * Delete the current upstream repo.
+ */
+function showUpstreamDelete() {
+  $('#delete-upstream-modal').modal('show');
+  clearUpstreamModalText();
+}
+
+/**
+ * Delete the current upstream repo.
+ */
+function deleteUpstream() {
+  let repository;
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+    Git.Remote.delete(repo, 'upstream').then(function(result) {
+      displayModal('Upstream repository successfully deleted.')
+    }, function(err) {
+      displayModal(err);
+    });
+  });
 }
 
 /**
@@ -1756,23 +1791,21 @@ function clearUpstreamModalText() {
  */
 function setUpstreamRepo() {
   let repository;
-  let upstreamRepoPath = document.getElementById("remote-path").value;
+  let upstreamRepoPath = document.getElementById("upstream-path").value;
   if(upstreamRepoPath != null) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
       addCommand("git remote add upstream " + upstreamRepoPath);
-      console.log(result)
       result.catch(function(error) {
       if (error.message == "cannot set empty URL"){ //Checking for empty URL in the upstream modal
         displayModal("Please enter a valid path to the original branch");
       }
       else if (error.message == "remote 'upstream' already exists"){ //Checking for existing upstream branch
         displayModal("Upstream branch already exists");
-      }
-      addCommand("git remote add upstream " + upstreamRepoPath);
-      });
+      } 
+      }), displayModal("Upstream repository successfully configured.");
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err) //Checking if a repo is opened before setting an upstream
       displayModal("Please open a valid repository first");

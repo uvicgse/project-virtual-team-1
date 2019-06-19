@@ -1164,6 +1164,11 @@ body .pull-request-panel {
   border-width: 1px;
 }
 
+
+#display-upstream {
+  color:black !important;
+}
+
 .stash-panel {
   height: 15vh;
   padding: 0px;
