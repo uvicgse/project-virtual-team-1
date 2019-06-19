@@ -23,10 +23,12 @@
     <div class="right-pr-nav">
         <i (click)="togglePRPanel()"><img src="./assets/PullRequestIcon.svg"></i>
         <hr>
-        <a class="badge badge-pill badge-light text-left "  style="transform: scale(0.7);">Ahead
+        <!-- This badge's colour scheme matches the push icon's hover colour  (fa-cloud-upload:hover) -->
+        <a class="badge badge-pill badge-light text-left "  style="transform: scale(0.7); background-color: #B9E2E0;">Ahead
             <span class="badge badge-light"  id ="ahead_count" ></span>
         </a>
-        <a class="badge  badge-dark btn-responsive text-left" style="transform: scale(0.7);">Behind
+        <!-- This badge's colour scheme matches the pull icon's hover colour (fa-cloud-download:hover) -->
+        <a class="badge  badge-dark btn-responsive text-left" style="transform: scale(0.7); background-color: #E1B9E2;">Behind
             <span class="badge badge-light"  id ="behind_count" ></span>
         </a>
 
