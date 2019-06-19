@@ -1,0 +1,28 @@
+<div class="stash-panel-contents" id="stash-panel-contents">
+    <!-- STASH LIST -->
+    <div class='page-header' id="stash-header">
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <button type='button' class='btn btn-primary' onclick="popStash(0)" title="Apply and Drop Top Stash">Pop!</button>
+            </div>
+        </div>
+        <h3 id="stash-list-title">Stash List</h3>
+    </div>
+    <div class="files-stashed" id="files-stashed">
+        <ul id="stash-list" class="list-group">
+        </ul>
+    </div>
+</div>
+<table class="stash-drop-panel" id="stash-drop-panel" hidden>
+    <tr>
+        <td class="apply-stash-zone" ondragover="allowDrop(event)" ondrop="handleStashApplyZoneDrop(event)">
+            Apply
+        </td>
+    </tr>
+    <tr>
+        <td class="drop-stash-zone" ondragover="allowDrop(event)" ondrop="handleStashDropZoneDrop(event)">
+            Drop
+        </td>
+    </tr>
+</table>
+ 
