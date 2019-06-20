@@ -184,7 +184,7 @@ function addAndCommit() {
       console.log("Verifying account");
       let sign;
 
-      sign = repository.defaultSignature();
+      sign = getSignature(repository);
 
       commitMessage = document.getElementById('commit-message-input').value;
       console.log("Signature to be put on commit: " + sign.toString());
@@ -518,7 +518,7 @@ function createBranch() {
               branchName,
               commit,
               0,
-              repo.defaultSignature(),
+              getSignature(repo),
               "Created new-branch on HEAD");
           }, function (err) {
             console.log("git.ts, line 337, error occurred while trying to create a new branch " + err);
@@ -662,7 +662,7 @@ function mergeLocalBranches(element) {
       console.log("branch to merge to: " + toBranch.name());
       return repos.mergeBranches(toBranch,
         fromBranch,
-        repos.defaultSignature(),
+        getSignature(repos),
         Git.Merge.PREFERENCE.NONE,
         null);
     })
@@ -696,7 +696,7 @@ function createTag(tagName: string, commitSha: string, pushTag: boolean, message
       if (message == undefined) {
         return Git.Tag.createLightweight(repo, tagName, commit, 0);
       } else {
-        return Git.Tag.create(repo, tagName, commit, repo.defaultSignature(), message, 0);
+        return Git.Tag.create(repo, tagName, commit, getSignature(repo), message, 0);
       }
     })
     .then(function(tagOid){
@@ -769,6 +769,34 @@ function mergeCommits(from) {
         refreshAll(repos);
       }
     });
+}
+
+// Rebase modal functionality starts here!
+function showRebaseModal() {
+  $('#rebase-modal').modal('show');
+  getRebaseFromBranch();
+  let branches = getEveryBranch();
+  console.log('out of method: ' + branches);
+}
+
+function getRebaseFromBranch() {
+    let rebaseFromBranch = document.getElementById("currentBranch");
+    rebaseFromBranch.innerText = repoCurrentBranch;
+}
+
+async function getEveryBranch() {
+  async function fetchBranches() {
+      let repos;
+      return Git.Repository.open(repoFullPath)
+        .then(function (repo) {
+          repos = repo;
+          return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
+      });
+  }
+
+  let branches = await fetchBranches();
+  console.log('In method: ' + branches);
+  return branches;
 }
 
 function rebaseCommits(from: string, to: string) {
@@ -921,7 +949,7 @@ function stashChanges() {
       // show the command to the user
       addCommand(cmdStr);
 
-      Git.Stash.save(repo, repo.defaultSignature(), stashMessage, flags)
+      Git.Stash.save(repo, getSignature(repo), stashMessage, flags)
         .then(function(oid) {
           // error for testing purposes
           //throw new Error('test error2');
@@ -941,24 +969,18 @@ function stashChanges() {
 /**
  * Pop a single stashed state from the top of the stash list
  */
-function popStash() {
-  Git.Repository.open(repoFullPath)
-  .then(function (repo) {
-    addCommand("git stash pop")
-
-    let stashIndex = 0; // 0 --> top of the stack
-    Git.Stash.pop(repo, stashIndex)
-    .then(function(result) {
-      // unfortunately the result is ALWAYS undefined
-    }).catch(function(err) {
-      handleStashError(err)
-    }).done(function() {
-      doneStash()
-    });
+function popStash(index) {
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.silent(true).stash(["pop",index]).then((result)=>{
+    addCommand("git stash pop " + index)
+  }).catch(function(err) {
+    handleStashError(err);
   });
 }
 
-
+/**
+ * Queries for stash list and displays it
+ */
 function displayStashes(){
   let sGitRepo = sGit(repoFullPath);
 
@@ -969,25 +991,122 @@ function displayStashes(){
       let stashList = document.getElementById("stash-list")!;
       stashList.innerHTML = "";
       // update the list
-      list.all.forEach(element => {
+      list.all.forEach((element,key) => {
+        //generate list element
         let stashElement = document.createElement("li");
-        stashElement.className = "list-group-item stash-list-item";
+        stashElement.className = "list-group-item stash-list-item list-group-item-action";
         stashElement.innerHTML = element.message;
+        //allow showing of stash info on click
+        stashElement.onclick = function () {
+          showStashInfo(key);
+        }
+
+        //generate apply button
+        let applyButton = document.createElement("i");
+        applyButton.className = "fa fa-arrow-circle-up fa-2x";
+        applyButton.onclick = function (event){
+          //stop propgation required to not activate on show
+          event.stopPropagation();
+          applyStash(key);
+        };
+        applyButton.title = "Apply Stash";
+
+        //generate drop button
+        let dropButton = document.createElement("i");
+        dropButton.className = "fa fa-trash fa-2x";
+        dropButton.onclick = function (event){
+          //stop propgation required to not activate on show
+          event.stopPropagation();
+          dropStash(key);
+        };
+        dropButton.title = "Drop Stash";
+
+        let buttons = document.createElement("div");
+        buttons.className = "pull-right";
+        buttons.style.display = "inline-block";
+
+        //add buttons to list element
+        buttons.appendChild(dropButton);
+        buttons.appendChild(applyButton);
+        stashElement.prepend(buttons);
+
+        //allow drag and drop
+        stashElement.draggable =true;
+
+        stashElement.ondragstart = function (event){
+          //visually show drop zone
+          document.getElementById("graph-panel")!.classList.add("dropzone");
+          event.dataTransfer!.effectAllowed = 'move';
+          //generate data payload
+          let payload = {
+            operation: "stash",
+            index: key
+          };
+          event.dataTransfer!.setData("text", JSON.stringify(payload));
+
+          window.requestAnimationFrame(function(){
+            document.getElementById("stash-panel-contents")!.hidden = true;
+            document.getElementById("stash-drop-panel")!.hidden = false;
+          });
+        }
+
+        stashElement.ondragend = function (event){
+          //remove dropzone styling
+          document.getElementById("graph-panel")!.classList.remove("dropzone");
+
+          window.requestAnimationFrame(function(){
+            document.getElementById("stash-panel-contents")!.hidden = false;
+            document.getElementById("stash-drop-panel")!.hidden = true;
+          });
+
+          //required to prevent default drop handling
+          event.preventDefault();
+        };
+
+        //add list element to list
         stashList.appendChild(stashElement);
       });
     }
 
-    // do this anyway, just to make sure we can see it.
+    //hide stash list panel if there are no stashes to show
     if(list.all.length > 0){
-      document.getElementById("stashed-files-message")!.hidden =true;
-      document.getElementById("pop-stash-list")!.style.display = "block";
+      document.getElementById("stash-panel-wrapper")!.hidden =false;
     } else {
-      document.getElementById("stashed-files-message")!.hidden = false;
-      document.getElementById("pop-stash-list")!.style.display = "none";
+      document.getElementById("stash-panel-wrapper")!.hidden = true;
     }
   });
 }
 
+function showStashInfo(index) {
+  let sGitRepo = sGit(repoFullPath);
+  let stashIndex = ("stash@{" + index + "}");
+  addCommand("git stash show " + stashIndex);
+  sGitRepo.silent(true).stash(["show", stashIndex]).then((result)=> {
+    updateModalText(result);
+  }).catch(function(err) {
+    handleStashError(err);
+  });
+}
+
+function applyStash(index){
+  let sGitRepo = sGit(repoFullPath);
+  addCommand("git stash apply " + index)
+  sGitRepo.silent(true).stash(["apply",index]).then((result)=>{
+    // no op
+  }).catch(function(err) {
+    handleStashError(err);
+  });
+}
+
+function dropStash(index){
+  let sGitRepo = sGit(repoFullPath);
+  addCommand("git stash drop " + index)
+  sGitRepo.silent(true).stash(["drop",index]).then((result)=>{
+    // no op
+  }).catch(function(err) {
+    handleStashError(err);
+  });
+}
 function isStashListTheSame(list) {
   // get the list of hashes
   let currStashHashList = []
@@ -1622,13 +1741,48 @@ function cleanRepo() {
  */
 function setUpstreamModal() {
   $('#set-upstream-modal').modal('show');
+  let repository;
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        repository = repo;
+        Git.Remote.lookup(repository, 'upstream').then(function(remote) {
+          document.getElementById("display-upstream").innerText = remote.url();
+          document.getElementById("deleteUpstreamBtn").style.display = "block";
+        }, function(err) {
+          document.getElementById("display-upstream").innerText = 'No upstream repository currently configured.';
+          document.getElementById("deleteUpstreamBtn").style.display = "none";
+        });
+    });
 }
 
 /**
  * Clears the fields from the upstream repo modal.
  */
 function clearUpstreamModalText() {
-  document.getElementById("remote-path").value = "";
+  document.getElementById("upstream-path").value = "";
+}
+
+/**
+ * Delete the current upstream repo.
+ */
+function showUpstreamDelete() {
+  $('#delete-upstream-modal').modal('show');
+  clearUpstreamModalText();
+}
+
+/**
+ * Delete the current upstream repo.
+ */
+function deleteUpstream() {
+  let repository;
+  Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+    Git.Remote.delete(repo, 'upstream').then(function(result) {
+      displayModal('Upstream repository successfully deleted.')
+    }, function(err) {
+      displayModal(err);
+    });
+  });
 }
 
 /**
@@ -1637,28 +1791,63 @@ function clearUpstreamModalText() {
  */
 function setUpstreamRepo() {
   let repository;
-  let upstreamRepoPath = document.getElementById("remote-path").value;
+  let upstreamRepoPath = document.getElementById("upstream-path").value;
   if(upstreamRepoPath != null) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
-      console.log(result)
+      addCommand("git remote add upstream " + upstreamRepoPath);
       result.catch(function(error) {
       if (error.message == "cannot set empty URL"){ //Checking for empty URL in the upstream modal
         displayModal("Please enter a valid path to the original branch");
       }
       else if (error.message == "remote 'upstream' already exists"){ //Checking for existing upstream branch
         displayModal("Upstream branch already exists");
-      }
-      addCommand("git remote add upstream " + upstreamRepoPath);
-      });
+      } 
+      }), displayModal("Upstream repository successfully configured.");
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err) //Checking if a repo is opened before setting an upstream
       displayModal("Please open a valid repository first");
     });
   }
   clearUpstreamModalText();
+}
+
+/**
+* This function is called when the user clicks the "Sync" button on the navbar. It syncs from the upstream repository
+* configured in addRemoteRepo()
+*/
+function syncFromFork() {
+  let repository;
+  let commitRef;
+  var fetchOptions = {
+    callbacks: {
+      credentials: function () { return getCredentials(); },
+      certificateCheck: function () { return 1; }
+    }
+  }
+  Git.Repository.open(repoFullPath)
+  .then(function (repo) {
+    repository = repo;
+    var result = Git.Remote.addFetch(repository, 'upstream', 'remotes/upstream/master');
+    return repository.fetch('upstream',fetchOptions) //fetch from upstream
+  }, function (err) {
+    displayModal("Error fetching:"+ err)
+  })
+  .then(function() {
+    return repository.checkoutBranch("master") //checkout master
+  }, function (err) {
+    displayModal("Error checking out branch:"+ err)
+  })
+  .then(function() {
+    return repository.mergeBranches("master", "upstream/master"); //merge upstream/master into master
+  }, function (err) {
+    displayModal("Error merging:"+ err)
+  })
+  .then(function(oid){
+    displayModal("Sync complete!")
+  });
 }
 
 /**
@@ -1670,12 +1859,12 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
   addCommand("git mv " + filesource + " " + filedestination);
 
   // test if file destination already exists or if test is to be skipped
-  if(fs.existsSync(filedestination) || skipFileExistTest){
+  if(fs.existsSync(filedestination) || skipFileExistTest) {
     let sGitRepo = sGit(repoFullPath);  // open repository with simple-git
     sGitRepo.silent(true)   // activate silent mode to prevent fatal errors from getting logged to STDOUT
-            .mv(filesource, filedestination)  //perform GIT MV operation
-            .then(() => console.log('move completed'))
-            .catch((err) => displayModal('move failed: ' + err));
+        .mv(filesource, filedestination)  //perform GIT MV operation
+        .then(() => console.log('move completed'))
+        .catch((err) => displayModal('move failed: ' + err));
   }
   else{
     displayModal("Destination directory does not exist");
@@ -1691,9 +1880,6 @@ function unpushedCommitsModal() {
     document.getElementById("ahead_count").innerHTML = status.ahead;
     document.getElementById("behind_count").innerHTML = status.behind;
 
-    //we don't need to log these on a continuous basis
-    //console.log(status.ahead);
-    //console.log(status.behind);
   });
 
 }

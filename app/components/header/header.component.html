@@ -12,7 +12,9 @@
           class="add-repository-button" title="Add Repository"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar">
-      <ul class="nav navbar-nav col-md-5 hidden-xs">
+
+       <!-- Repo/branch/tag     -->
+      <div class="nav navbar-nav col-md-5 hidden-xs">
         <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
         <li class="repo-name dropdown-toggle">
           <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal"
@@ -55,78 +57,90 @@
             <div id="branch-item-list" class="select-menu-list" role="tabpanel" tabindex="0" [ngClass]="{'hidden' : !branchSelectedInRefDropdown}"></div>
           </ul>
         </li>
-      </ul>
+      </div>
 
       <!--Toolbar-->
-      <ul class="navbar-nav col hidden-xs toolbar-Container">
-        <li class="toolbar-Icons" onclick="openWiki()">
-          <i id="wiki-icon" class="fa fa-wikipedia-w fa-2x"></i>
-          <span class="toolbar-Text">Wiki</span>
-        </li>
-        <!--Commit-->
-        <li class="toolbar-Icons" onclick="commitModal()">
-          <a href="#"><img src="./assets/Plus.svg" height="40" width="48" class="add-repository-button"
-              title="Commit"></a>
-          <span class="toolbar-Text">Commit</span>
-        </li>
+      <div class="navbar-nav-toolbar hidden-xs toolbar-Container">
+          <a class="toolbar-Icons" onclick="openWiki()">
+            <i class="fa fa-wikipedia-w fa-lg">
+                <span class="toolbar-Text">Wiki</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons text-center" (click)="displayFileEditor()">
+            <i class="fa fa-edit fa-lg">
+              <span class="toolbar-Text">Editor</span>
+            </i>
+          </a>
+        <a class="toolbar-Icons text-center" (click)="displayIssuePanel()">
+          <i class="fa fa-exclamation-circle fa-lg">
+            <span class="toolbar-Text">Issues</span>
+          </i>
+        </a>
+          <a class="toolbar-Icons text-center" onclick="commitModal()">
+            <i class="fa fa-plus-circle fa-lg">
+            <span class="toolbar-Text">Commit</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="pushToRemote()">
+            <i class="fa fa-cloud-upload fa-lg">
+                <span class="toolbar-Text">Push</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="pullFromRemote()">
+            <i class="fa fa-cloud-download fa-lg">
+                <span class="toolbar-Text">Pull</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="cleanRepo()">
+            <i class="fa fa-recycle fa-lg">
+                <span class="toolbar-Text">Clean</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="openBranchModal()">
+            <i class="fa fa-pagelines fa-lg">
+                <span class="toolbar-Text">Branch</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="revertCommit()">
+            <i class="fa fa-history fa-lg">
+                <span class="toolbar-Text">Revert</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="showStashModal()">
+            <i class="fa fa-star fa-lg">
+                <span class="toolbar-Text">Stash</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="setUpstreamModal()">
+            <i class="fa fa-chevron-up fa-lg">
+                <span class="toolbar-Text">Upstream</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="syncFromFork()">
+            <i class="fa fa-share-alt fa-lg">
+                <span class="toolbar-Text">Sync</span>
+            </i>
+          </a>
+          <a class="toolbar-Icons" onclick="showRebaseModal()">
+            <i class="fa fa-refresh fa-lg">
+                <span class="toolbar-Text">Rebase</span>
+            </i>
+          </a>
+      </div>
 
-        <!--Push-->
-        <li class="toolbar-Icons" onclick="pushToRemote()">
-          <a href="#"><img src="./assets/Push.svg" height="40" width="48"class="upload" title="Push"></a>
-          <span class="toolbar-Text">Push</span>
-        </li>
-
-        <!--Pull-->
-        <li class="toolbar-Icons" onclick="pullFromRemote()">
-          <a href='#'><img src="./assets/Pull.svg" height="40" width="48" class="download" title="Sync"></a>
-          <span class="toolbar-Text">Pull</span>
-        </li>
-
-        <!--Clean-->
-        <li class="toolbar-Icons" onclick="cleanRepo()">
-          <a href="#"><img src="./assets/Clean-Dark.svg" height="40" width="48" class="add-repository-button"
-              title="Clean"></a>
-          <span class="toolbar-Text">Clean</span>
-        </li>
-
-        <!--Branch-->
-        <li class="toolbar-Icons" onclick="openBranchModal()">
-          <a href="#"><img src="./assets/Branch.svg" height="40" width="48"  class="add-repository-button" title="Branch"></a>
-          <span class="toolbar-Text">Branch</span>
-        </li>
-
-        <!--Revert-->
-        <li class="toolbar-Icons" onclick="revertCommit()">
-            <a href="#"><img src="./assets/Revert.svg" height="40" width="48" class="add-repository-button" title="Revert"></a>
-            <span class="toolbar-Text">Revert</span>
-        </li>
-
-        <!--Stash-->
-        <li class="toolbar-Icons" onclick="showStashModal()">
-            <a href="#"><img src="./assets/stash.png" height="40" width="48" class="add-repository-button" title="Stash"></a>
-            <span class="toolbar-Text">Stash</span>
-        </li>
-
-        <!--Add Upstream Remote Respository-->
-        <li class="toolbar-Icons" onclick="setUpstreamModal()">
-            <a href="#"><img src="./assets/addremote.png" height="40" width="48" class="add-repository-button" title="Set Upstream"></a>
-            <span class="toolbar-Text">Upstream</span>
-        </li>
-      </ul>
-
-      <ul class="navbar-nav navbar-right hidden-xs">
-        <li>
-          <label id="githubname" style="color:white"></label>
+      <!-- Sign in/sign out button -->
+      <div class="navbar-nav navbar-right hidden-xs">
           <div id="Button_Sign_out">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()">Sign out</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()" title="Sign out">Sign out</a>
+              <label class ="logout-label" id="githubname" style="color:white"></label>
           </div>
           <div id="Button_Sign_in">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()">Sign In Using Github</a>
+              <a class="fa fa-github fa-2x"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()" title="Sign in with GitHub"></a>
           </div>
-          </li>
-      </ul>
-      
+      </div>
 
+
+      <!-- Hamburger menu -->
       <ul class="nav navbar-nav visible-xs">
         <li (click)="promptUserToAddRepository()"><a>&nbsp;&nbsp;add repository</a></li>
         <li class="dropdown">
@@ -432,14 +446,180 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" onclick="clearUpstreamModalText()" class="upstreamModalComponents">&times;</span>
         </button>
-        <h4 class="modal-title">Info</h4>
+        <h4 class="modal-title">Configure an Upstream Repository</h4>
+      </div>
+      <div class="modal-body" id="modal-text-box">
+        <h5 type="text">Upstream:</h5>
+        <p id="display-upstream"></p>
+        <button type="button" class="btn btn-danger btn-sm" id="deleteUpstreamBtn" data-dismiss="modal" onclick="showUpstreamDelete()">Delete</button>
       </div>
       <div class="modal-body" id="modal-text-box">
         Please provide the HTTP path to the original repository:
-        <input type="text" id="remote-path" class="form-control" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
+        <input type="text" id="upstream-path" class="form-control" style=" width: 554px !important" placeholder="https://github.com/ORIGINAL_OWNER/ORIGINAL_OWNER_REPOSITORY.git">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="setUpstreamButton" onclick="setUpstreamRepo()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal for deleting upstream -->
+<div id="delete-upstream-modal" class="modal fade">
+  <!-- <input type="hidden" id="branch-to-delete" name="branch-to-delete" /> -->
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Confirmation</h4>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the upstream repository?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="localDeleteButton" data-dismiss="modal" onClick="deleteUpstream()">Delete</button>
+
+<!--rebase-->
+<div id="rebase-modal" class="modal fade  " tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg " >
+        <div class="modal-content" >
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Rebase Branch </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-9" select-outline>
+                <div>
+                  <label for="currentBranch">From: </label>
+                  <b><i id="currentBranch">{{branch}}</i></b>
+                </div>
+                <div>
+                  <label>Onto: </label>
+                  <!-- <option *ngFor="let branch of getEveryBranch()">{{branch}}</option> -->
+                  <select id="ontoBranches">
+                    <!-- <b><i id="showOntoBranches">{{branch}}</i></b> -->
+                    <option>{{branch}}</option>
+                  </select>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                  <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+            <div class="modal-footer">
+<!--                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg">Apply Rebase</button>-->
+                <button type="button" class="btn btn-success" data-toggle="modal" data-dismiss="modal" href="#exampleModal">Apply Rebase</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Abort</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  "  style="height: 100%">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Rebasing Commits</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="table-responsive table-hover">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Action</th>
+              <th>Commit</th>
+              <th>Comments</th>
+            </tr>
+            </thead>
+            <tbody class="draggable">
+            <tr>
+              <td><div class="btn-group">
+                <button type="button" class="btn btn-danger">Action</button>
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">squash</a></li>
+                  <li><a href="#">pick</a></li>
+                  <li><a href="#">reword</a></li>
+
+
+                </ul>
+              </div></td>
+              <td>96411f7</td>
+              <td>Reword *_ restore EI Update to use library</td>
+
+
+            </tr>
+            <tr>
+              <td><div class="btn-group">
+                <button type="button" class="btn btn-danger">Action</button>
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">squash</a></li>
+                  <li><a href="#">pick</a></li>
+                  <li><a href="#">reword</a></li>
+
+
+                </ul>
+              </div></td>
+              <td>5425d73</td>
+              <td>On-attach spec file new line removed</td>
+
+
+            </tr>
+            <tr>
+              <td><div class="btn-group">
+                <button type="button" class="btn btn-danger">Action</button>
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">squash</a></li>
+                  <li><a href="#">pick</a></li>
+                  <li><a href="#">reword</a></li>
+
+
+                </ul>
+              </div></td>
+              <td>0d68911</td>
+              <td>Test did not show usage</td>
+
+
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue Rebase </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
       </div>
     </div>
   </div>

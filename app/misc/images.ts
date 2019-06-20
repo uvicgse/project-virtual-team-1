@@ -49,7 +49,7 @@ function imageForUser(name: string, email: string, callback) {
       // That being said, if you've hit the rate limit, just supply the token below; i.e. gh.client('token')
       let client = gh.client();
       
-      client.get(`/users/${username}`, {}, function (err, status, body, headers) {
+      let t = client.get(`/users/${username}`, {}, function (err, status, body, headers) {
         if (!err) {          
           pic = body.avatar_url;
           images[username] = pic;   // add to cache

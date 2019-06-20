@@ -76,3 +76,6 @@ VisualGit utilises a range of libraries and frameworks, more information on them
  - [simple-git](https://www.npmjs.com/package/simple-git)
  - [Vis.js](http://visjs.org/docs/network/)
  - [TypeScript](https://www.typescriptlang.org/)
+
+# Issue Reporting
+When creating new issues, or feature requests please follow this handy [formatting guide](https://github.com/uvicgse/project-virtual-team-1/wiki/Issue-Formatting-Guidelines) to aid future developers' understanding of your desires.
