@@ -29,14 +29,13 @@ let password = "x-oauth-basic";
 
 // Configuration of Oauth Application Variables
 const OauthConfig = {
- clientId: 'CLIENT_ID',
- clientSecret: 'CLIENT_SECRET',
- authorizationUrl: 'https://github.com/login/oauth/authorize',
- tokenUrl: 'https://github.com/login/oauth/access_token',
- useBasicAuthorizationHeader: false,
- redirectUri: 'http://localhost'
+  clientId: 'CLIENT_ID',
+  clientSecret: 'CLIENT_SECRET',
+  authorizationUrl: 'https://github.com/login/oauth/authorize',
+  tokenUrl: 'https://github.com/login/oauth/access_token',
+  useBasicAuthorizationHeader: false,
+  redirectUri: 'http://localhost'
 };
-
 const windowParams = {
   alwaysOnTop: true,
   autoHideMenuBar: true,
