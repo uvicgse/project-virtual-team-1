@@ -2,21 +2,21 @@
   <div class="container-fluid row">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-        aria-expanded="false">
+              aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
       <a href="#"><img src="./assets/AddRepositoryFolder.svg" onclick="switchToAddRepositoryPanel()"
-          class="add-repository-button" title="Add Repository"></a>
+                       class="add-repository-button" title="Add Repository"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="nav navbar-nav col-md-5 hidden-xs">
         <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
         <li class="repo-name dropdown-toggle">
           <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal"
-            onclick="checkSignedIn()">repository</a>
+             onclick="checkSignedIn()">repository</a>
         </li>
         <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
         <li class="branch-name dropdown">
@@ -66,7 +66,7 @@
         <!--Commit-->
         <li class="toolbar-Icons" onclick="commitModal()">
           <a href="#"><img src="./assets/Plus.svg" height="40" width="48" class="add-repository-button"
-              title="Commit"></a>
+                           title="Commit"></a>
           <span class="toolbar-Text">Commit</span>
         </li>
 
@@ -85,7 +85,7 @@
         <!--Clean-->
         <li class="toolbar-Icons" onclick="cleanRepo()">
           <a href="#"><img src="./assets/Clean-Dark.svg" height="40" width="48" class="add-repository-button"
-              title="Clean"></a>
+                           title="Clean"></a>
           <span class="toolbar-Text">Clean</span>
         </li>
 
@@ -97,26 +97,26 @@
 
         <!--Revert-->
         <li class="toolbar-Icons" onclick="revertCommit()">
-            <a href="#"><img src="./assets/Revert.svg" height="40" width="48" class="add-repository-button" title="Revert"></a>
-            <span class="toolbar-Text">Revert</span>
+          <a href="#"><img src="./assets/Revert.svg" height="40" width="48" class="add-repository-button" title="Revert"></a>
+          <span class="toolbar-Text">Revert</span>
         </li>
 
         <!--Stash-->
         <li class="toolbar-Icons" onclick="showStashModal()">
-            <a href="#"><img src="./assets/stash.png" height="40" width="48" class="add-repository-button" title="Stash"></a>
-            <span class="toolbar-Text">Stash</span>
+          <a href="#"><img src="./assets/stash.png" height="40" width="48" class="add-repository-button" title="Stash"></a>
+          <span class="toolbar-Text">Stash</span>
         </li>
 
         <!--Add Upstream Remote Respository-->
         <li class="toolbar-Icons" onclick="setUpstreamModal()">
-            <a href="#"><img src="./assets/addremote.png" height="40" width="48" class="add-repository-button" title="Set Upstream"></a>
-            <span class="toolbar-Text">Upstream</span>
+          <a href="#"><img src="./assets/addremote.png" height="40" width="48" class="add-repository-button" title="Set Upstream"></a>
+          <span class="toolbar-Text">Upstream</span>
         </li>
 
         <!--Rebase-->
         <li class="toolbar-Icons" onclick="showRebaseModal()">
-            <a href="#"><img src="./assets/Rebase.png" height="40" width="48" class="add-repository-button" title="Rebase"></a>
-            <span class="toolbar-Text">Rebase</span>
+          <a href="#"><img src="./assets/Rebase.png" height="40" width="48" class="add-repository-button" title="Rebase"></a>
+          <span class="toolbar-Text">Rebase</span>
         </li>
       </ul>
 
@@ -124,12 +124,12 @@
         <li>
           <label id="githubname" style="color:white"></label>
           <div id="Button_Sign_out">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()">Sign out</a>
+            <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="signOut()">Sign out</a>
           </div>
           <div id="Button_Sign_in">
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()">Sign In Using Github</a>
+            <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()">Sign In Using Github</a>
           </div>
-          </li>
+        </li>
       </ul>
 
 
@@ -173,7 +173,7 @@
     </div>
     <div id="cloneProgressDiv" class="progress" style="visibility: collapse">
       <div id="cloneProgressBar" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20"
-        aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+           aria-valuemin="0" aria-valuemax="100" style="width: 0%">
       </div>
     </div>
   </div>
@@ -365,12 +365,12 @@
 
 
 
-        <!--<input type="text" id="asdasda" class="form-control" placeholder="Search Repository">-->
-        <!--<span class="input-group-btn">-->
-          <!--<button class="btn btn-default" type="button" onclick="searchRepoName()">Search</button>-->
-        <!--</span>-->
-        <!--<ul class="list-group"id="adadadada" role="menu" aria-labelledby="repo-name">-->
-        <!--</ul>-->
+      <!--<input type="text" id="asdasda" class="form-control" placeholder="Search Repository">-->
+      <!--<span class="input-group-btn">-->
+      <!--<button class="btn btn-default" type="button" onclick="searchRepoName()">Search</button>-->
+      <!--</span>-->
+      <!--<ul class="list-group"id="adadadada" role="menu" aria-labelledby="repo-name">-->
+      <!--</ul>-->
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="createBranchButton" onclick="createBranch()">Create</button>
       </div>
@@ -404,9 +404,9 @@
   <div class="modal-dialog">
     <div class="modal-content" id="rep-modal">
       <div class="modal-header stashMsgModalHeader">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true" onclick="clearStashMsgErrorText()" class="stashMsgModalComponents">&times;</span>
-            </button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" onclick="clearStashMsgErrorText()" class="stashMsgModalComponents">&times;</span>
+        </button>
         <h4 class="modal-title stashMsgModalTitle stashMsgModalComponents" >Create new stash message</h4>
       </div>
       <div class="modal-body">
@@ -416,8 +416,8 @@
         <!-- Allow the user to select to stash untracked files-->
         <!-- Checkbox to allow the user to stash untracked files -->
         <div class="UntrackedFiles" style="padding-top: 5px">
-            <input type="checkbox" id="untracked-files-checkbox">
-            <label class="checkbox-label">Include Untracked Files</label>
+          <input type="checkbox" id="untracked-files-checkbox">
+          <label class="checkbox-label">Include Untracked Files</label>
         </div>
         <div class="modal-body stashMsgModalError stashMsgModalComponents" id="stashMsgErrorText"></div>
       </div>
@@ -431,7 +431,7 @@
 
 <!--Modal for adding remote upstream repository-->
 <div id="set-upstream-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-  aria-hidden="true">
+     aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content" style=" width: 602px !important">
       <div class="modal-header">
@@ -453,141 +453,140 @@
 
 <!--rebase-->
 <div id="rebase-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg " style="height: 100%">
-        <div class="modal-content" >
+  <div class="modal-dialog modal-lg " style="height: 100%">
+    <div class="modal-content" >
 
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Rebase Branch </h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Rebase Branch </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-9" select-outline>
+            <div>
+              <label>From: </label>
+              <b><i id="rebaseBranch" onload = "getRebaseFromBranch()"></i></b>
             </div>
+            <div>
+              <label>Onto: </label>
+              <select id = "ontoBranches" onload =getRebaseOntoBranch() ></select>
+              <!-- <option *ngFor="let branch of getEveryBranch()">{{branch}}</option> -->
+<!--              <select id="ontoBranches" onload = "getRebaseOntoBranch()></select>-->
 
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-9" select-outline>
-                      <div>
-                        <label>From: </label>
-                        <b><i id="rebaseBranch">{{branch}}</i></b>
-                      </div>
-                      <div>
-                        <label>Onto: </label>
-                        <!-- <option *ngFor="let branch of getEveryBranch()">{{branch}}</option> -->
-                        <select id="ontoBranches">
-                          <!-- <b><i id="showOntoBranches">{{branch}}</i></b> -->
-                          <option>{{branch}}</option>
-                        </select>
-                      </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                            <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-<!--                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg">Apply Rebase</button>-->
-                <button type="button" onclick="applyRebase()" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Apply Rebase</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Abort</button>
-            </div>
-
-          <!-- Modal -->
-          <div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog  " role="document" style="height: 100%">
-              <div class="modal-content" >
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Rebasing Commits</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-
-                  <div class="table-responsive table-hover">
-                    <table class="table table-bordered">
-                      <thead>
-                      <tr>
-                        <th>Action</th>
-                        <th>Commit</th>
-                        <th>Comments</th>
-                      </tr>
-                      </thead>
-                      <tbody class="draggable">
-                      <tr>
-                        <td><div class="btn-group">
-                          <button type="button" class="btn btn-danger">Action</button>
-                          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">squash</a></li>
-                            <li><a href="#">pick</a></li>
-                            <li><a href="#">reword</a></li>
-
-
-                          </ul>
-                        </div></td>
-                        <td>96411f7</td>
-                        <td>Reword *_ restore EI Update to use library</td>
-
-
-                      </tr>
-                      <tr>
-                        <td><div class="btn-group">
-                          <button type="button" class="btn btn-danger">Action</button>
-                          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">squash</a></li>
-                            <li><a href="#">pick</a></li>
-                            <li><a href="#">reword</a></li>
-
-
-                          </ul>
-                        </div></td>
-                        <td>5425d73</td>
-                        <td>On-attach spec file new line removed</td>
-
-
-                      </tr>
-                      <tr>
-                        <td><div class="btn-group">
-                          <button type="button" class="btn btn-danger">Action</button>
-                          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">squash</a></li>
-                            <li><a href="#">pick</a></li>
-                            <li><a href="#">reword</a></li>
-
-
-                          </ul>
-                        </div></td>
-                        <td>0d68911</td>
-                        <td>Test did not show usage</td>
-
-
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-
-
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary">Start Rebasing </button>
-                </div>
-              </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+              <label class="form-check-label" for="inlineCheckbox1">Interactive </label>
             </div>
           </div>
         </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <!--                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg">Apply Rebase</button>-->
+        <button type="button" onclick="applyRebase()" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Apply Rebase</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Abort</button>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  " role="document" style="height: 100%">
+          <div class="modal-content" >
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Rebasing Commits</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="table-responsive table-hover">
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Commit</th>
+                    <th>Comments</th>
+                  </tr>
+                  </thead>
+                  <tbody class="draggable">
+                  <tr>
+                    <td><div class="btn-group">
+                      <button type="button" class="btn btn-danger">Action</button>
+                      <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">squash</a></li>
+                        <li><a href="#">pick</a></li>
+                        <li><a href="#">reword</a></li>
+
+
+                      </ul>
+                    </div></td>
+                    <td>96411f7</td>
+                    <td>Reword *_ restore EI Update to use library</td>
+
+
+                  </tr>
+                  <tr>
+                    <td><div class="btn-group">
+                      <button type="button" class="btn btn-danger">Action</button>
+                      <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">squash</a></li>
+                        <li><a href="#">pick</a></li>
+                        <li><a href="#">reword</a></li>
+
+
+                      </ul>
+                    </div></td>
+                    <td>5425d73</td>
+                    <td>On-attach spec file new line removed</td>
+
+
+                  </tr>
+                  <tr>
+                    <td><div class="btn-group">
+                      <button type="button" class="btn btn-danger">Action</button>
+                      <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">squash</a></li>
+                        <li><a href="#">pick</a></li>
+                        <li><a href="#">reword</a></li>
+
+
+                      </ul>
+                    </div></td>
+                    <td>0d68911</td>
+                    <td>Test did not show usage</td>
+
+
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary">Start Rebasing </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
