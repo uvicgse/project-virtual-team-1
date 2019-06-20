@@ -233,13 +233,18 @@ body .navbar .dropdown-toggle {
   margin-top: 10px;
 }*/
 
+.filepanel-headings {
+  color: white;
+  float: left;
+}
+
 body .file-panel {
   width: 20%;
-  height: 70vh;
+  height: 80vh;
   background-color: #282828;
   float: left;
   z-index: 0;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 body .file-panel .modified-files-header .staged-files-header .select-all-message {
@@ -254,12 +259,21 @@ body .file-panel .files-changed .modified-files-message {
 }
 
 body .file-panel .files-staged .modified-files-message {
-    padding: 20px;
+  padding: 20px;
 }
 
 body .file-panel .files-changed .file {
   width: 99%;
   height: 10%;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #fff;
+}
+
+.file {
+  width: 99%;
+  height: 10%;
+  min-height: 40px;
   position: relative;
   overflow: hidden;
   border: 1px solid #fff;
@@ -274,6 +288,23 @@ body .file-panel .files-changed .files-staged .file p {
   text-overflow: ellipsis;
   overflow: hidden;
   width: 80%;
+}
+
+.file-path {
+  float: right;
+  width: 95%;
+}
+
+.files-changed {
+  overflow-y: auto;
+  min-height: 25%;
+  max-height: 35%;
+}
+
+.files-staged {
+  overflow-y: auto;
+  min-height: 25%;
+  max-height: 35%;
 }
 
 body .file-panel .files-changed .files-staged .file input {
@@ -1142,11 +1173,12 @@ div.wiki-header button.close-button, div.wiki-header button.open-button {
 /*
   Pull request related css.
 */
+
 body .pull-request-panel {
   background-color: #282828;
   display: block;
+  height: 80vh;
   float: right;
-  height: 60vh;
   overflow-y: auto;
   transition: .5s;
   width: 60px;

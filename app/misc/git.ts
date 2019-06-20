@@ -209,7 +209,7 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-
+      displayModal("Commit successful");
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
@@ -1882,4 +1882,18 @@ function unpushedCommitsModal() {
 
   });
 
+}
+
+//undo the latest unpush single commit using git reset --soft HEAD~1
+//TODO support for undo any number of commit user want
+function resetLastCommit()
+{
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.silent(true).reset(["HEAD~1"]).then((result) => {
+    displayModal("Most recent unpush commit has been reset");
+  } ).catch( function ( err )
+  {
+    alert("Reset Failed : "+ err.message );
+    console.log( err );
+  });
 }
