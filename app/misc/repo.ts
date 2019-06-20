@@ -751,7 +751,7 @@ function refreshReferences(verbose, force) {
   }
 
   // TODO: fully impelement
-  function checkoutLocalTag(element) {
+  function checkoutTag(element) {
     let button;   // entry in branch drop-down
     let img = "<img"
     if (typeof element === "string") {
@@ -777,11 +777,6 @@ function refreshReferences(verbose, force) {
             console.log("repo.ts, cannot checkout local tag: " + err);
           });
       })
-  }
-
-  // TODO: implement
-  function checkoutRemoteTag(element) {
-
   }
 
   function checkoutRemoteBranch(element) {
