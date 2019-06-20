@@ -79,11 +79,6 @@ ipcRenderer.on('change-to-default-style', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
-    // Add click event to Commit button
-    document.getElementById('commit-button').addEventListener("click", function() {
-      console.log("commit button has been clicked");
-      addAndCommit();
-    });
 
     document.getElementById('save-button').addEventListener("click", function() {
       saveFile();
