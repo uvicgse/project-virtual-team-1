@@ -153,11 +153,6 @@ function displayFilePanel() {
     commitButton.style.visibility = "visible";
   }
 
-  let fileEditButton = document.getElementById("fileEdit-button");
-  if (fileEditButton != null){
-    fileEditButton.style.visibility = "visible";
-  }
-  document.getElementById("Issues-button").style="visiblity: visible";
 }
 
 function displayPullRequestPanel() {
@@ -206,12 +201,7 @@ function hideFilePanel() {
     commitButton.style.visibility = "hidden";
   }
 
-  let fileEditButton = document.getElementById("fileEdit-button");
-  if (fileEditButton != null){
-    fileEditButton.style.visibility = "hidden";
-  }
-  document.getElementById("Issues-button").style="visibility: hidden";
-}
+ }
 
 function hideGraphPanel() {
   let graphPanel = document.getElementById("graph-panel");
