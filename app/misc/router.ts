@@ -142,17 +142,6 @@ function displayFilePanel() {
   if (filePanel != null){
     filePanel.style.zIndex = "10";
   }
-
-  let commitMessageInput = document.getElementById("commit-message-input");
-  if (commitMessageInput != null){
-    commitMessageInput.style.visibility = "visible";
-  }
-
-  let commitButton = document.getElementById("commit-button");
-  if (commitButton != null){
-    commitButton.style.visibility = "visible";
-  }
-
 }
 
 function displayPullRequestPanel() {
@@ -189,16 +178,6 @@ function hideFilePanel() {
   let filePanel = document.getElementById("file-panel");
   if (filePanel != null){
     filePanel.style.zIndex = "-10";
-  }
-
-  let commitMessageInput = document.getElementById("commit-message-input");
-  if (commitMessageInput != null){
-    commitMessageInput.style.visibility = "hidden";
-  }
-
-  let commitButton = document.getElementById("commit-button");
-  if (commitButton != null){
-    commitButton.style.visibility = "hidden";
   }
 
  }
@@ -313,10 +292,14 @@ function hideDiffPanelButtons() {
 
 function hideFooter(){
   document.getElementById("terminal")!.style.visibility = "hidden";
+  document.getElementById("commit-panel")!.style.visibility = "hidden";
   document.getElementById("stash-panel")!.style.visibility = "hidden";
 }
 function displayFooter(){
   document.getElementById("terminal")!.style.visibility = "visible";
+  if(document.getElementById("staged-files-message") == null){
+    document.getElementById("commit-panel")!.style.visibility = "visible";
+  }
   document.getElementById("stash-panel")!.style.visibility = "visible";
 }
 

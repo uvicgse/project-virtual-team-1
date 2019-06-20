@@ -526,28 +526,8 @@ body .footer .commit-panel .commit-message-input {
   padding: 5px;
 }
 
-body .footer .commit-panel .commit-button-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-body .footer .commit-panel .commit-button-wrapper .commit-button {
-  display: block;
-  margin-left: 5px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  height: 30px;
-  border-radius: 10px;
-  border: 0;
-  padding: 0 14px;
-  background-color: #39c0ba;
-  color: #fff;
-  white-space: nowrap;
-}
-
-body .footer .commit-panel .commit-button:hover {
-  opacity: 0.8;
+.commit-panel{
+  visibility: hidden;
 }
 
 body .footer .terminal .git-command {
