@@ -747,6 +747,7 @@ div.selected-commit-diff-panel button.close-button {
 
 .toolbar-Icons{
     padding: 3px;
+    color: white;
 }
 
 .toolbar-Icons:hover {
@@ -776,44 +777,44 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
-.fa-cloud-upload:hover {
-    color: #B9E2E0;
+.fa-cloud-upload-alt:hover {
+    color: #FAB757;
 }
 
-.fa-cloud-upload:hover span{
+.fa-cloud-upload-alt:hover span{
     display: block;
     position: absolute;
     transform: translate(-2%, -5%);
     font-family: sans-serif;
 }
 
-.fa-cloud-download:hover {
+.fa-cloud-download-alt:hover {
     color: #E1B9E2;
 }
 
-.fa-cloud-download:hover span{
+.fa-cloud-download-alt:hover span{
     display: block;
     position: absolute;
     transform: translate(10%, -5%);
     font-family: sans-serif;
 }
 
-.fa-recycle:hover {
+.fa-broom:hover {
     color: #1664FF;
 }
 
-.fa-recycle:hover span{
+.fa-broom:hover span{
     display: block;
     position: absolute;
     transform: translate(-15%, -5%);
     font-family: sans-serif;
 }
 
-.fa-pagelines:hover {
+.fa-code-branch:hover {
     color: #3B9880;
 }
 
-.fa-pagelines:hover span{
+.fa-code-branch:hover span{
     display: block;
     position: absolute;
     transform: translate(-27%, -5%);
@@ -827,18 +828,18 @@ div.selected-commit-diff-panel button.close-button {
 .fa-history:hover span{
     display: block;
     position: absolute;
-    transform: translate(-27%, -5%);
+    transform: translate(-20%, -5%);
     font-family: sans-serif;
 }
 
-.fa-star:hover {
+.fa-box-open:hover {
     color: #F7F47C;
 }
 
-.fa-star:hover span{
+.fa-box-open:hover span{
     display: block;
     position: absolute;
-    transform: translate(-15%, -5%);
+    transform: translate(-7%, -5%);
     font-family: sans-serif;
 }
 
@@ -853,25 +854,25 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
-.fa-share-alt:hover {
+.fa-sync-alt:hover {
     color: #FA57E7;
 }
 
-.fa-share-alt:hover span{
+.fa-sync-alt:hover span{
     display: block;
     position: absolute;
     transform: translate(-15%, -5%);
     font-family: sans-serif;
 }
 
-.fa-refresh:hover {
-    color: #57FA9C;
+.fa-network-wired:hover {
+    color: #FA5E57;
 }
 
-.fa-refresh:hover span{
+.fa-network-wired:hover span{
     display: block;
     position: absolute;
-    transform: translate(-27%, -5%);
+    transform: translate(-16%, -5%);
     font-family: sans-serif;
 }
 
@@ -883,12 +884,13 @@ div.selected-commit-diff-panel button.close-button {
     text-decoration: none;
 }
 
-.navbar-nav.navbar-right .fa:hover {
+.navbar-nav.navbar-right .fab:hover {
     filter: invert(.5);
 }
 
-.navbar-nav.navbar-right .fa {
+.navbar-nav.navbar-right .fab {
     /* login */
+    color: white;
     position: absolute;
     top: 5px;
     right: 5px;
@@ -917,6 +919,7 @@ div.selected-commit-diff-panel button.close-button {
 .toolbar-Text {
   font-size: 14px;
   color: white;
+  padding-top: 5px;
 }
 
 .toolbar-Container {
