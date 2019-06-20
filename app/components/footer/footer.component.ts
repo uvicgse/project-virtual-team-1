@@ -8,13 +8,5 @@ import { StashPanelComponent } from "../stashPanel/stash.panel.component";
 })
 
 export class FooterComponent {
-  displayIssuePanel(): void {
-    let issue = document.getElementById("issue-panel");
-    displayIssues();
-    if(issue != null) {
-      issue.style.height = "100vh"
-      issue.style.width = "100vw"
-      issue.style.zIndex = "10";
-    } 
-  }
+
 }
