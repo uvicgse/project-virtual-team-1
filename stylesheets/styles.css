@@ -765,6 +765,28 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
+.fa-edit:hover {
+  color: #FFA500;
+}
+
+.fa-edit:hover span{
+  display: block;
+  position: absolute;
+  transform: translate(-20%, -5%);
+  font-family: sans-serif;
+}
+
+.fa-exclamation-circle:hover {
+  color: #FF0000;
+}
+
+.fa-exclamation-circle:hover span{
+  display: block;
+  position: absolute;
+  transform: translate(-20%, -5%);
+  font-family: sans-serif;
+}
+
 .fa-plus-circle:hover {
     color: #99E29D;
 }
