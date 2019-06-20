@@ -695,7 +695,10 @@ function reCenter() {
         }
     };
 
-    network.focus(commitList[commitList.length - 1]["id"], moveOptions);
+    // Recenter on the first commit
+    if (commitList.length > 0) {
+        network.focus(commitList[commitList.length - 1]["id"], moveOptions);
+    }
 }
 
 // Open a specific commit's dialog box
