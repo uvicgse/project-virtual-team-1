@@ -13,7 +13,7 @@ function collapseSignPanel() {
 }
 
 function switchToClonePanel() {
-  console.log("switch to clone panel");
+  console.log("Switching to clone panel");
   hideAuthenticatePanel();
   hideFilePanel();
   hidePullRequestPanel();
@@ -46,7 +46,7 @@ function switchToMainPanel() {
 
 function checkSignedIn() {
   if (continuedWithoutSignIn) {
-    displayModal("You need to sign in");
+    displayModal("Sign in required, please sign in.");
     // Don't open the repo modal
     $('#repo-name').removeAttr("data-target");
 } else {
@@ -74,7 +74,7 @@ function switchToAddRepositoryPanelWhenNotSignedIn() {
 
 function switchToAddRepositoryPanel() {
   inTheApp = true
-  console.log("Switching to add repo panel");
+  console.log("Switching to add repo panel.");
   useRecentRepositories();
   hideFooter();
   hideAuthenticatePanel();
@@ -116,10 +116,10 @@ function wait(ms) {
 }
 
 function displayUsername() {
-  console.log("Display Username called");
   document.getElementById("Button_Sign_out").style.display = "block";
   showUsername = true;
-  console.log(getUsername());
+  let currentUsername = getUsername();
+  console.log("Currently signed in as: " + currentUsername);
   let githubname = document.getElementById("githubname");
   if (githubname != null){
     let existing_username = githubname.innerHTML;
@@ -349,7 +349,7 @@ function useSavedCredentials() : boolean {
   let file = 'data.json';
   // check if the data.json file exists
   if (fs.existsSync(file)) {
-    console.log('button has been pressed: logging in with saved credentials');
+    console.log('Previous login detected: logging in with saved credentials...');
     decrypt();
     loginWithSaved(switchToMainPanel);
     return true;
@@ -364,7 +364,7 @@ function createRecentRepositories(file) {
     try {
         fs.writeFileSync(file);
     } catch (err) {
-        console.log(err);
+        console.log("ERROR Could not create recent repository file, createRecentRepositories() in router.ts threw error: " + err);
     }
 }
 
@@ -374,9 +374,9 @@ function useRecentRepositories() {
     let file = 'repos.json';
 
     if (!fs.existsSync(file)) {
-        console.log(file + ' does not exist');
+        console.log("ERROR: " + file + ' does not exist.');
         createRecentRepositories(file);
     } else {
-        console.log(file + ' exists')
+        console.log(file + ' exists.')
     }
 }

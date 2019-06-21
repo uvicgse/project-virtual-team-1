@@ -14,7 +14,7 @@ function changeColor(color) {
   // Save user color selection
   if (color != null) {
     fs.writeFile(userColorFilePath, color, function(err) {
-        if (err) console.log("Cannot write colour to file: " + err);
+        if (err) console.log("ERROR cannot write colour to file. Reason: " + err);
     });
   }
 
@@ -53,7 +53,8 @@ function changeColor(color) {
 
   if (color === 'white') {
     for (let i = 0; i < head.length; i++) {
-      console.log(head[i]);
+      // Currently unneeded nav class printout.
+      // console.log(head[i]);
       head[i].className = 'navbar navbar-white';
     }
     for (let i = 0; i < headButton.length; i++) {
@@ -102,12 +103,13 @@ function changeColor(color) {
     if (stagedMessageColor != null) {
       stagedMessageColor.style.color = '#000000';
     }
-    
+
     before = 'white';
   }
   else if (color === 'pink') {
     for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
+            // Currently unneeded nav class printout.
+            // console.log(head[i]);
             head[i].className = 'navbar navbar-pink';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -117,14 +119,14 @@ function changeColor(color) {
             headButton[i].classList.add('btn-default');
         }
         for (var i = 0; i < fa.length; i++) {
-            fa[i].setAttribute('style', 'color:white'); 
+            fa[i].setAttribute('style', 'color:white');
         }
         fp.setAttribute('style', 'background-color: #FFC2C2');
         for (var i = 0; i < p.length; i++) {
             p[i].style.color = '#000000';
         }
         for (var i = 0; i < h1.length; i++) {
-            h1[i].style.color = '#FFA3A3'; 
+            h1[i].style.color = '#FFA3A3';
         }
         for (let i = 0; i < stashes.length; i++){
           stashes[i].style.color = "#000000";
@@ -133,11 +135,11 @@ function changeColor(color) {
 
         changeTextColor('#000000');
 
-        diffp.style.color = '#000000'; 
+        diffp.style.color = '#000000';
         diffp.style.backgroundColor = 'white';
         diffPanel.style.backgroundColor = 'white';
         network.style.backgroundColor = '#FFE5E5';
-        footer.style.backgroundColor = '#FFD7D7'; 
+        footer.style.backgroundColor = '#FFD7D7';
         footer.style.border = '#FFD7D7';
         arp.style.backgroundColor = '#FFD7D7';
         auth.style.backgroundColor = '#FFE5E5';
@@ -160,7 +162,8 @@ function changeColor(color) {
     }
     else if (color === 'blue') {
       for (var i = 0; i < head.length; i++) {
-              console.log(head[i]);
+              // Currently unneeded nav class printout.
+              // console.log(head[i]);
               head[i].className = 'navbar navbar-blue';
           }
           for (var i = 0; i < headButton.length; i++) {
@@ -170,14 +173,14 @@ function changeColor(color) {
               headButton[i].classList.add('btn-default');
           }
           for (var i = 0; i < fa.length; i++) {
-              fa[i].setAttribute('style', 'color:white'); 
+              fa[i].setAttribute('style', 'color:white');
           }
-          fp.setAttribute('style', 'background-color: #9DD2FE'); 
+          fp.setAttribute('style', 'background-color: #9DD2FE');
           for (var i = 0; i < p.length; i++) {
               p[i].style.color = '#000000';
           }
           for (var i = 0; i < h1.length; i++) {
-              h1[i].style.color = '#4EAFFE'; 
+              h1[i].style.color = '#4EAFFE';
           }
           for (let i = 0; i < stashes.length; i++){
             stashes[i].style.color = "#000000";
@@ -186,13 +189,13 @@ function changeColor(color) {
 
           changeTextColor('#000000');
 
-          diffp.style.color = '#000000'; 
-          diffp.style.backgroundColor = 'white'; 
+          diffp.style.color = '#000000';
+          diffp.style.backgroundColor = 'white';
           diffPanel.style.backgroundColor = 'white';
-          network.style.backgroundColor = '#EEF6FF'; 
-          footer.style.backgroundColor = '#B6DEFF'; 
-          footer.style.border = '#B6DEFF'; 
-          arp.style.backgroundColor = '#DAEEFF'; 
+          network.style.backgroundColor = '#EEF6FF';
+          footer.style.backgroundColor = '#B6DEFF';
+          footer.style.border = '#B6DEFF';
+          arp.style.backgroundColor = '#DAEEFF';
           auth.style.backgroundColor = '#DAEEFF';
           repoName.style.color = '#fff';
           branchName.style.color = '#fff';
@@ -201,19 +204,20 @@ function changeColor(color) {
           diffChangePopUp.style.backgroundColor = '#B6DEFF';
           commitDiffPanel.style.backgroundColor = '#fff';
           stashTitle.style.color = '#000000';
-         
+
           if (modifiedMessageColor != null) {
             modifiedMessageColor.style.color = '#fff';
           }
           if (stagedMessageColor != null) {
             stagedMessageColor.style.color = '#fff';
           }
-          
+
           before = 'blue';
     }
     else if (color === 'navy') {
       for (var i = 0; i < head.length; i++) {
-              console.log(head[i]);
+              // Currently unneeded nav class printout.
+              // console.log(head[i]);
               head[i].className = 'navbar navbar-navy';
           }
           for (var i = 0; i < headButton.length; i++) {
@@ -225,7 +229,7 @@ function changeColor(color) {
           for (var i = 0; i < fa.length; i++) {
               fa[i].setAttribute('style', 'color:white');
           }
-          fp.setAttribute('style', 'background-color: #0066FF'); 
+          fp.setAttribute('style', 'background-color: #0066FF');
           for (var i = 0; i < p.length; i++) {
               p[i].style.color = '#000000';
           }
@@ -239,14 +243,14 @@ function changeColor(color) {
 
           changeTextColor('#000000');
 
-          diffp.style.color = '#000000';  
+          diffp.style.color = '#000000';
           diffp.style.backgroundColor = 'white';
           diffPanel.style.backgroundColor = 'white';
-          network.style.backgroundColor = '#CCE0FF'; 
+          network.style.backgroundColor = '#CCE0FF';
           network.style.border = '#CCE0FF';
-          footer.style.backgroundColor = '#4D94FF'; 
-          footer.style.border = '#4D94FF'; 
-          arp.style.backgroundColor = '#4D94FF'; 
+          footer.style.backgroundColor = '#4D94FF';
+          footer.style.border = '#4D94FF';
+          arp.style.backgroundColor = '#4D94FF';
           auth.style.backgroundColor = '#4D94FF';
           repoName.style.color = '#fff';
           branchName.style.color = '#fff';
@@ -255,7 +259,7 @@ function changeColor(color) {
           diffChangePopUp.style.backgroundColor = '#0066FF';
           commitDiffPanel.style.backgroundColor = '#fff';
           stashTitle.style.color = '#000000';
-          
+
           if (modifiedMessageColor != null) {
             modifiedMessageColor.style.color = '#fff';
           }
@@ -267,7 +271,8 @@ function changeColor(color) {
     }
     else if (color === 'green') {
       for (var i = 0; i < head.length; i++) {
-              console.log(head[i]);
+        // Currently unneeded nav class printout.
+              // console.log(head[i]);
               head[i].className = 'navbar navbar-green';
           }
           for (var i = 0; i < headButton.length; i++) {
@@ -277,14 +282,14 @@ function changeColor(color) {
               headButton[i].classList.add('btn-default');
           }
           for (var i = 0; i < fa.length; i++) {
-              fa[i].setAttribute('style', 'color:white'); 
+              fa[i].setAttribute('style', 'color:white');
           }
-          fp.setAttribute('style', 'background-color: #5CD65C'); 
+          fp.setAttribute('style', 'background-color: #5CD65C');
           for (var i = 0; i < p.length; i++) {
               p[i].style.color = '#000000';
           }
           for (var i = 0; i < h1.length; i++) {
-              h1[i].style.color = '#00990d'; 
+              h1[i].style.color = '#00990d';
           }
           for (let i = 0; i < stashes.length; i++){
             stashes[i].style.color = "#000000";
@@ -293,14 +298,14 @@ function changeColor(color) {
 
           changeTextColor('#000000');
 
-          diffp.style.color = '#000000'; 
-          diffp.style.backgroundColor = 'white'; 
+          diffp.style.color = '#000000';
+          diffp.style.backgroundColor = 'white';
           diffPanel.style.backgroundColor = 'white';
-          network.style.backgroundColor = '#EBFAEB'; 
-          footer.style.backgroundColor = '#ADEBAD'; 
-          footer.style.border = '#ADEBAD'; 
-          arp.style.backgroundColor = '#ADEBAD'; 
-          auth.style.backgroundColor = '#ADEBAD'; 
+          network.style.backgroundColor = '#EBFAEB';
+          footer.style.backgroundColor = '#ADEBAD';
+          footer.style.border = '#ADEBAD';
+          arp.style.backgroundColor = '#ADEBAD';
+          auth.style.backgroundColor = '#ADEBAD';
           repoName.style.color = '#fff';
           branchName.style.color = '#fff';
           modifiedTitle.style.color = '#fff';
@@ -308,7 +313,7 @@ function changeColor(color) {
           diffChangePopUp.style.backgroundColor = '#ADEBAD';
           commitDiffPanel.style.backgroundColor = '#fff';
           stashTitle.style.color = '#000000';
-          
+
           if (modifiedMessageColor != null) {
           modifiedMessageColor.style.color = '#fff';
         }
@@ -317,10 +322,11 @@ function changeColor(color) {
         }
 
           before = 'green';
-  } 
+  }
   else if (color === 'default') {
     for (let i = 0; i < head.length; i++) {
-      console.log(head[i]);
+      // Currently unneeded nav class printout.
+      // console.log(head[i]);
       head[i].className = 'navbar navbar-inverse';
     }
     for (let i = 0; i < headButton.length; i++) {
@@ -379,7 +385,7 @@ function changeColor(color) {
       diffChangePanelText[i].setAttribute('style', 'color:' + textColor);
     }
   }
-  
+
   // Match the style of the file editor to the rest of the app
   editor!.style.color = diffp.style.color;
   editor!.style.backgroundColor = network.style.backgroundColor;

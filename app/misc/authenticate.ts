@@ -129,7 +129,7 @@ function searchRepoName() {
     for (let i = 0; i < data.length; i++) {
 
       let rep = Object.values(data)[i];
-      console.log("url of repo: " + rep['html_url']);
+      // console.log("url of repo: " + rep['html_url']);
 
       // Searches from the text input and adds to the list if repo name is found
       if (parseInt(rep['forks_count']) == 0) {
@@ -181,9 +181,10 @@ function authenticateUser(callback) {
       });
 
     }, err => {
-      console.log('Error while getting token', err);
+      console.log('ERROR while getting token. ', err);
 	}).catch( err => {
-    console.log(err);
+    let tokenError = err;
+    console.log("Token error: " + err);
   });
 }
 
@@ -219,6 +220,7 @@ function getUserInfo(callback) {
       }
       else {
         displayModal(err);
+        console.log("ERROR fetching user information: " + err);
       }
       document.getElementById('grey-out').style.display = 'none';
     }
@@ -242,6 +244,7 @@ function submitOTP(callback) {
   }, function (err, id, token, headers) {
     if (err) {
       displayModal(err);
+      console.log("ERROR submitting OTP: " + err);
     }
     else {
       client = github.client(token);
@@ -256,6 +259,7 @@ function processLogin(ghme, callback) {
   ghme.info(function(err, data, head) {
     if (err) {
       displayModal(err);
+      console.log("ERROR processing login: " + err);
     } else {
       avaterImg = Object.values(data)[2]
       document.getElementById("githubname").innerHTML = data["login"]
@@ -271,10 +275,13 @@ function processLogin(ghme, callback) {
     } else {
        displayUsername();
       document.getElementById("avatar").innerHTML = "Sign out";
-      console.log("number of repos: " + data.length);
+      console.log("Number of repos associated to logged in user: " + data.length + " To display urls of said repos, uncomment the log below this one in processLogin() in authenticate.ts.");
       for (let i = 0; i < data.length; i++) {
         let rep = Object.values(data)[i];
-        console.log("url of repo: " + rep['html_url']);
+        // The following line lists the URL of all the repos associated with the logged in user.
+        // It was clogging the debugging console with unneccessary information so it's been commented
+        // out for the time being.
+        // console.log("url of repo: " + rep['html_url']);
 
         if(rep['fork'] == false) {
           if(parseInt(rep['forks_count']) == 0) {
@@ -315,7 +322,7 @@ function selectRepo(ele) {
   if (butt.innerHTML != 'Clone'){
     butt.disabled = false;
   }
-  console.log("selected " + ele.innerHTML + " as repository");
+  console.log("Selected " + ele.innerHTML + " as repository");
 }
 
 function cloneRepo() {
@@ -326,16 +333,16 @@ function cloneRepo() {
 
   hidePRPanel();
 
-  console.log("cloning " + url);
+  console.log("Cloning " + url);
   let splitUrl = url.split("/");
   let local;
   if (splitUrl.length >= 2) {
     local = splitUrl[splitUrl.length - 1];
   }
-  console.log("cloning " + local);
+  console.log("Cloning " + local);
 
   if (local == null) {
-    updateModalText("Error: could not define name of repo");
+    updateModalText("Error: could not define name of repo.");
     return;
   }
 

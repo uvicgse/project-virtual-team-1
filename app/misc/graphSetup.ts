@@ -8,7 +8,7 @@ let options, bsNodes, bsEdges, nodes, edges, network;
 let secP = null, fromNode = null, toNode;
 
 let GraphNodeID = 0;
- 
+
 function returnSelectedNodeValue():number{
     let returnValue = GraphNodeID;
     GraphNodeID = 0;
@@ -16,7 +16,7 @@ function returnSelectedNodeValue():number{
 }
 
 function drawGraph() {
-    updateGraphProgress(0);    
+    updateGraphProgress(0);
     document.getElementById('graph-loading').style.display = 'block';
     $('#modal').modal('show');
     bsNodes = new vis.DataSet([]);
@@ -147,27 +147,27 @@ function drawGraph() {
         aheadCommitList=[]
         let sGitRepo = sGit(repoFullPath);
         sGitRepo.silent( true ).log( { '--branches': null, '--not': null, '--remotes': null } ).then( ( result ) =>
-        {  
+        {
             //collect all branches unpush commits using:- git log --branches --not --remotes
             for ( let k = 0; k < result.all.length; k++ )
             {
                 aheadCommitList.push( result.all[ k ].hash );
             }
         } ).then(() => sGitRepo.silent( true ).log( { 'origin/master..master': null } )).then(( result ) =>
-        {  
+        {
             //add unpush commit on master using:- git log origin/master..master
             for ( let k = 0; k < result.all.length; k++ )
             {
                 aheadCommitList.push( result.all[ k ].hash );
             }
         }).catch(function (err) {
-            console.log("ERROR!! unable to load local Only commits becuase: "+err.message);
+            console.log("ERROR: unable to load local only commits because: "+err.message);
         } ).then( function (){
             processGraph( commits );
-        } ).catch( function ( err ){ 
-            console.log(err)
+        } ).catch( function ( err ){
+            console.log("ERROR loading local commits: " + err)
         } );
-        
+
 
         network.on("stabilizationIterationsDone", function () {
             network.setOptions({physics: false});
@@ -275,7 +275,7 @@ function drawGraph() {
                 }
             }
         })
-        
+
         // Clicking on the network disables the context menu
         network.on("click", function (properties) {
             let contextMenu = $("#networkContext")
@@ -351,7 +351,8 @@ function displaySelectedCommitDiffPanel(commitId): void {
       closeButton.style.display = "inline";
     }
     let commitPanel = document.getElementById("selected-commit-diff-panel");
-    console.log("inside display selected commit");
+    // To help with understanding order of operations:
+    // console.log("Inside display selected commit.");
     if (commitPanel != null) {
       commitPanel.style.height = "100vh";
       commitPanel.style.width = "100vw";
