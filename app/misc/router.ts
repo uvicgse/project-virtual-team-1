@@ -19,6 +19,7 @@ function switchToClonePanel() {
   hidePullRequestPanel();
   hideGraphPanel();
   hideFooter();
+  hideNavToolbar();
   displayClonePanel();
 }
 
@@ -28,6 +29,7 @@ function switchToMainPanel() {
   displayFilePanel();
   displayPullRequestPanel();
   displayFooter();
+  displayNavToolbar();
   displayGraphPanel();
 
   openDisabled = false;
@@ -76,6 +78,7 @@ function switchToAddRepositoryPanel() {
   inTheApp = true
   console.log("Switching to add repo panel");
   useRecentRepositories();
+  hideNavToolbar();
   hideFooter();
   hideAuthenticatePanel();
   hideFilePanel();
@@ -309,6 +312,22 @@ function hideDiffPanelButtons() {
 
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
+}
+
+function hideNavToolbar() {
+  // only hide these if there is no repo
+  if (!repoFullPath) {
+    document.getElementById("nav-repo-branch-tag-info")!.style.visibility = "hidden";
+    document.getElementById("nav-toolbar")!.style.visibility = "hidden";
+  }
+}
+
+function displayNavToolbar() {
+  // only show these if there is a repo
+  if (repoFullPath) {
+    document.getElementById("nav-repo-branch-tag-info")!.style.visibility = "visible";
+    document.getElementById("nav-toolbar")!.style.visibility = "visible";
+  }
 }
 
 function hideFooter(){
