@@ -1632,6 +1632,11 @@ function displayModifiedFiles() {
             element.style.backgroundColor = "#84db00";
           } else if (line.charAt(0) === "-") {
             element.style.backgroundColor = "#ff2448";
+          } else if (line.includes("No newline at end of file")) {
+            // mimic the git diff command line tool and show this line anyway
+            // the line shows "<	12	<	\n\ No newline at end of file\n"
+            // so just show "\ No newline at end of file" as per git
+            line = "\ No newline at end of file"
           }
 
           // If not a changed line, origin will be a space character, so still need to slice
