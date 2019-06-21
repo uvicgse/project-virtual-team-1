@@ -336,7 +336,8 @@ function checkRepoOpen() {
   document.getElementById("repo-back-button")!.style.visibility = showRepoNavTools;
   document.getElementById("nav-repo-branch-tag-info")!.style.visibility = showRepoNavTools;
   document.getElementById("nav-toolbar")!.style.visibility = showRepoNavTools;
-  document.getElementById("nav-open-repo-button")!.style.visibility = showRepoNavTools;
+  // do not hide this repo button until issue 184 is fixed
+  //document.getElementById("nav-open-repo-button")!.style.visibility = showRepoNavTools;
 }
 
 function hideFooter(){
