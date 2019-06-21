@@ -21,7 +21,7 @@ let vis = require("vis");
 let commitHistory = [];
 let commitToRevert = 0;
 let commitHead = 0;
-let commitID = 0;x
+let commitID = 0;
 let lastCommitLength;
 let refreshAllFlagCommit = false;
 
