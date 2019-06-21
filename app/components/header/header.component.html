@@ -14,13 +14,11 @@
     <div class="collapse navbar-collapse" id="navbar">
        <!-- Repo/branch/tag -->
       <div class="nav navbar-nav col-md-5 hidden-xs">
-        <!-- <li><img src="./assets/RightArrow.svg" class="right-arrow"></li> -->
         <li><i class="fas fa-angle-right fa-2x"></i></li>
         <li class="repo-name dropdown-toggle">
           <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal"
             onclick="checkSignedIn()">repository</a>
         </li>
-        <!-- <li><img src="./assets/RightArrow.svg" class="right-arrow"></li> -->
         <li><i class="fas fa-angle-right fa-2x"></i></li>
         <li class="branch-name dropdown">
           <a href="#" class="dropdown-toggle" id="branch-name" data-toggle="dropdown" onclick="switchToMainPanel()">
@@ -68,12 +66,12 @@
             </i>
           </a>
           <a class="toolbar-Icons text-center" (click)="displayFileEditor()">
-            <i class="fa fa-edit fa-lg">
+            <i class="fas fa-edit fa-2x">
               <span class="toolbar-Text">Editor</span>
             </i>
           </a>
         <a class="toolbar-Icons text-center" (click)="displayIssuePanel()">
-          <i class="fa fa-exclamation-circle fa-lg">
+          <i class="fas fa-exclamation-circle fa-2x">
             <span class="toolbar-Text">Issues</span>
           </i>
         </a>
