@@ -117,7 +117,7 @@ body .header {
 
 body .navbar {
   margin-bottom: 0px;
-  font-size: 20px;
+  font-size: 14px;
   z-index: 1;
 }
 
@@ -739,12 +739,6 @@ div.selected-commit-diff-panel button.close-button {
   max-height: 55px;
 }
 
-.fa {
-  /* All font-awesome assets */
-  /* Would prefer to use font-awesome 5.0+ */
-  color: white;
-}
-
 .toolbar-Icons{
     padding: 3px;
     color: white;
@@ -756,7 +750,7 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .fa-wikipedia-w:hover {
-    color: #C2E0FA;
+    color: #407CD9;
 }
 
 .fa-wikipedia-w:hover span{
@@ -800,7 +794,7 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .fa-broom:hover {
-    color: #1664FF;
+    color: #55D1F9;
 }
 
 .fa-broom:hover span{
@@ -931,9 +925,16 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .nav.navbar-nav {
+    min-width: 30%;
     float:left;
-    margin:auto;
-    /* overflow: hidden; */
+    /* margin:auto; */
+    display: inline-block;
+}
+
+.fa-angle-right {
+    color: white;
+    position: relative;
+    top: 12px;
 }
 
 #wiki-icon {

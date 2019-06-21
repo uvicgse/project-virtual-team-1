@@ -12,15 +12,16 @@
           class="add-repository-button" title="Add Repository"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar">
-
-       <!-- Repo/branch/tag     -->
+       <!-- Repo/branch/tag -->
       <div class="nav navbar-nav col-md-5 hidden-xs">
-        <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
+        <!-- <li><img src="./assets/RightArrow.svg" class="right-arrow"></li> -->
+        <li><i class="fas fa-angle-right fa-2x"></i></li>
         <li class="repo-name dropdown-toggle">
           <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal"
             onclick="checkSignedIn()">repository</a>
         </li>
-        <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
+        <!-- <li><img src="./assets/RightArrow.svg" class="right-arrow"></li> -->
+        <li><i class="fas fa-angle-right fa-2x"></i></li>
         <li class="branch-name dropdown">
           <a href="#" class="dropdown-toggle" id="branch-name" data-toggle="dropdown" onclick="switchToMainPanel()">
             branch/tag<span class="caret"></span>
@@ -62,57 +63,57 @@
       <!--Toolbar-->
       <div class="navbar-nav-toolbar hidden-xs toolbar-Container">
           <a class="toolbar-Icons" onclick="openWiki()">
-            <i class="fab fa-wikipedia-w fa-lg">
+            <i class="fab fa-wikipedia-w fa-2x">
                 <span class="toolbar-Text">Wiki</span>
             </i>
           </a>
           <a class="toolbar-Icons text-center" onclick="commitModal()">
-            <i class="fas fa-plus-circle fa-lg">
+            <i class="fas fa-plus-circle fa-2x">
             <span class="toolbar-Text">Commit</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="pushToRemote()">
-            <i class="fas fa-cloud-upload-alt fa-lg">
+            <i class="fas fa-cloud-upload-alt fa-2x">
                 <span class="toolbar-Text">Push</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="pullFromRemote()">
-            <i class="fas fa-cloud-download-alt fa-lg">
+            <i class="fas fa-cloud-download-alt fa-2x">
                 <span class="toolbar-Text">Pull</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="cleanRepo()">
-            <i class="fas fa-broom fa-lg">
+            <i class="fas fa-broom fa-2x">
                 <span class="toolbar-Text">Clean</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="openBranchModal()">
-            <i class="fas fa-code-branch fa-lg">
+            <i class="fas fa-code-branch fa-2x">
                 <span class="toolbar-Text">Branch</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="revertCommit()">
-            <i class="fas fa-history fa-lg">
+            <i class="fas fa-history fa-2x">
                 <span class="toolbar-Text">Revert</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="showStashModal()">
-            <i class="fas fa-box-open fa-lg">
+            <i class="fas fa-box-open fa-2x">
                 <span class="toolbar-Text">Stash</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="setUpstreamModal()">
-            <i class="fas fa-chevron-up fa-lg">
+            <i class="fas fa-chevron-up fa-2x">
                 <span class="toolbar-Text">Upstream</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="syncFromFork()">
-            <i class="fas fa-sync-alt fa-lg">
+            <i class="fas fa-sync-alt fa-2x">
                 <span class="toolbar-Text">Sync</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="showRebaseModal()">
-            <i class="fas fa-network-wired fa-lg">
+            <i class="fas fa-network-wired fa-2x">
                 <span class="toolbar-Text">Rebase</span>
             </i>
           </a>
@@ -125,7 +126,7 @@
               <label class ="logout-label" id="githubname" style="color:white"></label>
           </div>
           <div id="Button_Sign_in">
-              <a class="fab fa-github fa-2x"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()" title="Sign in with GitHub"></a>
+              <a class="fab fa-github fa-3x"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()" title="Sign in with GitHub"></a>
           </div>
       </div>
 
