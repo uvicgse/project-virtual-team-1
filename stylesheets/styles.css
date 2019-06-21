@@ -1185,10 +1185,13 @@ body .pull-request-panel {
 }
 
 .right-pr-nav i img {
-  height: 48px;
+  height: 36px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 20px;
   text-align: center;
-  width: 48px;
+  width: 36px;
 }
 
 .pr-list-container {
