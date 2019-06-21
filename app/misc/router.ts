@@ -316,12 +316,23 @@ function hideDiffPanelButtons() {
 
 function checkRepoOpen() {
   // hide these repo nav elements if there is no repo
+
+  // this checks to see if a repo has successfully been open
   let repoElement = document.getElementById("repo-name");
-  console.log("repoName: ", repoElement.innerHTML);
+  // this checks to see if the user set a repo path to open
+  let repoPath = document.getElementById("repoOpen");
+  let repoCreate = document.getElementById("repoCreate");
+  let repoClone = document.getElementById("repoClone");
+
   let showRepoNavTools = "hidden";
-  if (repoElement.innerHTML != "repository") {
+  // if these values are set, then show everything
+  if (repoElement.innerHTML != "repository" || repoPath.value ||
+      repoCreate.value || repoClone.value || repoLocalPath)
+  {
     showRepoNavTools = "visible";
   }
+
+  // show/hide the relevent items
   document.getElementById("repo-back-button")!.style.visibility = showRepoNavTools;
   document.getElementById("nav-repo-branch-tag-info")!.style.visibility = showRepoNavTools;
   document.getElementById("nav-toolbar")!.style.visibility = showRepoNavTools;
