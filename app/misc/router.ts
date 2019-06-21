@@ -19,7 +19,7 @@ function switchToClonePanel() {
   hidePullRequestPanel();
   hideGraphPanel();
   hideFooter();
-  hideNavToolbar();
+  checkRepoOpen();
   displayClonePanel();
 }
 
@@ -29,7 +29,7 @@ function switchToMainPanel() {
   displayFilePanel();
   displayPullRequestPanel();
   displayFooter();
-  displayNavToolbar();
+  checkRepoOpen();
   displayGraphPanel();
 
   openDisabled = false;
@@ -78,7 +78,7 @@ function switchToAddRepositoryPanel() {
   inTheApp = true
   console.log("Switching to add repo panel");
   useRecentRepositories();
-  hideNavToolbar();
+  checkRepoOpen();
   hideFooter();
   hideAuthenticatePanel();
   hideFilePanel();
@@ -314,20 +314,17 @@ function hideDiffPanelButtons() {
   disableDiffPanelEditOnHide();
 }
 
-function hideNavToolbar() {
-  // only hide these if there is no repo
-  if (!repoFullPath) {
-    document.getElementById("nav-repo-branch-tag-info")!.style.visibility = "hidden";
-    document.getElementById("nav-toolbar")!.style.visibility = "hidden";
+function checkRepoOpen() {
+  // hide these repo nav elements if there is no repo
+  let repoElement = document.getElementById("repo-name");
+  console.log("repoName: ", repoElement.innerHTML);
+  let showRepoNavTools = "hidden";
+  if (repoElement.innerHTML != "repository") {
+    showRepoNavTools = "visible";
   }
-}
-
-function displayNavToolbar() {
-  // only show these if there is a repo
-  if (repoFullPath) {
-    document.getElementById("nav-repo-branch-tag-info")!.style.visibility = "visible";
-    document.getElementById("nav-toolbar")!.style.visibility = "visible";
-  }
+  document.getElementById("repo-back-button")!.style.visibility = showRepoNavTools;
+  document.getElementById("nav-repo-branch-tag-info")!.style.visibility = showRepoNavTools;
+  document.getElementById("nav-toolbar")!.style.visibility = showRepoNavTools;
 }
 
 function hideFooter(){
