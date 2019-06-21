@@ -21,7 +21,7 @@ let vis = require("vis");
 let commitHistory = [];
 let commitToRevert = 0;
 let commitHead = 0;
-let commitID = 0;
+let commitID = 0;x
 let lastCommitLength;
 let refreshAllFlagCommit = false;
 
@@ -39,7 +39,7 @@ function sortedListOfCommits(commits){
 
     while (commits.length > 0) {
       let commit = commits.shift();
-      let parents = commit.parents();
+      let parents = commit.parentxs();
       if (parents === null || parents.length === 0) {
         commitHistory.push(commit);
       } else {
@@ -1870,9 +1870,9 @@ function moveFile(filesource:string, filedestination:string, skipFileExistTest:b
         .mv(filesource, filedestination)  //perform GIT MV operation
         .then(() => console.log('File move completed.'))
         .catch((err) => {
-          displayModal('File move failed: ' + err));
+          displayModal('File move failed: ' + err);
           console.log("ERROR: file move failed. Full error: " + err);
-      }
+        });
   }
   else{
     displayModal("Destination directory does not exist.");
