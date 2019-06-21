@@ -777,7 +777,7 @@ function showRebaseModal() {
   $('#rebase-modal').modal('show');
   getRebaseFromBranch();
   let branches = getEveryBranch();
-  console.log('Out of method ' + branches);
+  // console.log('Out of method ' + branches);
 }
 
 function getRebaseFromBranch() {
@@ -796,7 +796,7 @@ async function getEveryBranch() {
   }
 
   let branches = await fetchBranches();
-  console.log('In method: ' + branches);
+  // console.log('In method: ' + branches);
   return branches;
 }
 
