@@ -434,7 +434,7 @@ function refreshReferences(verbose, force) {
               localBranches.push(refName);
               displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
             } else if (refList[i].isTag()){
-              displayTag(refName, "tag-item-list", ""); // TODO: support switching to a tag by adding an on-click function
+              displayTag(refName, "tag-item-list", "checkoutTag(\""+refList[i]+"\")");
             } else{
               console.log("Unsupported reference: " + refList[i].name());
             }
@@ -478,7 +478,6 @@ function refreshReferences(verbose, force) {
           repoLocalPath = "..." + repoLocalPath.slice(breakStringFrom, repoLocalPath.length);
         }
         document.getElementById("repo-name").innerHTML = repoLocalPath;
-        // TODO: add a condition here to switch between tag and branch name string
         document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
@@ -491,7 +490,6 @@ function refreshReferences(verbose, force) {
         drawGraph();
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         //default label set to master
-        // TODO: add a condition here to switch between tag and branch name string
         document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
   }
@@ -640,7 +638,6 @@ function refreshReferences(verbose, force) {
     let a = document.createElement("a");
     let span = document.createElement("span");
     let button = document.createElement("span");
-    let checkoutButton = document.createElement("span");
 
     // set HTML attributes
     a.setAttribute("href", "#");
@@ -652,13 +649,12 @@ function refreshReferences(verbose, force) {
     button.setAttribute("id", name);
     button.setAttribute("class", "btn btn-danger");
     button.innerHTML = "Delete";
-    checkoutButton.setAttribute
 
     // display tag in delete list on graph
     var deleteDropdownList = document.getElementById("deleteTagList");
     var deleteChilds = deleteDropdownList.childNodes;
     var createNewDelTag = true;
-    for(i = 0; i < deleteChilds.length; i++) {
+    for(let i = 0; i < deleteChilds.length; i++) {
       if(deleteChilds[i].firstChild.innerHTML == name) {
         createNewDelTag = false;
       }
@@ -673,7 +669,7 @@ function refreshReferences(verbose, force) {
     button.onclick = (event) => {
 
       // get name of tag from event
-      tagName = event.srcElement.getAttribute("id");
+      let tagName = event.srcElement.getAttribute("id");
 
       let repo;
       Git.Repository.open(repoFullPath)
@@ -686,9 +682,7 @@ function refreshReferences(verbose, force) {
       ).catch(function(msg) {
         let errorMessage = "Error: " + msg.message;
       });
-    }
-
-    // TODO: checkout a tag
+    };
 
     // create tag element in list
     span.appendChild(button);
@@ -714,7 +708,7 @@ function refreshReferences(verbose, force) {
     // deleting a tag
     li.onclick = () => {
 
-      updateModalText("Tag sucessfully deleted - refresh to see the updated graph. ");
+      updateModalText("Tag successfully deleted - refresh to see the updated graph. ");
 
       let repo;
       Git.Repository.open(repoFullPath)
@@ -730,12 +724,12 @@ function refreshReferences(verbose, force) {
 
       var parentList = document.getElementById("deleteTagList");
       var deleteChildren = parentList.childNodes;
-      for( i = 0; i < deleteChildren.length; i++ ) {
+      for(let i = 0; i < deleteChildren.length; i++) {
         if (deleteChildren[i].firstChild.innerHTML == name) {
           deleteChildren[i].remove();
         }
       }
-    }
+    };
     li.appendChild(a);
     parentDropdownList.appendChild(li);
   }
@@ -751,13 +745,13 @@ function refreshReferences(verbose, force) {
     let icon = document.createElement("i");
     icon.style.cssFloat = "right";
     icon.style.marginRight = "20px";
-    icon.className = "fa fa-window-minimize"
+    icon.className = "fa fa-window-minimize";
 
     button.appendChild(icon);
 
     div.setAttribute("id", name);
     div.setAttribute("role", "menu");
-    div.setAttribute("class", "list-group")
+    div.setAttribute("class", "list-group");
     button.onclick = (e) => {
       showDropDown(button);
       icon.className === "fa fa-window-minimize" ? icon.className = "fa fa-plus" : icon.className = "fa fa-window-minimize";
@@ -768,7 +762,7 @@ function refreshReferences(verbose, force) {
 
   function showDropDown(ele) {
     //If the forked Repo is clicked collapse or uncollapse the forked repo list
-    let div = document.getElementById(ele.className)
+    let div = document.getElementById(ele.className);
     if (div.style.display === 'none') {
       div.style.display = 'block';
     }
@@ -780,14 +774,14 @@ function refreshReferences(verbose, force) {
   
   function checkoutLocalBranch(element) {
     let button;   // entry in branch drop-down
-    let img = "<img"
+    let img = "<img";
     if (typeof element === "string") {
       button = element;
     } else {
       button = element.innerHTML;
     }
     if (button.includes(img)) {
-      button = button.substr(0, button.lastIndexOf(img)) // remove local branch <img> tag from branch name string
+      button = button.substr(0, button.lastIndexOf(img)); // remove local branch <img> tag from branch name string
       if (button.includes(img)) {
         button = button.substr(0, button.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
       }
@@ -796,8 +790,8 @@ function refreshReferences(verbose, force) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
         document.getElementById('graph-loading').style.display = 'block';
-        addCommand("git checkout " + bn);
-        repo.checkoutBranch("refs/heads/" + bn)
+        addCommand("git checkout " + button);
+        repo.checkoutBranch("refs/heads/" + button)
           .then(function () {
             refreshAll(repo);
           }, function (err) {
@@ -806,45 +800,58 @@ function refreshReferences(verbose, force) {
       })
   }
 
-  // TODO: fully impelement
+  /*
+  *
+  * .then(function () {
+                          refreshAll(repo);
+                          document.getElementById("branch-name").innerHTML = 'Tag: ' + '<span id="name-selected">' + element.replace(/^.*[\\\/]/, '') +'</span>' + '<span class="caret"></span>';
+                      }, function (err) {
+                          console.log("repo.ts, cannot checkout local tag: " + err);
+                          displayModal("ERROR: cannot checkout local tag " + element);
+                          refreshAll(repo);
+                      })
+  * */
+
+  // checkout tag
   function checkoutTag(element) {
-    let button;   // entry in branch drop-down
-    let img = "<img"
-    if (typeof element === "string") {
-      button = element;
-    } else {
-      button = element.innerHTML;
-    }
-    if (button.includes(img)) {
-      button = button.substr(0, button.lastIndexOf(img)) // remove local branch <img> tag from branch name string
-      if (button.includes(img)) {
-        button = button.substr(0, button.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
-      }
-    }
-    console.log("name of tag being checked out: " + button);
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
-        document.getElementById('spinner').style.display = 'block';
-        addCommand("git checkout " + button);
-        repo.checkoutBranch("refs/tags/" + button)
-          .then(function () {
-            refreshAll(repo);
-          }, function (err) {
-            console.log("repo.ts, cannot checkout local tag: " + err);
-          });
-      })
+        document.getElementById('graph-loading').style.display = 'block';
+        addCommand("git checkout " + element);
+
+        repo.getReference(element).then(function(reference) {
+          reference.peel(Git.Object.TYPE.COMMIT)
+              .then(ref => Git.Commit.lookup(repo, ref.id()))
+              .then(function (commit) {
+                  console.log("commit id of tag [" + element + "] being checked out: " + commit.sha());
+                  repo.setHeadDetached(commit.sha());
+              }, function (err) {
+                  console.log("repo.ts, cannot checkout local tag: " + err);
+                  displayModal("ERROR: cannot checkout local tag " + element);
+                  refreshAll(repo);
+              })
+              .then(function () {
+                  refreshAll(repo);
+                  document.getElementById("branch-name").innerHTML = 'Tag: ' + '<span id="name-selected">' + element.replace(/^.*[\\\/]/, '') +'</span>' + '<span class="caret"></span>';
+              })
+        }, function (err) {
+          console.log("cannot find retrieve reference object for " + element);
+            displayModal("ERROR: cannot find retrieve reference object for " + element);
+          refreshAll(repo);
+        });
+      });
   }
 
   function checkoutRemoteBranch(element) {
     let button;   // entry in branch drop-down
-    let img = "<img"
+    let img = "<img";
     if (typeof element === "string") {
       button = element;
     } else {
       button = element.innerHTML;
     }
     if (button.includes(img)) {
-      button = button.substr(0, button.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
+      button = button.substr(0, button.lastIndexOf(img)); // remove remote branch <img> tag from branch name string
       if (button.includes(img)) {
         button = button.substr(0, button.lastIndexOf(img))  // remove local branch <img> tag from branch name string
       }
