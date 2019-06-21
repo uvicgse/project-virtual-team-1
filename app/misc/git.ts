@@ -116,7 +116,7 @@ function stage() {
 
   if (stagedFiles == null || stagedFiles.length !== 0) {
     if (document.getElementById("staged-files-message") !== null) {
-      document.getElementById("commit-panel")!.style.visibility = "visible";
+      enableCommit();
       let filePanelMessage = document.getElementById("staged-files-message");
       filePanelMessage.parentNode.removeChild(filePanelMessage);
     }
@@ -238,7 +238,8 @@ function clearStagedFilesList() {
   filesChangedMessage.id = "staged-files-message";
   filesChangedMessage.innerHTML = "Your staged files will appear here";
   filePanel.appendChild(filesChangedMessage);
-  document.getElementById("commit-panel")!.style.visibility = "hidden";
+  
+  disableCommit();
   changeColor();
 }
 

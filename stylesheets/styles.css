@@ -526,10 +526,6 @@ body .footer .commit-panel .commit-message-input {
   padding: 5px;
 }
 
-.commit-panel{
-  visibility: hidden;
-}
-
 body .footer .terminal .git-command {
   margin: 10px;
 }
@@ -1385,3 +1381,25 @@ ul li {
   margin-bottom: -1px;
   border: 0.5px solid #ddd;
 }
+
+#commit-message-input{
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+#commit-button{
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 4px;
+  width: 100%;
+  color: white;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+
+.commit-button-disabled{
+  border-color: lightgray !important;
+  background-color: lightgray !important;
+  color: slategray !important;
+}
+
