@@ -217,7 +217,7 @@ function addAndCommit() {
 
       refreshAll(repository);
     }, function (err) {
-      console.log("git.ts, line 112, could not commit, " + err);
+      console.log("ERROR: could not commit  " + err);
       // Added error thrown for if files not selected
       if (err.message == "No files selected to commit.") {
         displayModal(err.message);
@@ -341,7 +341,7 @@ function getAllCommits(callback) {
         },
 
         function (err) {
-          console.log("git.ts, line 203, cannot load all commits" + err);
+          console.log("ERROR: cannot load all commits: " + err + ".");
           callback(allCommits);
         });
     });
@@ -522,7 +522,7 @@ function createBranch() {
               getSignature(repo),
               "Created new-branch on HEAD");
           }, function (err) {
-            console.log("git.ts, line 337, error occurred while trying to create a new branch " + err);
+            console.log("ERROR occurred while trying to create a new branch " + err);
           });
       }).done(function () {
         $('#branch-modal').modal('hide');
@@ -1689,7 +1689,7 @@ function deleteFile(filePath: string) {
     fs.unlink(newFilePath, (err) => {
       if (err) {
         alert("An error occurred updating the file" + err.message);
-        console.log("git.ts, line 759, an error occurred updating the file " + err);
+        console.log("ERROR occurred updating the file " + err);
         return;
       }
       console.log("File successfully deleted.");

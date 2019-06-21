@@ -62,7 +62,7 @@ function saveRecentRepositories(repoPath) {
       jsonfile.writeFileSync(repoFile, updatedRepoList);
     } catch (err) {
       let recentRepoError = err;
-      console.log("ERROR saving recent repository list. saveRecentRepositories() in repo.ts threw the error: " + recentRepoError);
+      console.log("ERROR saving recent repository list: " + recentRepoError);
     }
 }
 
@@ -162,7 +162,7 @@ function downloadFunc(cloneURL, fullLocalPath) {
     },
       function (err) {
         updateModalText("Clone Failed - " + err);
-        console.log("repo.ts, line 64, failed to clone repo: " + err); // TODO show error on screen
+        console.log("ERROR failed to clone repo: " + err); // TODO show error on screen
         switchToAddRepositoryPanel();
       });
 }
@@ -270,7 +270,7 @@ function openRepository() {
     },
       function (err) {
         updateModalText("No repository found. Select a folder with a repository.");
-        console.log("repo.ts, line 101, cannot open repository: " + err); // TODO show error on screen
+        console.log("ERROR: cannot open repository: " + err); // TODO show error on screen
         switchToAddRepositoryPanel();
       });
     document.getElementById("dirPickerOpenLocal").value = "";
@@ -320,7 +320,7 @@ function openRepository() {
       },
         function (err) {
           updateModalText("Creating Failed - " + err);
-          //console.log("repo.ts, line 131, cannot open repository: "+err); // TODO show error on screen
+          //console.log("ERROR cannot open repository: "+err); // TODO show error on screen
         });
     }
 
@@ -423,7 +423,7 @@ function refreshReferences(verbose, force) {
                 console.log("Unsupported reference: " + refList[i].name());
               }
             }, function (err) {
-              console.log("repo.ts, line 269, could not find referenced branch" + err);
+              console.log("ERROR: could not find referenced branch" + err);
             });
 
             // display branch list and tag list
@@ -798,7 +798,7 @@ function refreshReferences(verbose, force) {
           .then(function () {
             refreshAll(repo);
           }, function (err) {
-            console.log("repo.ts, line 271, cannot checkout local branch: " + err);
+            console.log("ERROR: cannot checkout local branch: " + err);
           });
       })
   }
@@ -841,7 +841,7 @@ function refreshReferences(verbose, force) {
             console.log("Pull successful.");
           });
       }, function (err) {
-        console.log("repo.ts, line 306, could not pull from repository" + err);
+        console.log("ERROR: could not pull from repository" + err);
       })
   }
 
