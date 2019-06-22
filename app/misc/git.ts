@@ -209,7 +209,7 @@ function addAndCommit() {
       hideDiffPanel();
       clearStagedFilesList();
       clearCommitMessage();
-
+      displayModal("Commit successful");
       for (let i = 0; i < filesToAdd.length; i++) {
         addCommand("git add " + filesToAdd[i]);
       }
@@ -1630,6 +1630,11 @@ function displayModifiedFiles() {
             element.style.backgroundColor = "#84db00";
           } else if (line.charAt(0) === "-") {
             element.style.backgroundColor = "#ff2448";
+          } else if (line.includes("No newline at end of file")) {
+            // mimic the git diff command line tool and show this line anyway
+            // the line shows "<	12	<	\n\ No newline at end of file\n"
+            // so just show "\ No newline at end of file" as per git
+            line = "\ No newline at end of file"
           }
 
           // If not a changed line, origin will be a space character, so still need to slice
@@ -1804,7 +1809,7 @@ function setUpstreamRepo() {
       }
       else if (error.message == "remote 'upstream' already exists"){ //Checking for existing upstream branch
         displayModal("Upstream branch already exists");
-      } 
+      }
       }), displayModal("Upstream repository successfully configured.");
     }, function(err) {
       console.log("Error adding remote upstream repository:" + err) //Checking if a repo is opened before setting an upstream
@@ -1882,4 +1887,18 @@ function unpushedCommitsModal() {
 
   });
 
+}
+
+//undo the latest unpush single commit using git reset --soft HEAD~1
+//TODO support for undo any number of commit user want
+function resetLastCommit()
+{
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.silent(true).reset(["HEAD~1"]).then((result) => {
+    displayModal("Most recent unpush commit has been reset");
+  } ).catch( function ( err )
+  {
+    alert("Reset Failed : "+ err.message );
+    console.log( err );
+  });
 }
