@@ -43,7 +43,7 @@ Types of nodes in the network.
     Tag = Represents a tag reference. Is linked to a single commit node
 */
 
-/* 
+/*
 Types of nodes in the network.
     Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
     Node = Commit node in the lowest zoom level (2rd level). Represents a a single commit
@@ -69,12 +69,12 @@ function generateUniqueNumber() {
 
 // Process and populate the initial graph
 function processGraph(commits: nodegit.Commit[]) {
-    
+
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
         basicList = [];
         numOfCommits = commits.length;
-        
+
         sortCommits(commits)
             .then(populateCommits)
             .then(function(data) {
@@ -92,8 +92,8 @@ function processGraph(commits: nodegit.Commit[]) {
 // Sort the commit nodes in order to better populate the graph
 function sortCommits(commits) {
     var promise = new Promise((resolve, reject) => {
-        let stageStartProgress = 0; 
-        let stageEndProgress = 80; 
+        let stageStartProgress = 0;
+        let stageEndProgress = 80;
 
         updateGraphProgress(stageStartProgress);
 
@@ -102,9 +102,9 @@ function sortCommits(commits) {
 
         function computeChunk() {
             var count = chunk;
-            
+
             while (commits.length > 0 && count--) {
-                updateGraphProgress((commitHistory.length / numCommits) * stageEndProgress);  
+                updateGraphProgress((commitHistory.length / numCommits) * stageEndProgress);
 
                 let commit = commits.shift();
                 let parents = commit.parents();
@@ -146,10 +146,10 @@ function sortCommits(commits) {
 
 // Populate the graph nodes and add edges where appropriate
 function populateCommits(oldResult) {
-    let stageStartProgress = 80; 
-    let stageEndProgress = 100; 
+    let stageStartProgress = 80;
+    let stageEndProgress = 100;
 
-    updateGraphProgress(stageStartProgress);    
+    updateGraphProgress(stageStartProgress);
 
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
@@ -160,10 +160,10 @@ function populateCommits(oldResult) {
         columns = [];
         branchIds = [];
         tagIds = [];
-        
+
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
-            updateGraphProgress((i / commitHistory.length) * stageEndProgress);  
+            updateGraphProgress((i / commitHistory.length) * stageEndProgress);
 
             let parents: string[] = commitHistory[i].parents();
             let nodeColumn;
@@ -241,9 +241,9 @@ function populateCommits(oldResult) {
         for (let i = 0; i < basicList.length; i++) {
             addBasicEdge(basicList[i]);
         }
-        
+
         //sortBasicGraph();
-        
+
         updateGraphProgress(stageEndProgress);
 
         commitList = commitList.sort(timeCompare);
@@ -405,7 +405,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
                 author: c.author(),
                 nodeType: NodeType.Basic
             });
-        });   
+        });
 
         // Update node list
         let shaList = [];
@@ -531,7 +531,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
     }
 
     let flag = false;
-  
+
     let colorData = {}
     if ( isUnpushCommit )
     {
@@ -545,7 +545,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
             }
         }
     }
-    
+
     nodes.add({
         id: id,
         shape: "circularImage",
