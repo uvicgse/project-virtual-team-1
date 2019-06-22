@@ -1,4 +1,5 @@
 let gh = require('octonode');
+let githubUsername = require('github-username');
 
 // local cache for profile picture URLs
 let images = {};
@@ -65,10 +66,28 @@ function imageForUser(name: string, email: string, callback) {
       });
     }
   }
-  // fallback to letter icons if the email isn't a GitHub noreply one
+  // Email not "@users.noreply.github.com", so try to get GitHub username from email
   else {
-    pic = getLetterIcon(name);
-    console.log("No GitHub username detected; using letter icons instead");
-    callback(pic);
+    
+    let username;
+
+    githubUsername(email).then(
+      function(user) {	
+        console.log(`Username: ${user}`);
+        username = user;
+      },
+      function(err) {
+        console.log(`ERROR: ${err}`);
+      }
+    );
+    
+    if (typeof username !== 'undefined') {
+      // TODO: GET /users/{username}
+    }
+    else {
+      console.log("ERROR: Couldn't get GitHub username from email; using letter icons instead");
+      pic = getLetterIcon(name);
+      callback(pic);
+    }
   }
 }
