@@ -791,8 +791,14 @@ function applyRebase() {
 }
 
 function getRebaseFromBranch(): void {
+  let reRemove = /refs\/heads\//gi;
   let rebaseFromBranch = document.getElementById("rebaseBranch");
-  rebaseFromBranch.innerText = repoCurrentBranch;
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+      return repo.getCurrentBranch();
+    }).then(function (branch) {
+      rebaseFromBranch.innerText = branch;
+    })
 }
 
 async function getRebaseOntoBranch(): void {
@@ -804,17 +810,12 @@ async function getRebaseOntoBranch(): void {
     // we need to filter out the remote branches
     // so use regex to find what we don't want
     let reMatch = /refs\/remotes/gi;
-    // we need to remove some text from the branch name to clean things up
-    let reRemove = /refs\/heads\//gi;
 
     for(let branch of branches){
       if (branch.search(reMatch) == -1) {
-        let displayBranch = branch.replace(reRemove, "");
         let option = document.createElement("option");
-        option.value  = displayBranch;
-        option.innerText = displayBranch;
-        // option.setAttribute("value", displayBranch);
-        // option.setAttribute("text", displayBranch);
+        option.value  = branch;
+        option.innerText = branch;
         rebaseOntoBranches.appendChild(option);
       }
     }
