@@ -1,8 +1,8 @@
 <div class="footer" id="footer">
     <div class="container-fluid" style="width: 100%;">
         <div class="row">
-            <div class="commit-panel col-sm-3" id="commit-panel">
-                <textarea placeholder="Commit disabled...&#10;&#10;No Files Staged" disabled rows=3 class="form-control" id="commit-message-input" draggable="true" onkeypress="commitShortcut(event)" ondragstart="handleCommitBoxDragStart(event)" ondragend="handleCommitBoxDragEnd(event)"></textarea>
+            <div class="commit-panel col-sm-3" id="commit-panel" draggable="false" ondragstart="handleCommitBoxDragStart(event)" ondragend="handleCommitBoxDragEnd(event)">
+                <textarea placeholder="Commit disabled...&#10;&#10;No Files Staged" disabled rows=3 class="form-control" id="commit-message-input"  onkeypress="commitShortcut(event)"></textarea>
                 <button class="input-group-addon commit-button-disabled" id="commit-button" onclick="addAndCommit()" disabled>Commit</button>
             </div>
 

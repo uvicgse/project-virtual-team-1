@@ -1,19 +1,23 @@
 function handleGraphDrop(event:DragEvent){
     //Intended to be easily extendable for future drag and drop handling
     if(event.dataTransfer){
-        //Retrieve payload and convert to JSON
-        let payload = JSON.parse(event.dataTransfer!.getData("text"));
+        let payloadString = event.dataTransfer.getData("text");
+        if (payloadString != ""){
+            //Retrieve payload and convert to JSON
+            let payload = JSON.parse(payloadString);
 
-        //Perform specified operation
-        switch (payload.operation){
-            case "stash":
-                popStash(payload.index);
-                break;
-            case "commit":
-                addAndCommit();
-                break;
-            default:
+            //Perform specified operation
+            switch (payload.operation){
+                case "stash":
+                    popStash(payload.index);
+                    break;
+                case "commit":
+                    addAndCommit();
+                    break;
+                default:
+            }
         }
+        
     }
 }
 

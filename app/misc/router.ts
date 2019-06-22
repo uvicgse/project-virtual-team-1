@@ -363,6 +363,7 @@ function useRecentRepositories() {
 }
 
 function enableCommit(){
+  document.getElementById("commit-panel")!.draggable = true;
   let messageInput = <HTMLInputElement>document.getElementById("commit-message-input")!;
   messageInput.disabled = false;
   messageInput.placeholder = "Describe your changes here...\n\n(Ctrl + Enter or drag and drop to commit)"
@@ -372,6 +373,7 @@ function enableCommit(){
 }
 
 function disableCommit(){
+  document.getElementById("commit-panel")!.draggable = false;
   let messageInput = <HTMLInputElement>document.getElementById("commit-message-input")!;
   messageInput.disabled = true;
   messageInput.placeholder = "Commit Disabled...\n\nNo Files Staged"

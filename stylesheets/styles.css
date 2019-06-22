@@ -1388,6 +1388,7 @@ ul li {
 }
 
 #commit-message-input{
+  resize: none;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
@@ -1406,5 +1407,6 @@ ul li {
   border-color: lightgray !important;
   background-color: lightgray !important;
   color: slategray !important;
+  cursor: no-drop !important;
 }
 
