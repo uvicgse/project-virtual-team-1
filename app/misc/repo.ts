@@ -800,33 +800,22 @@ function refreshReferences(verbose, force) {
       })
   }
 
-  // checkout tag
+  // checkout tag function
   function checkoutTag(element) {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
         document.getElementById('graph-loading').style.display = 'block';
         addCommand("git checkout " + element);
 
-        repo.getReference(element).then(function(reference) {
-          reference.peel(Git.Object.TYPE.COMMIT)
-              .then(ref => Git.Commit.lookup(repo, ref.id()))
-              .then(function (commit) {
-                  console.log("commit id of tag [" + element + "] being checked out: " + commit.sha());
-                  repo.setHeadDetached(commit.sha());
-              }, function (err) {
-                  console.log("repo.ts, cannot checkout local tag: " + err);
-                  displayModal("ERROR: cannot checkout local tag " + element);
-                  refreshAll(repo);
-              })
-              .then(function () {
-                  refreshAll(repo);
-                  document.getElementById("branch-name").innerHTML = 'Tag: ' + '<span id="name-selected">' + element.replace(/^.*[\\\/]/, '') +'</span>' + '<span class="caret"></span>';
-              })
-        }, function (err) {
-          console.log("cannot find retrieve reference object for " + element);
-            displayModal("ERROR: cannot find retrieve reference object for " + element);
-          refreshAll(repo);
-        });
+        repo.setHead(element)
+            .then(function () {
+                refreshAll(repo);
+                document.getElementById("branch-name").innerHTML = 'Tag: ' + '<span id="name-selected">' + element.replace(/^.*[\\\/]/, '') +'</span>' + '<span class="caret"></span>';
+            }, function (err) {
+                console.log("repo.ts, cannot checkout local tag: " + err);
+                displayModal("ERROR: cannot checkout local tag " + element);
+                refreshAll(repo);
+            });
       });
   }
 
