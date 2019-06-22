@@ -800,18 +800,6 @@ function refreshReferences(verbose, force) {
       })
   }
 
-  /*
-  *
-  * .then(function () {
-                          refreshAll(repo);
-                          document.getElementById("branch-name").innerHTML = 'Tag: ' + '<span id="name-selected">' + element.replace(/^.*[\\\/]/, '') +'</span>' + '<span class="caret"></span>';
-                      }, function (err) {
-                          console.log("repo.ts, cannot checkout local tag: " + err);
-                          displayModal("ERROR: cannot checkout local tag " + element);
-                          refreshAll(repo);
-                      })
-  * */
-
   // checkout tag
   function checkoutTag(element) {
     Git.Repository.open(repoFullPath)

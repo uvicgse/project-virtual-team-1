@@ -473,7 +473,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }
-            let bsnodeId = shortTagName;
+            let bsnodeId = generateUniqueNumber();
             bsNodes.add({
                 id: bsnodeId,
                 // shape: "ellipse", // old shape
