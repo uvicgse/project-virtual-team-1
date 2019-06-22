@@ -25,8 +25,6 @@ let commitHead = 0;
 let commitID = 0;
 let lastCommitLength;
 let refreshAllFlagCommit = false;
-let updateRebaseSelection = true;
-
 
 
 function passReferenceCommits(){
@@ -791,7 +789,6 @@ function applyRebase() {
 }
 
 function getRebaseFromBranch(): void {
-  let reRemove = /refs\/heads\//gi;
   let rebaseFromBranch = document.getElementById("rebaseBranch");
   Git.Repository.open(repoFullPath)
     .then(function (repo) {
@@ -802,24 +799,15 @@ function getRebaseFromBranch(): void {
 }
 
 async function getRebaseOntoBranch(): void {
-  if (updateRebaseSelection) {
-    updateRebaseSelection = false;
-
     let branches = await getEveryBranch();
     let rebaseOntoBranches = document.getElementById("ontoBranches");
-    // we need to filter out the remote branches
-    // so use regex to find what we don't want
-    let reMatch = /refs\/remotes/gi;
 
     for(let branch of branches){
-      if (branch.search(reMatch) == -1) {
         let option = document.createElement("option");
         option.value  = branch;
         option.innerText = branch;
         rebaseOntoBranches.appendChild(option);
-      }
     }
-  }
 }
 
 async function getEveryBranch() {
@@ -845,7 +833,7 @@ function rebaseCommits(from: string, to: string) {
         repos = repo;
         //return repos.getCommit(fromSha);
         addCommand("git rebase " + to);
-        return Git.Reference.nameToId(repos, 'refs/heads/' + from);
+        return Git.Reference.nameToId(repos, from);
       })
       .then(function (oid) {
         console.log("Looking for commit id: " + oid + " in repositories");
@@ -854,7 +842,7 @@ function rebaseCommits(from: string, to: string) {
       .then(function (annotated) {
         console.log("finding the id of " + annotated);
         branch = annotated;
-        return Git.Reference.nameToId(repos, 'refs/heads/' + to);
+        return Git.Reference.nameToId(repos, to);
       })
       .then(function (oid) {
         console.log("" + oid);
