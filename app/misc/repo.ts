@@ -463,6 +463,7 @@ function refreshReferences(verbose, force) {
     document.getElementById('graph-loading').style.display = 'block';
     let branch;
     lastRefList = [];
+    let navRepoName = repoLocalPath;
 
     //Get the current branch from the repo
     repository.getCurrentBranch()
@@ -494,16 +495,10 @@ function refreshReferences(verbose, force) {
       .then(function () {
         console.log("Updating the graph and the labels");
         drawGraph();
-        let breakStringFrom;
         if (repoLocalPath.length > 20) {
-          for (var i = 0; i < repoLocalPath.length; i++) {
-            if (repoLocalPath[i] == "/") {
-              breakStringFrom = i;
-            }
-          }
-          repoLocalPath = "..." + repoLocalPath.slice(breakStringFrom, repoLocalPath.length);
+            navRepoName = "..." + repoLocalPath.replace(/^.*[\\\/]/, '');
         }
-        document.getElementById("repo-name").innerHTML = repoLocalPath;
+        document.getElementById("repo-name").innerHTML = navRepoName;
         document.getElementById("branch-name").innerHTML = '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
@@ -514,7 +509,7 @@ function refreshReferences(verbose, force) {
         console.log("No branches found. Setting default label values to master");
         console.log("Updating the labels and graph");
         drawGraph();
-        document.getElementById("repo-name").innerHTML = repoLocalPath;
+        document.getElementById("repo-name").innerHTML = navRepoName;
         //default label set to master
         document.getElementById("branch-name").innerHTML = '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
