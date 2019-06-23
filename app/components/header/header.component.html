@@ -9,12 +9,14 @@
         <span class="icon-bar"></span>
       </button>
       <a href="#"><img src="./assets/AddRepositoryFolder.svg" onclick="switchToAddRepositoryPanel()"
-          class="add-repository-button" title="Add Repository"></a>
+          class="add-repository-button" title="Add Repository" id="nav-open-repo-button"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar">
+
        <!-- Repo/branch/tag -->
-      <div class="nav navbar-nav col-md-5 hidden-xs">
+      <div class="nav navbar-nav col-md-5 hidden-xs" id="nav-repo-branch-tag-info">
         <li><i class="fas fa-angle-right fa-2x"></i></li>
+
         <li class="repo-name dropdown-toggle">
           <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal"
             onclick="checkSignedIn()">repository</a>
@@ -59,7 +61,7 @@
       </div>
 
       <!--Toolbar-->
-      <div class="navbar-nav-toolbar hidden-xs toolbar-Container">
+      <div class="navbar-nav-toolbar hidden-xs toolbar-Container" id="nav-toolbar">
           <a class="toolbar-Icons" onclick="openWiki()">
             <i class="fab fa-wikipedia-w fa-2x">
                 <span class="toolbar-Text">Wiki</span>

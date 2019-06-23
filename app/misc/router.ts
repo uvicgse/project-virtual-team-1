@@ -19,6 +19,7 @@ function switchToClonePanel() {
   hidePullRequestPanel();
   hideGraphPanel();
   hideFooter();
+  checkRepoOpen();
   displayClonePanel();
 }
 
@@ -28,6 +29,7 @@ function switchToMainPanel() {
   displayFilePanel();
   displayPullRequestPanel();
   displayFooter();
+  checkRepoOpen();
   displayGraphPanel();
 
   openDisabled = false;
@@ -76,6 +78,7 @@ function switchToAddRepositoryPanel() {
   inTheApp = true
   console.log("Switching to add repo panel");
   useRecentRepositories();
+  checkRepoOpen();
   hideFooter();
   hideAuthenticatePanel();
   hideFilePanel();
@@ -309,6 +312,32 @@ function hideDiffPanelButtons() {
 
   disableSaveCancelButton();
   disableDiffPanelEditOnHide();
+}
+
+function checkRepoOpen() {
+  // hide these repo nav elements if there is no repo
+
+  // this checks to see if a repo has successfully been open
+  let repoElement = document.getElementById("repo-name");
+  // this checks to see if the user set a repo path to open
+  let repoPath = document.getElementById("repoOpen");
+  let repoCreate = document.getElementById("repoCreate");
+  let repoClone = document.getElementById("repoClone");
+
+  let showRepoNavTools = "hidden";
+  // if these values are set, then show everything
+  if (repoElement.innerHTML != "repository" || repoPath.value ||
+      repoCreate.value || repoClone.value || repoLocalPath)
+  {
+    showRepoNavTools = "visible";
+  }
+
+  // show/hide the relevent items
+  document.getElementById("repo-back-button")!.style.visibility = showRepoNavTools;
+  document.getElementById("nav-repo-branch-tag-info")!.style.visibility = showRepoNavTools;
+  document.getElementById("nav-toolbar")!.style.visibility = showRepoNavTools;
+  // do not hide this repo button until issue 184 is fixed
+  //document.getElementById("nav-open-repo-button")!.style.visibility = showRepoNavTools;
 }
 
 function hideFooter(){
