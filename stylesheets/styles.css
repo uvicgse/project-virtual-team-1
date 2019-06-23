@@ -117,7 +117,7 @@ body .header {
 
 body .navbar {
   margin-bottom: 0px;
-  font-size: 20px;
+  font-size: 14px;
   z-index: 1;
 }
 
@@ -233,13 +233,18 @@ body .navbar .dropdown-toggle {
   margin-top: 10px;
 }*/
 
+.filepanel-headings {
+  color: white;
+  float: left;
+}
+
 body .file-panel {
   width: 20%;
-  height: 70vh;
+  height: 80vh;
   background-color: #282828;
   float: left;
   z-index: 0;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 body .file-panel .modified-files-header .staged-files-header .select-all-message {
@@ -254,12 +259,21 @@ body .file-panel .files-changed .modified-files-message {
 }
 
 body .file-panel .files-staged .modified-files-message {
-    padding: 20px;
+  padding: 20px;
 }
 
 body .file-panel .files-changed .file {
   width: 99%;
   height: 10%;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #fff;
+}
+
+.file {
+  width: 99%;
+  height: 10%;
+  min-height: 40px;
   position: relative;
   overflow: hidden;
   border: 1px solid #fff;
@@ -274,6 +288,23 @@ body .file-panel .files-changed .files-staged .file p {
   text-overflow: ellipsis;
   overflow: hidden;
   width: 80%;
+}
+
+.file-path {
+  float: right;
+  width: 95%;
+}
+
+.files-changed {
+  overflow-y: auto;
+  min-height: 25%;
+  max-height: 35%;
+}
+
+.files-staged {
+  overflow-y: auto;
+  min-height: 25%;
+  max-height: 35%;
 }
 
 body .file-panel .files-changed .files-staged .file input {
@@ -336,7 +367,7 @@ body .body-panel {
 
 body .body-panel .diff-panel {
   width: 0;
-  height: 100%;
+  height: 80vh;
   float: left;
 }
 
@@ -739,14 +770,9 @@ div.selected-commit-diff-panel button.close-button {
   max-height: 55px;
 }
 
-.fa {
-  /* All font-awesome assets */
-  /* Would prefer to use font-awesome 5.0+ */
-  color: white;
-}
-
 .toolbar-Icons{
     padding: 3px;
+    color: white;
 }
 
 .toolbar-Icons:hover {
@@ -755,7 +781,7 @@ div.selected-commit-diff-panel button.close-button {
 }
 
 .fa-wikipedia-w:hover {
-    color: #C2E0FA;
+    color: #407CD9;
 }
 
 .fa-wikipedia-w:hover span{
@@ -794,48 +820,48 @@ div.selected-commit-diff-panel button.close-button {
 .fa-plus-circle:hover span{
     display: block;
     position: absolute;
-    transform: translate(-27%, -5%);
+    transform: translate(-25%, -5%);
     font-family: sans-serif;
 }
 
-.fa-cloud-upload:hover {
-    color: #B9E2E0;
+.fa-cloud-upload-alt:hover {
+    color: #FAB757;
 }
 
-.fa-cloud-upload:hover span{
+.fa-cloud-upload-alt:hover span{
     display: block;
     position: absolute;
     transform: translate(-2%, -5%);
     font-family: sans-serif;
 }
 
-.fa-cloud-download:hover {
+.fa-cloud-download-alt:hover {
     color: #E1B9E2;
 }
 
-.fa-cloud-download:hover span{
+.fa-cloud-download-alt:hover span{
     display: block;
     position: absolute;
     transform: translate(10%, -5%);
     font-family: sans-serif;
 }
 
-.fa-recycle:hover {
-    color: #1664FF;
+.fa-broom:hover {
+    color: #55D1F9;
 }
 
-.fa-recycle:hover span{
+.fa-broom:hover span{
     display: block;
     position: absolute;
     transform: translate(-15%, -5%);
     font-family: sans-serif;
 }
 
-.fa-pagelines:hover {
+.fa-code-branch:hover {
     color: #3B9880;
 }
 
-.fa-pagelines:hover span{
+.fa-code-branch:hover span{
     display: block;
     position: absolute;
     transform: translate(-27%, -5%);
@@ -849,18 +875,18 @@ div.selected-commit-diff-panel button.close-button {
 .fa-history:hover span{
     display: block;
     position: absolute;
-    transform: translate(-27%, -5%);
+    transform: translate(-20%, -5%);
     font-family: sans-serif;
 }
 
-.fa-star:hover {
+.fa-box-open:hover {
     color: #F7F47C;
 }
 
-.fa-star:hover span{
+.fa-box-open:hover span{
     display: block;
     position: absolute;
-    transform: translate(-15%, -5%);
+    transform: translate(-7%, -5%);
     font-family: sans-serif;
 }
 
@@ -875,25 +901,25 @@ div.selected-commit-diff-panel button.close-button {
     font-family: sans-serif;
 }
 
-.fa-share-alt:hover {
+.fa-sync-alt:hover {
     color: #FA57E7;
 }
 
-.fa-share-alt:hover span{
+.fa-sync-alt:hover span{
     display: block;
     position: absolute;
     transform: translate(-15%, -5%);
     font-family: sans-serif;
 }
 
-.fa-refresh:hover {
-    color: #57FA9C;
+.fa-network-wired:hover {
+    color: #FA5E57;
 }
 
-.fa-refresh:hover span{
+.fa-network-wired:hover span{
     display: block;
     position: absolute;
-    transform: translate(-27%, -5%);
+    transform: translate(-16%, -5%);
     font-family: sans-serif;
 }
 
@@ -905,12 +931,13 @@ div.selected-commit-diff-panel button.close-button {
     text-decoration: none;
 }
 
-.navbar-nav.navbar-right .fa:hover {
+.navbar-nav.navbar-right .fab:hover {
     filter: invert(.5);
 }
 
-.navbar-nav.navbar-right .fa {
+.navbar-nav.navbar-right .fab {
     /* login */
+    color: white;
     position: absolute;
     top: 5px;
     right: 5px;
@@ -939,20 +966,26 @@ div.selected-commit-diff-panel button.close-button {
 .toolbar-Text {
   font-size: 14px;
   color: white;
+  padding-top: 5px;
 }
 
 .toolbar-Container {
-  margin: auto;
-  float:left;
+  float: left;
   overflow: hidden;
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
 .nav.navbar-nav {
+    width: 30%;
+    min-width: 500px;
     float:left;
-    margin:auto;
-    /* overflow: hidden; */
+}
+
+.fa-angle-right {
+    color: white;
+    position: relative;
+    top: 12px;
 }
 
 #wiki-icon {
@@ -1164,11 +1197,12 @@ div.wiki-header button.close-button, div.wiki-header button.open-button {
 /*
   Pull request related css.
 */
+
 body .pull-request-panel {
   background-color: #282828;
   display: block;
+  height: 80vh;
   float: right;
-  height: 60vh;
   overflow-y: auto;
   transition: .5s;
   width: 60px;
@@ -1183,10 +1217,13 @@ body .pull-request-panel {
 }
 
 .right-pr-nav i img {
-  height: 48px;
+  height: 36px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 20px;
   text-align: center;
-  width: 48px;
+  width: 36px;
 }
 
 .pr-list-container {
