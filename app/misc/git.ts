@@ -218,12 +218,11 @@ function addAndCommit() {
       refreshAll(repository);
     }, function (err) {
       console.log("ERROR: could not commit  " + err);
+      updateModalText("Could not commit. " + err.message);
       // Added error thrown for if files not selected
       if (err.message == "No files selected to commit.") {
         displayModal(err.message);
         console.log("ERROR: " + err.message);
-      } else {
-        updateModalText("You have not logged in. Please login to commit a change");
       }
     });
 }
