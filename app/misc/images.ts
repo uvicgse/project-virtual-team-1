@@ -18,7 +18,7 @@ function getLetterIcon(name: string) {
 /**
  * Helper function for getting a GitHub user's avatar
  *
- * @param GitHub username
+ * @param username GitHub username
  * @param callback(string)  URL of GitHub avatar image.
  *                          If the GitHub API can't be reached (or throws an error),
  *                          a placeholder letter icon is provided instead.
@@ -126,7 +126,6 @@ function imageForUser(name: string, email: string, callback) {
     
     // Now use the username to retrieve the profile picture URL
     if (typeof username !== 'undefined') {
-      // TODO: GET /users/{username}
       getGithubAvatar(username, function(imageUrl) {
         pic = imageUrl;
       });
