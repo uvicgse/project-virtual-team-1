@@ -802,7 +802,7 @@ function getRebaseFromBranch(): void {
 async function getRebaseOntoBranch(): void {
     let branches = await getEveryBranch();
     let rebaseOntoBranches = document.getElementById("ontoBranches");
-
+    $( "#ontoBranches" ).empty();
     for(let branch of branches){
         let option = document.createElement("option");
         option.value  = branch;
