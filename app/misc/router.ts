@@ -380,7 +380,7 @@ function useSavedCredentials() : boolean {
   if (fs.existsSync(file)) {
     console.log('button has been pressed: logging in with saved credentials');
     decrypt();
-    loginWithSaved(switchToMainPanel);
+    loginWithSaved(switchToAddRepositoryPanel);
     return true;
   }
   return false;
