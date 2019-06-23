@@ -10,7 +10,7 @@ function encryptAccessToken(accessToken) {
 
   jsonfile.writeFile(file, obj, function (err) {
     if (err) throw err;
-    console.log('Access Token Saved to File System');
+    console.log('Access Token Saved to File System.');
 
   })
 }
@@ -20,7 +20,7 @@ function getAccessToken(){
   // If user is not logged in, return null
   if (!!!encryptedToken)
     return null
-  // Decrypt the access token to 
+  // Decrypt the access token to
   var bytes = CryptoJS.AES.decrypt(encryptedToken.toString(), os.hostname());
   return bytes.toString(CryptoJS.enc.Utf8);
 }
@@ -29,6 +29,3 @@ function getAccessToken(){
 function encryptTemp(token) {
   encryptedToken = CryptoJS.AES.encrypt(token, os.hostname());
 }
-
-
-

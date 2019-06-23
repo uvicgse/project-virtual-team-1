@@ -82,7 +82,7 @@ function processGraph(commits: nodegit.Commit[]) {
                 if (textBox != null) {
                         document.getElementById('graph-loading').style.display = 'none';
                     } else {
-                        console.log("Modal-text-box is missing");
+                        console.log("ERROR: Modal-text-box is missing.");
                     }
                 });
     });
@@ -357,7 +357,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
 
     if (flag) {
         id = basicNodeId++;
-        let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
+        let title = "Author: " + name + " || " + "Number of Commits: " + count;
         console.log(title);
         let imageUrl;
         let colorData = {};
@@ -429,7 +429,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1];
-            console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+            // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
             if (branchName.isHead()) {
                 shortName = "*" + shortName;
             }
@@ -469,7 +469,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
-            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            // console.log(shortTagName + " tag: " + tagName.isHead().toString());
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }
@@ -567,7 +567,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1]; // Get the branch's name instead of ref/origin/branch
-            console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+            // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
             if (branchName.isHead()) {
                 shortName = "*" + shortName;
             }
@@ -610,7 +610,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1]; // Get the tag's name instead of ref/origin/tag
-            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            // console.log(shortTagName + " tag: " + tagName.isHead().toString());
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }
