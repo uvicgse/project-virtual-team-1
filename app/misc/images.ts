@@ -15,6 +15,39 @@ function getLetterIcon(name: string) {
   return "node_modules/material-letter-icons/dist/png/" + first + ".png";
 }
 
+/**
+ * Helper function for getting a GitHub user's avatar
+ *
+ * @param GitHub username
+ * @param callback(string)  URL of GitHub avatar image.
+ *                          If the GitHub API can't be reached (or throws an error),
+ *                          a placeholder letter icon is provided instead.
+ */
+function getGithubAvatar(username: string, callback) {
+  
+  // The GitHub API has lower rate limits for non-authenticated requests.
+  // To increase the limit, supply an access token below; i.e. gh.client('token').
+  // Tokens can be generated at https://github.com/settings/tokens
+  let client = gh.client('d227df0e0611b347dda84b6db9261d55aad5044a');
+  
+  let pic;
+
+  let t = client.get(`/users/${username}`, {}, function (err, status, body, headers) {
+    if (!err) {          
+      pic = body.avatar_url;
+      images[username] = pic;   // add to cache
+      console.log(`[GitHub API] ${username}: ${pic}`)
+    }
+    else {
+      console.log(`[GitHub API] ${err}`);
+      console.log("GitHub API request failed; using letter icons instead");
+
+      pic = getLetterIcon(name);
+    }
+    callback(pic);
+  });
+}
+
 function getName(author: string) {
   let name = author.split("<")[0];
   return name;
@@ -41,53 +74,67 @@ function imageForUser(name: string, email: string, callback) {
     // try the local cache first
     pic = images[username];
     if (typeof(pic) !== "undefined") {
-      console.log(`Cached image URL: ${pic}`)
+      console.log(`[Cached] username: ${pic}`)
       callback(pic);
     }
     else {
-      // github-avatar-url insists on having an API token, 
-      // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
-      // That being said, if you've hit the rate limit, just supply the token below; i.e. gh.client('token')
-      let client = gh.client();
       
-      let t = client.get(`/users/${username}`, {}, function (err, status, body, headers) {
-        if (!err) {          
-          pic = body.avatar_url;
-          images[username] = pic;   // add to cache
-          console.log(`GitHub API: ${pic}`)
-        }        
-        else {
-          console.log(`GitHub API: ${err}`);
-          console.log("GitHub API request failed; using letter icons instead");
-
-          pic = getLetterIcon(name);
-        }        
+      getGithubAvatar(username, function(pic) {
         callback(pic);
       });
+
+      // /** TODO: refactor avatar URL retrieval into helper function **/  
+
+      // // github-avatar-url insists on having an API token, 
+      // // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
+      // // That being said, if you've hit the rate limit, just supply the token below; i.e. gh.client('token')
+      // let client = gh.client();
+      
+      // let t = client.get(`/users/${username}`, {}, function (err, status, body, headers) {
+      //   if (!err) {          
+      //     pic = body.avatar_url;
+      //     images[username] = pic;   // add to cache
+      //     console.log(`GitHub API: ${pic}`)
+      //   }
+      //   else {
+      //     console.log(`GitHub API: ${err}`);
+      //     console.log("GitHub API request failed; using letter icons instead");
+
+      //     pic = getLetterIcon(name);
+      //   }
+      //   /** end refactor segment **/
+
+      //   callback(pic);
+      // });
     }
   }
   // Email not "@users.noreply.github.com", so try to get GitHub username from email
   else {
     
+    // Get GitHub username from email
     let username;
 
     githubUsername(email).then(
       function(user) {	
-        console.log(`Username: ${user}`);
+        console.log(`[GitHub API] ${email} --> ${user}`);
         username = user;
       },
       function(err) {
-        console.log(`ERROR: ${err}`);
+        console.log(`[GitHub API] ERROR: ${err}`);
       }
     );
     
+    // Now use the username to retrieve the profile picture URL
     if (typeof username !== 'undefined') {
       // TODO: GET /users/{username}
+      getGithubAvatar(username, function(imageUrl) {
+        pic = imageUrl;
+      });
     }
     else {
-      console.log("ERROR: Couldn't get GitHub username from email; using letter icons instead");
-      pic = getLetterIcon(name);
-      callback(pic);
+      console.log(`ERROR: Couldn't get GitHub username for ${email}; using letter icons instead`);
+      pic = getLetterIcon(name);    
     }
+    callback(pic);
   }
 }
