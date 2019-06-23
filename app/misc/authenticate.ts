@@ -182,7 +182,6 @@ function authenticateUser(callback) {
     }, err => {
       console.log('ERROR while getting token. ', err);
 	}).catch( err => {
-    let tokenError = err;
     console.log("Token error: " + err);
   });
 }
