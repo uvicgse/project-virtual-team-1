@@ -8,8 +8,10 @@ let options, bsNodes, bsEdges, nodes, edges, network;
 let secP = null, fromNode = null, toNode;
 
 let GraphNodeID = 0;
+var resetNodeMenuItem = undefined
 
-function returnSelectedNodeValue():number{
+function returnSelectedNodeValue (): number
+{
     let returnValue = GraphNodeID;
     GraphNodeID = 0;
     return returnValue;
@@ -236,7 +238,19 @@ function drawGraph() {
                     contextMenu.css({
                         top: properties.event.pageY + "px",
                         left: properties.event.pageX + "px"
-                    });
+                    } );
+                    if ( resetNodeMenuItem == undefined )
+                    {
+                        resetNodeMenuItem = $( "#rightClickMenuItemReset" );
+                    }
+                    if ( aheadCommitList.includes( contextNode.commitSha ) )
+                    {
+                        let contextMenuItems = $( "#nodeRightClickMenu" );
+                        contextMenuItems.append( resetNodeMenuItem );
+                    } else
+                    {
+                        resetNodeMenuItem.remove();
+                    }
                     contextMenu.finish().toggle();
                     contextMenu.focus();
 

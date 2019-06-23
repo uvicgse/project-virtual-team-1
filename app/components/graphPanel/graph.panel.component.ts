@@ -28,6 +28,13 @@ export class GraphPanelComponent {
 
   }
 
+  resetRepoToCommit ()
+  {
+    resetLastCommit()
+    let contextMenu = $("#networkContext");
+    contextMenu.hide();
+  }
+
   // Disables the context menu in the graphed network
   disableContextMenu() {
     let contextMenu = $("#networkContext");
