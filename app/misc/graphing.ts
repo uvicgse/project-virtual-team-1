@@ -546,19 +546,26 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
         }
     }
 
-    nodes.add({
-        id: id,
-        shape: "circularImage",
-        title: title,
-        image: img4User(name),
-        physics: false,
-        fixed: false,
-        color: colorData,
-        x: (column - 1) * spacingX,
-        y: (id - 1) * spacingY,
-        author: c.author(),
-        nodeType: NodeType.Node,
-        commitSha: c.sha()
+    let imageUrl;
+
+    imageForUser(name, email, function (pic) {
+        imageUrl = pic;    
+
+        nodes.add({
+            id: id,
+            shape: "circularImage",
+            title: title,
+            image: imageUrl,
+            physics: false,
+            fixed: false,
+            color: colorData,
+            x: (column - 1) * spacingX,
+            y: (id - 1) * spacingY,
+            author: c.author(),
+            nodeType: NodeType.Node,
+            commitSha: c.sha()
+        });
+
     });
 
     // Add branches to commits, if any exist
