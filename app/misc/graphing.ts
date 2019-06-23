@@ -572,7 +572,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1]; // Get the branch's name instead of ref/origin/branch
             // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
-            if (branchName.isHead()) {
+            if (branchName.isHead() || branchName == "HEAD") {
                 shortName = "*" + shortName;
             }
             let bsnodeId = generateUniqueNumber();
