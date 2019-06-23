@@ -28,7 +28,7 @@ function getGithubAvatar(username: string, callback) {
   // The GitHub API has lower rate limits for non-authenticated requests.
   // To increase the limit, supply an access token below; i.e. gh.client('token').
   // Tokens can be generated at https://github.com/settings/tokens
-  let client = gh.client('d227df0e0611b347dda84b6db9261d55aad5044a');
+  let client = gh.client();
   
   let pic;
 
