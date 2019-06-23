@@ -430,10 +430,11 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1];
             console.log(shortName + " sub-branch: " + branchName.isHead().toString());
-            if (branchName.isHead()) {
+            // add a special case for HEAD
+            if (branchName.isHead() || branchName == "HEAD") {
                 shortName = "*" + shortName;
             }
-            let bsnodeId = shortName;
+            let bsnodeId = generateUniqueNumber();
             bsNodes.add({
                 id: bsnodeId,
                 shape: "icon",
@@ -470,6 +471,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
             console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            // I believe this will never happen, but I will not delete it just in case
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }

@@ -1,12 +1,14 @@
 let Git = require("nodegit");
+let readFile = require("fs-sync");
+let checkFile = require("fs");
+let jsonfile = require('jsonfile');
+
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
 let tags = {};
 let remoteName = {};
 let localBranches = [];
-let readFile = require("fs-sync");
-let checkFile = require("fs");
 let repoCurrentBranch = "master";
 let modal;
 let span;
@@ -14,8 +16,9 @@ let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
 let lastRefList = [];
-let jsonfile = require('jsonfile');
 let refreshAllFlagRef = false;
+let detachedFlag = false;
+let detachedRef;
 
 // Issue 6
 // Retrieve repos from repos.json
@@ -417,7 +420,6 @@ function refreshReferences(verbose, force) {
                           tags[commit.sha()] = [refList[i]];
                       }
                   });
-
               } else{
                 console.log("Unsupported reference: " + refList[i].name());
               }
@@ -439,6 +441,18 @@ function refreshReferences(verbose, force) {
               console.log("Unsupported reference: " + refList[i].name());
             }
           }
+
+          // dealing with case where HEAD is detached at a commit
+          if (detachedFlag) {
+            let detachedOid = detachedRef.target().tostrS();
+            if (detachedOid in bname) {
+              bname[detachedOid].push(detachedRef);
+            }
+            else {
+              bname[detachedOid] = [detachedRef];
+            }
+          }
+
           // update lastRefList
           lastRefList = refList.slice();
         })
@@ -457,6 +471,18 @@ function refreshReferences(verbose, force) {
         let branchParts = reference.name().split("/");
         console.log("branch parts: " + branchParts);
         branch = branchParts[branchParts.length - 1];
+
+        // checkout-tag special case: HEAD is detached at a commit
+        if (branchParts == "HEAD") {
+          // signalling the detached flag
+          detachedFlag = true;
+          let detachedCid = reference.target().tostrS();
+          console.log("HEAD is detached at ["+detachedCid+"]");
+          branch = branch + " detached at " + detachedCid;
+          detachedRef = reference;
+        } else {
+          detachedFlag = false;
+        }
       })
       .then(function () {
         // suppress commit detection alert
@@ -478,7 +504,7 @@ function refreshReferences(verbose, force) {
           repoLocalPath = "..." + repoLocalPath.slice(breakStringFrom, repoLocalPath.length);
         }
         document.getElementById("repo-name").innerHTML = repoLocalPath;
-        document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
+        document.getElementById("branch-name").innerHTML = '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
         //Default values will be set for the branch labels
@@ -490,7 +516,7 @@ function refreshReferences(verbose, force) {
         drawGraph();
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         //default label set to master
-        document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
+        document.getElementById("branch-name").innerHTML = '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
   }
 
@@ -808,14 +834,13 @@ function refreshReferences(verbose, force) {
         addCommand("git checkout " + element);
 
         repo.setHead(element)
-            .then(function () {
-                refreshAll(repo);
-                document.getElementById("branch-name").innerHTML = 'Tag: ' + '<span id="name-selected">' + element.replace(/^.*[\\\/]/, '') +'</span>' + '<span class="caret"></span>';
-            }, function (err) {
-                console.log("repo.ts, cannot checkout local tag: " + err);
-                displayModal("ERROR: cannot checkout local tag " + element);
-                refreshAll(repo);
-            });
+          .then(function () {
+            refreshAll(repo);
+          }, function (err) {
+            console.log("repo.ts, cannot checkout local tag: " + err);
+            displayModal("ERROR: cannot checkout local tag " + element);
+            refreshAll(repo);
+          });
       });
   }
 
