@@ -39,7 +39,7 @@ function sortedListOfCommits(commits){
 
     while (commits.length > 0) {
       let commit = commits.shift();
-      let parents = commit.parentxs();
+      let parents = commit.parents();
       if (parents === null || parents.length === 0) {
         commitHistory.push(commit);
       } else {
