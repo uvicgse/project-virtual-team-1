@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FooterComponent } from "../footer/footer.component";
+import { HeaderComponent } from "../header/header.component";
 import { TextEditorComponent } from "../textEditor/text.editor.component";
 
 @Component({
@@ -9,7 +9,7 @@ import { TextEditorComponent } from "../textEditor/text.editor.component";
 
 export class DiffPanelComponent{
   // Creating instances for the classes so that their functions can be used
-  private footerInstance: FooterComponent = new FooterComponent();
+  private headerInstance: HeaderComponent = new HeaderComponent();
   private textEditorInstance: TextEditorComponent = new TextEditorComponent();
 
 
@@ -64,7 +64,7 @@ export class DiffPanelComponent{
   */
   openFromDiff(): void {
     // Displays the file editor
-    this.footerInstance.displayFileEditor();
+    this.headerInstance.displayFileEditor();
 
     // Grabs the name of the file that is currently open in the diff panel
     let doc = document.getElementById("diff-panel");
