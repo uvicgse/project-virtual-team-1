@@ -52,7 +52,6 @@ function handleStashDropZoneDrop(event:DragEvent){
 function handleCommitBoxDragStart(event:DragEvent){
     document.getElementById("graph-panel")!.classList.add("dropzone");
     event.dataTransfer!.effectAllowed = 'move';
-    event.dataTransfer!.setDragImage(document.createElement("div"),0,0);
     //generate data payload
     let payload = {
         operation: "commit",
