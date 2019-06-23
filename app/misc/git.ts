@@ -785,7 +785,8 @@ function applyRebase() {
   console.log('Branches to rebase from: ' + fromBranch + ', to: ' + toBranch);
 
   // Ok, start the real rebase
-  rebaseCommits(fromBranch, toBranch);
+  //rebaseCommits(fromBranch, toBranch);
+  rebaseSimpleGit(fromBranch, toBranch);
 }
 
 function getRebaseFromBranch(): void {
@@ -824,6 +825,16 @@ async function getEveryBranch() {
   return branches;
 }
 
+function rebaseSimpleGit(from: string, to: string) {
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.rebase([to, from], (err, data) => {
+    if (!err) {
+        console.log('Remote url for repository at ' + __dirname + ':');
+        console.log(data);
+    }
+  });
+}
+
 function rebaseCommits(from: string, to: string) {
   let repos;
   let index;
@@ -850,14 +861,20 @@ function rebaseCommits(from: string, to: string) {
       })
       .then(function (annotated) {
         console.log("Changing commit message");
+        console.log(Git.Rebase.open(repos, branch, annotated));
         return Git.Rebase.init(repos, branch, annotated, null, null);
       })
       .then(function (rebase) {
         console.log("Rebasing");
-        return rebase.next();
+        console.log(rebase);
+        var signature = Git.Signature.default(repos);
+        console.log(signature);
+        return rebase.finish(signature)
+        //return rebase.next();
       })
-      .then(function (operation) {
-        refreshAll(repos);
+      .then(function (result) {
+        //refreshAll(repos);
+        console.log("Rebase statue (0 success, -1 failure): " + result);
       });
 }
 
