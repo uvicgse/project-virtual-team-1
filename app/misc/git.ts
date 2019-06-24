@@ -833,7 +833,7 @@ async function getEveryBranch() {
 
 function rebaseSimpleGit(from: string, to: string) {
   let sGitRepo = sGit(repoFullPath);
-  sGitRepo.rebase([to, from], (err, data) => {
+  sGitRepo.rebase(['--onto', to, from], (err, data) => {
     if (!err) {
         console.log('Remote url for repository at ' + __dirname + ':');
         console.log(data);
