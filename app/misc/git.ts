@@ -126,6 +126,9 @@ function stage() {
 function addAndCommit() {
   commitMessage = document.getElementById('commit-message-input').value;
   if (commitMessage == null || commitMessage == "") {
+    commitMessage = document.getElementById('commit-message-input-navbar').value;
+  }
+  if (commitMessage == null || commitMessage == "") {
     displayModal("Cannot commit without a commit message. Please add a commit message before committing");
     return;
   }
@@ -457,9 +460,8 @@ function pushToRemote() {
 }
 
 function commitModal() {
-  // TODO: implement commit modal
-  //displayModal("Commit inside a modal yet to be implemented");
   $('#set-commit-modal').modal('show');
+  clearCommitModalText()
 }
 
 function openBranchModal() {
@@ -1769,6 +1771,13 @@ function setUpstreamModal() {
  */
 function clearUpstreamModalText() {
   document.getElementById("upstream-path").value = "";
+}
+
+/**
+ * Clears the fields from the commit modal.
+ */
+function clearCommitModalText() {
+  document.getElementById("commit-message-input-navbar").value = "";
 }
 
 /**
