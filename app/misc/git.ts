@@ -124,12 +124,12 @@ function stage() {
 }
 
 function addAndCommit() {
-  commitMessage = document.getElementById('commit-message-input').value;
+  commitMessage = document.getElementById('commit-message-input').value; //Gets value from the commit message text area on main screen
   if (commitMessage == null || commitMessage == "") {
-    commitMessage = document.getElementById('commit-message-input-navbar').value;
+    commitMessage = document.getElementById('commit-message-input-navbar').value; //Gets value from the commit message text area in the navbar
   }
   if (commitMessage == null || commitMessage == "") {
-    displayModal("Cannot commit without a commit message. Please add a commit message before committing");
+    displayModal("Cannot commit without a commit message. Please add a commit message before committing"); //If both text areas are empty, then display this modal
     return;
   }
   let repository;
