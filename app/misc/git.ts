@@ -238,7 +238,7 @@ function clearStagedFilesList() {
   filesChangedMessage.id = "staged-files-message";
   filesChangedMessage.innerHTML = "Your staged files will appear here";
   filePanel.appendChild(filesChangedMessage);
-  
+
   disableCommit();
   changeColor();
 }
@@ -458,7 +458,8 @@ function pushToRemote() {
 
 function commitModal() {
   // TODO: implement commit modal
-  displayModal("Commit inside a modal yet to be implemented");
+  //displayModal("Commit inside a modal yet to be implemented");
+  $('#set-commit-modal').modal('show');
 }
 
 function openBranchModal() {

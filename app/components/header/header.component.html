@@ -465,6 +465,27 @@
   </div>
 </div>
 
+<!--Modal for commiting from navbar-->
+<div id="set-commit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content" style=" width: 602px !important">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+        <h4 class="modal-title">Commit changes</h4>
+      </div>
+      <div class="modal-body" id="modal-text-box">
+        Please provide a commit message.
+        <input type="text" id="commit-message-input" class="form-control" style=" width: 554px !important" placeholder="Enter a commit message">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="setCommitButton" onclick="addAndCommit()">Commit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Confirmation Modal for deleting upstream -->
 <div id="delete-upstream-modal" class="modal fade">
   <!-- <input type="hidden" id="branch-to-delete" name="branch-to-delete" /> -->
