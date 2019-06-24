@@ -39,8 +39,8 @@ function getGithubAvatar(username: string, callback) {
       console.log(`[GitHub API] ${username}: ${pic}`)
     }
     else {
-      console.log(`[GitHub API] ${err}`);
-      console.log("GitHub API request failed; using letter icons instead");
+      console.log(`[GitHub API] ${username} --> ERROR: ${err}`);
+      console.log("ERROR: GitHub API request failed; using letter icons instead");
 
       pic = getLetterIcon(name);
     }
@@ -111,6 +111,8 @@ function imageForUser(name: string, email: string, callback) {
   // Email not "@users.noreply.github.com", so try to get GitHub username from email
   else {
     
+    console.log(`Not a noreply email...finding username for ${email}...`);
+
     // Get GitHub username from email
     let username;
 
@@ -118,12 +120,18 @@ function imageForUser(name: string, email: string, callback) {
       function(user) {	
         console.log(`[GitHub API] ${email} --> ${user}`);
         username = user;
+
+        // getGithubAvatar(user, function(imageUrl) {
+        //   callback(imageUrl);
+        // });
+
       },
       function(err) {
-        console.log(`[GitHub API] ERROR: ${err}`);
+        console.log(`[GitHub API] ${email} --> ERROR: ${err}`);
+        // callback(getLetterIcon(name));
       }
     );
-    
+    console.log(`Now attempting to retrieve avatar for ${username}`);
     // Now use the username to retrieve the profile picture URL
     if (typeof username !== 'undefined') {
       getGithubAvatar(username, function(imageUrl) {
@@ -131,7 +139,7 @@ function imageForUser(name: string, email: string, callback) {
       });
     }
     else {
-      console.log(`ERROR: Couldn't get GitHub username for ${email}; using letter icons instead`);
+      console.log(`ERROR: No GitHub username for ${email}; using letter icons instead`);
       pic = getLetterIcon(name);    
     }
     callback(pic);
