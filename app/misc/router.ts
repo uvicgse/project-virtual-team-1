@@ -145,17 +145,6 @@ function displayFilePanel() {
   if (filePanel != null){
     filePanel.style.zIndex = "10";
   }
-
-  let commitMessageInput = document.getElementById("commit-message-input");
-  if (commitMessageInput != null){
-    commitMessageInput.style.visibility = "visible";
-  }
-
-  let commitButton = document.getElementById("commit-button");
-  if (commitButton != null){
-    commitButton.style.visibility = "visible";
-  }
-
 }
 
 function displayPullRequestPanel() {
@@ -192,16 +181,6 @@ function hideFilePanel() {
   let filePanel = document.getElementById("file-panel");
   if (filePanel != null){
     filePanel.style.zIndex = "-10";
-  }
-
-  let commitMessageInput = document.getElementById("commit-message-input");
-  if (commitMessageInput != null){
-    commitMessageInput.style.visibility = "hidden";
-  }
-
-  let commitButton = document.getElementById("commit-button");
-  if (commitButton != null){
-    commitButton.style.visibility = "hidden";
   }
 
  }
@@ -342,10 +321,12 @@ function checkRepoOpen() {
 
 function hideFooter(){
   document.getElementById("terminal")!.style.visibility = "hidden";
+  document.getElementById("commit-panel")!.style.visibility = "hidden";
   document.getElementById("stash-panel")!.style.visibility = "hidden";
 }
 function displayFooter(){
   document.getElementById("terminal")!.style.visibility = "visible";
+  document.getElementById("commit-panel")!.style.visibility = "visible";
   document.getElementById("stash-panel")!.style.visibility = "visible";
 }
 
@@ -408,4 +389,24 @@ function useRecentRepositories() {
     } else {
         console.log(file + ' exists.')
     }
+}
+
+function enableCommit(){
+  document.getElementById("commit-panel")!.draggable = true;
+  let messageInput = <HTMLInputElement>document.getElementById("commit-message-input")!;
+  messageInput.disabled = false;
+  messageInput.placeholder = "Describe your changes here...\n\n(Ctrl + Enter or drag and drop to commit)"
+  let commitButton = <HTMLInputElement>document.getElementById("commit-button")!
+  commitButton.disabled = false;
+  commitButton.classList.remove("commit-button-disabled");
+}
+
+function disableCommit(){
+  document.getElementById("commit-panel")!.draggable = false;
+  let messageInput = <HTMLInputElement>document.getElementById("commit-message-input")!;
+  messageInput.disabled = true;
+  messageInput.placeholder = "Commit Disabled...\n\nNo Files Staged"
+  let commitButton = <HTMLInputElement>document.getElementById("commit-button")!
+  commitButton.disabled = true;
+  commitButton.classList.add("commit-button-disabled");
 }

@@ -116,6 +116,7 @@ function stage() {
 
   if (stagedFiles == null || stagedFiles.length !== 0) {
     if (document.getElementById("staged-files-message") !== null) {
+      enableCommit();
       let filePanelMessage = document.getElementById("staged-files-message");
       filePanelMessage.parentNode.removeChild(filePanelMessage);
     }
@@ -125,7 +126,7 @@ function stage() {
 function addAndCommit() {
   commitMessage = document.getElementById('commit-message-input').value;
   if (commitMessage == null || commitMessage == "") {
-    window.alert("Cannot commit without a commit message. Please add a commit message before committing");
+    displayModal("Cannot commit without a commit message. Please add a commit message before committing");
     return;
   }
   let repository;
@@ -237,7 +238,8 @@ function clearStagedFilesList() {
   filesChangedMessage.id = "staged-files-message";
   filesChangedMessage.innerHTML = "Your staged files will appear here";
   filePanel.appendChild(filesChangedMessage);
-
+  
+  disableCommit();
   changeColor();
 }
 

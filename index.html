@@ -28,6 +28,7 @@
     <script src="app/misc/file.js"></script>
     <script src="app/misc/wiki.js"></script>
     <script src="app/misc/dragAndDrop.js"></script>
+    <script src="app/misc/keyboardShortcuts.js"></script>
     <link href="node_modules/vis/dist/vis.min.css" rel="stylesheet" type="text/css">
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -79,11 +80,6 @@ ipcRenderer.on('change-to-default-style', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
-    // Add click event to Commit button
-    document.getElementById('commit-button').addEventListener("click", function() {
-      console.log("Commit button has been clicked.");
-      addAndCommit();
-    });
 
     document.getElementById('save-button').addEventListener("click", function() {
       saveFile();
