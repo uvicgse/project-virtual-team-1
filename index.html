@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 $('#repo-modal').on('hidden.bs.modal', function (e) {
-  console.log(e+"Disabling clone button");
+  console.log(e+" Disabling clone button.");
   var butt = document.getElementById("cloneButton");
   butt.innerHTML = 'Clone';
   butt.setAttribute('class', 'btn btn-primary disabled');
@@ -128,7 +128,7 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
            icon: "edit",
            callback: function(itemKey, opt) {
              let content = $trigger.text();
-             console.log("path of local repository: " + repoFullPath + "/" + content);
+             console.log("Path of local repository: " + repoFullPath + "/" + content);
              let doc = document.getElementById("diff-panel-body");
              doc.innerHTML = "";
              doc.contentEditable = "true";
@@ -151,7 +151,7 @@ $.contextMenu({
     let branch;
     var options = {
       callback: function(key, options) {
-        var m = "clicked: " + key;
+        var m = "Clicked: " + key;
         console.log(m);
       },
       items: {
@@ -189,7 +189,7 @@ $.contextMenu({
         branch = branch.substring(1, branch.length);
       }
       options.items['merge to HEAD'].callback = function(itemKey, opt) {
-        console.log("meging to HEAD");
+        console.log("Merging to HEAD.");
         mergeInMenu(branch);
       };
     } else {

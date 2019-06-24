@@ -11,7 +11,8 @@
 
   <!-- Context menu for operations within the commit network -->
   <div id="networkContext" class="context-menu" tabindex="-1" (blur)="disableContextMenu()">
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" id="nodeRightClickMenu">
+      
       <li>
         <a (mousedown)="doNothing()" (click)="showCreateTagModal()">Create tag</a>
       </li>
@@ -19,6 +20,9 @@
         <a (click)="showDeleteTagList()">Delete a tag</a>
       </li>
       <li id="deleteTagList"></li>
+      <li id="rightClickMenuItemReset">
+          <a (click)="resetRepoToCommit()" title="undo the latest unpush commit from the current branch">Undo Latest Commit</a>
+      </li>
     </ul>
   </div>
 

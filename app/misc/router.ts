@@ -13,12 +13,13 @@ function collapseSignPanel() {
 }
 
 function switchToClonePanel() {
-  console.log("switch to clone panel");
+  console.log("Switching to clone panel");
   hideAuthenticatePanel();
   hideFilePanel();
   hidePullRequestPanel();
   hideGraphPanel();
   hideFooter();
+  checkRepoOpen();
   displayClonePanel();
 }
 
@@ -28,6 +29,7 @@ function switchToMainPanel() {
   displayFilePanel();
   displayPullRequestPanel();
   displayFooter();
+  checkRepoOpen();
   displayGraphPanel();
 
   openDisabled = false;
@@ -46,7 +48,7 @@ function switchToMainPanel() {
 
 function checkSignedIn() {
   if (continuedWithoutSignIn) {
-    displayModal("You need to sign in");
+    displayModal("Sign in required, please sign in.");
     // Don't open the repo modal
     $('#repo-name').removeAttr("data-target");
 } else {
@@ -74,8 +76,9 @@ function switchToAddRepositoryPanelWhenNotSignedIn() {
 
 function switchToAddRepositoryPanel() {
   inTheApp = true
-  console.log("Switching to add repo panel");
+  console.log("Switching to add repo panel.");
   useRecentRepositories();
+  checkRepoOpen();
   hideFooter();
   hideAuthenticatePanel();
   hideFilePanel();
@@ -116,10 +119,10 @@ function wait(ms) {
 }
 
 function displayUsername() {
-  console.log("Display Username called");
   document.getElementById("Button_Sign_out").style.display = "block";
   showUsername = true;
-  console.log(getUsername());
+  let currentUsername = getUsername();
+  console.log("Currently signed in as: " + currentUsername);
   let githubname = document.getElementById("githubname");
   if (githubname != null){
     let existing_username = githubname.innerHTML;
@@ -290,6 +293,32 @@ function hideDiffPanelButtons() {
   disableDiffPanelEditOnHide();
 }
 
+function checkRepoOpen() {
+  // hide these repo nav elements if there is no repo
+
+  // this checks to see if a repo has successfully been open
+  let repoElement = document.getElementById("repo-name");
+  // this checks to see if the user set a repo path to open
+  let repoPath = document.getElementById("repoOpen");
+  let repoCreate = document.getElementById("repoCreate");
+  let repoClone = document.getElementById("repoClone");
+
+  let showRepoNavTools = "hidden";
+  // if these values are set, then show everything
+  if (repoElement.innerHTML != "repository" || repoPath.value ||
+      repoCreate.value || repoClone.value || repoLocalPath)
+  {
+    showRepoNavTools = "visible";
+  }
+
+  // show/hide the relevent items
+  document.getElementById("repo-back-button")!.style.visibility = showRepoNavTools;
+  document.getElementById("nav-repo-branch-tag-info")!.style.visibility = showRepoNavTools;
+  document.getElementById("nav-toolbar")!.style.visibility = showRepoNavTools;
+  // do not hide this repo button until issue 184 is fixed
+  //document.getElementById("nav-open-repo-button")!.style.visibility = showRepoNavTools;
+}
+
 function hideFooter(){
   document.getElementById("terminal")!.style.visibility = "hidden";
   document.getElementById("commit-panel")!.style.visibility = "hidden";
@@ -330,9 +359,9 @@ function useSavedCredentials() : boolean {
   let file = 'data.json';
   // check if the data.json file exists
   if (fs.existsSync(file)) {
-    console.log('button has been pressed: logging in with saved credentials');
+    console.log('Previous login detected: logging in with saved credentials...');
     decrypt();
-    loginWithSaved(switchToMainPanel);
+    loginWithSaved(switchToAddRepositoryPanel);
     return true;
   }
   return false;
@@ -345,7 +374,7 @@ function createRecentRepositories(file) {
     try {
         fs.writeFileSync(file);
     } catch (err) {
-        console.log(err);
+        console.log("ERROR Could not create recent repository file, createRecentRepositories() in router.ts threw error: " + err);
     }
 }
 
@@ -355,10 +384,10 @@ function useRecentRepositories() {
     let file = 'repos.json';
 
     if (!fs.existsSync(file)) {
-        console.log(file + ' does not exist');
+        console.log("ERROR: " + file + ' does not exist.');
         createRecentRepositories(file);
     } else {
-        console.log(file + ' exists')
+        console.log(file + ' exists.')
     }
 }
 

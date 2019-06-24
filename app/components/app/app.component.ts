@@ -24,7 +24,7 @@ export class AppComponent {
     // If user has previously saved a color, then set the app to that color
     if (fs.existsSync(userColorFilePath)) {
       fs.readFile(userColorFilePath, function(err, buffer) {
-        console.log(buffer.toString());
+        console.log("Last used theme: " + buffer.toString() + ", initializing to this theme.");
         let color = buffer.toString();
         changeColor(color);
       });
