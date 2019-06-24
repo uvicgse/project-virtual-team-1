@@ -124,9 +124,12 @@ function stage() {
 }
 
 function addAndCommit() {
-  commitMessage = document.getElementById('commit-message-input').value;
+  commitMessage = document.getElementById('commit-message-input').value; //Gets value from the commit message text area on main screen
   if (commitMessage == null || commitMessage == "") {
-    displayModal("Cannot commit without a commit message. Please add a commit message before committing");
+    commitMessage = document.getElementById('commit-message-input-navbar').value; //Gets value from the commit message text area in the navbar
+  }
+  if (commitMessage == null || commitMessage == "") {
+    displayModal("Cannot commit without a commit message. Please add a commit message before committing"); //If both text areas are empty, then display this modal
     return;
   }
   let repository;
@@ -238,7 +241,7 @@ function clearStagedFilesList() {
   filesChangedMessage.id = "staged-files-message";
   filesChangedMessage.innerHTML = "Your staged files will appear here";
   filePanel.appendChild(filesChangedMessage);
-  
+
   disableCommit();
   changeColor();
 }
@@ -457,8 +460,8 @@ function pushToRemote() {
 }
 
 function commitModal() {
-  // TODO: implement commit modal
-  displayModal("Commit inside a modal yet to be implemented");
+  $('#set-commit-modal').modal('show');
+  clearCommitModalText()
 }
 
 function openBranchModal() {
@@ -1768,6 +1771,13 @@ function setUpstreamModal() {
  */
 function clearUpstreamModalText() {
   document.getElementById("upstream-path").value = "";
+}
+
+/**
+ * Clears the fields from the commit modal.
+ */
+function clearCommitModalText() {
+  document.getElementById("commit-message-input-navbar").value = "";
 }
 
 /**
