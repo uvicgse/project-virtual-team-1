@@ -1772,6 +1772,7 @@ function editUpstream() {
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
       repository = repo;
+      addCommand("git remote rm upstream");
       Git.Remote.delete(repository, 'upstream').then(function(result) {
         addCommand("git remote add upstream " + upstreamRepoPath);
         Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*').then(function(remote) {
