@@ -1756,6 +1756,35 @@ function setUpstreamModal() {
 }
 
 /**
+ * Modal for editing the current upstream repo.
+ */
+function showEditUpstream() {
+  $('#edit-upstream-modal').modal('show');
+}
+
+/**
+ * Edit the current upstream repo.
+ */
+function editUpstream() {
+  let repository;
+  let upstreamRepoPath = document.getElementById("upstream-path").value;
+  if(upstreamRepoPath != null) {
+    Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+      repository = repo;
+      Git.Remote.delete(repository, 'upstream').then(function(result) {
+        Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*').then(function(remote) {
+          displayModal("Upstream repository successfully configured.");
+        }, function(err){
+          displayModal(err);
+        });
+      });
+    })
+  }
+  clearUpstreamModalText();
+}
+
+/**
  * Clears the fields from the upstream repo modal.
  */
 function clearUpstreamModalText() {
@@ -1792,26 +1821,27 @@ function deleteUpstream() {
 function setUpstreamRepo() {
   let repository;
   let upstreamRepoPath = document.getElementById("upstream-path").value;
-  if(upstreamRepoPath != null) {
-    Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-      repository = repo;
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+    repository = repo;
+    Git.Remote.lookup(repository, 'upstream').then(function(remote) {
+      showEditUpstream();
+      return;
+    }, function(err) {
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
       addCommand("git remote add upstream " + upstreamRepoPath);
       result.catch(function(error) {
-      if (error.message == "cannot set empty URL"){ //Checking for empty URL in the upstream modal
-        displayModal("Please enter a valid path to the original branch");
-      }
-      else if (error.message == "remote 'upstream' already exists"){ //Checking for existing upstream branch
-        displayModal("Upstream branch already exists");
-      } 
-      }), displayModal("Upstream repository successfully configured.");
-    }, function(err) {
-      console.log("Error adding remote upstream repository:" + err) //Checking if a repo is opened before setting an upstream
-      displayModal("Please open a valid repository first");
-    });
-  }
-  clearUpstreamModalText();
+        if (error.message == "cannot set empty URL" ){ //Checking for empty URL in the upstream modal
+          displayModal("Please enter a valid path to the original branch");
+        }
+      })
+      displayModal("Upstream repository successfully configured.");
+      clearUpstreamModalText();
+    })
+  }, function(err) {
+    displayModal("Please open a valid repository first");
+    clearUpstreamModalText();
+  });
 }
 
 /**
