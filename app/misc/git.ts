@@ -777,12 +777,18 @@ async function showRebaseModal() {
   getRebaseOntoBranch();
 }
 
+
 // A helper function that gets the strings selected for the rebase
 function applyRebase() {
   let fromBranch = document.getElementById("rebaseBranch").innerText;
   let tempToBranch = document.getElementById("ontoBranches");
   let toBranch = tempToBranch.options[tempToBranch.selectedIndex].value;
   console.log('Branches to rebase from: ' + fromBranch + ', to: ' + toBranch);
+
+  if ( document.getElementById("inlineCheckbox1").checked )
+  {
+    $('#exampleModal').modal('show');
+  }
 
   // Ok, start the real rebase
   //rebaseCommits(fromBranch, toBranch);
