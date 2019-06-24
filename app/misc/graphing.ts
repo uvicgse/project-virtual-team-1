@@ -389,7 +389,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
         });
 
         // Get the image URL, then update the node for the commmit
-        imageForUser(name, email, function (pic) {
+        imageForUser(name, email, c.sha(), function (pic) {
             imageUrl = pic;
 
             bsNodes.update({
@@ -548,7 +548,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
 
     let imageUrl;
 
-    imageForUser(name, email, function (pic) {
+    imageForUser(name, email, c.sha(), function (pic) {
         imageUrl = pic;    
 
         nodes.add({

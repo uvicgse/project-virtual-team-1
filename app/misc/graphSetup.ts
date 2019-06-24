@@ -268,7 +268,8 @@ function drawGraph() {
                         window.open("https://github.com/" + name, "Author Profile");
                     }
 
-                    imageForUser(name, email, function (pic) {
+                    // no commit hash available, so just pass in some gabage and let imageForUser() figure things out via the email
+                    imageForUser(name, email, 'null', function (pic) {
                         document.getElementById("authorModalImage")!.src = pic;
                         $("#authorProfileModal").modal('show');
                     })

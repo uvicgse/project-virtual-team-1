@@ -60,7 +60,7 @@ function img4User(name:string) {
 }
 
 /** Retreives the URL for the given author's GitHub profile picture.*/
-function imageForUser(name: string, email: string, callback) {
+function imageForUser(name: string, email: string, commitHash: string, callback) {
   
   let pic;  
   
