@@ -151,7 +151,6 @@ function downloadFunc(cloneURL, fullLocalPath) {
       updateProgressBar(0);
       console.log("Repo successfully cloned.");
       document.getElementById('graph-loading').style.display = 'block';
-      refreshAll(repository);
       updateModalText("Clone Successful, repository saved under: " + fullLocalPath);
       addCommand("git clone " + cloneURL + " " + fullLocalPath);
       repoFullPath = fullLocalPath;
@@ -161,6 +160,8 @@ function downloadFunc(cloneURL, fullLocalPath) {
       switchToMainPanel();
     },
       function (err) {
+        progressDiv.style.visibility = 'collapse';
+        updateProgressBar(0);
         updateModalText("Clone Failed - " + err);
         console.log("ERROR failed to clone repo: " + err); // TODO show error on screen
         switchToAddRepositoryPanel();
