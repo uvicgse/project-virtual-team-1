@@ -268,8 +268,9 @@ function drawGraph() {
                         window.open("https://github.com/" + name, "Author Profile");
                     }
 
-                    // no commit hash available, so just pass in some gabage and let imageForUser() figure things out via the email
-                    imageForUser(name, email, 'null', function (pic) {
+                    // no commit hash or upstream URL available, 
+                    // so just pass in some garbage and let imageForUser() figure things out 
+                    imageForUser(name, email, 'null', 'null', function (pic) {
                         document.getElementById("authorModalImage")!.src = pic;
                         $("#authorProfileModal").modal('show');
                     })

@@ -60,88 +60,43 @@ function img4User(name:string) {
 }
 
 /** Retreives the URL for the given author's GitHub profile picture.*/
-function imageForUser(name: string, email: string, commitHash: string, callback) {
+function imageForUser(name: string, email: string, upstreamUrl: string, commitHash: string, callback) {
   
-  let pic;  
-  
-  if (email.includes('@users.noreply.github.com')) {
-    
-    // Extract GitHub username from noreply email (<number>+<username>@users.noreply.github.com)
-    // This won't work for users that are NOT hiding their email in the GitHub settings.
-    // See https://help.github.com/en/articles/about-commit-email-addresses for more info.
-    let username = email.replace('@users.noreply.github.com','').replace(/^(\d){4,}\+/,'');
-    
-    // try the local cache first
-    pic = images[username];
-    if (typeof(pic) !== "undefined") {
-      console.log(`[Cached] username: ${pic}`)
-      callback(pic);
-    }
-    else {
-      
-      getGithubAvatar(username, function(pic) {
-        callback(pic);
-      });
-
-      // /** TODO: refactor avatar URL retrieval into helper function **/  
-
-      // // github-avatar-url insists on having an API token, 
-      // // but since we're don't need it for public info, we'll instead use octonode to avoid having said token.
-      // // That being said, if you've hit the rate limit, just supply the token below; i.e. gh.client('token')
-      // let client = gh.client();
-      
-      // let t = client.get(`/users/${username}`, {}, function (err, status, body, headers) {
-      //   if (!err) {          
-      //     pic = body.avatar_url;
-      //     images[username] = pic;   // add to cache
-      //     console.log(`GitHub API: ${pic}`)
-      //   }
-      //   else {
-      //     console.log(`GitHub API: ${err}`);
-      //     console.log("GitHub API request failed; using letter icons instead");
-
-      //     pic = getLetterIcon(name);
-      //   }
-      //   /** end refactor segment **/
-
-      //   callback(pic);
-      // });
-    }
+  // try the cache first
+  let pic = images[email];
+  if (typeof(pic) !== 'undefined') {
+    console.log(`[Cached] ${email}: ${pic}`)
+    callback(pic);
   }
-  // Email not "@users.noreply.github.com", so try to get GitHub username from email
-  else {
+  // cache miss
+  else if (upstreamUrl !== 'null' && commitHash !== 'null') {
+
+    let pic;
+    let client = gh.client();
+    let repoPath = upstreamUrl.replace('https://github.com/','').replace('.git','');
     
-    console.log(`Not a noreply email...finding username for ${email}...`);
-
-    // Get GitHub username from email
-    let username;
-
-    githubUsername(email).then(
-      function(user) {	
-        console.log(`[GitHub API] ${email} --> ${user}`);
-        username = user;
-
-        // getGithubAvatar(user, function(imageUrl) {
-        //   callback(imageUrl);
-        // });
-
-      },
-      function(err) {
-        console.log(`[GitHub API] ${email} --> ERROR: ${err}`);
-        // callback(getLetterIcon(name));
+    // GET https://api.github.com/repos/{repo_owner}/{repo_name}/commits/{commitHash}
+    let ghCommit = `repos/${repoPath}/commits/${commitHash}`;
+    
+    let t = client.get(ghCommit, {}, function (err, status, body, headers) {
+      if (!err) {          
+        pic = body.author.avatar_url;
+        console.log(`[GitHub API] ${email}: ${pic}`)
+        images[email] = pic;   // add to cache
       }
-    );
-    console.log(`Now attempting to retrieve avatar for ${username}`);
-    // Now use the username to retrieve the profile picture URL
-    if (typeof username !== 'undefined') {
-      getGithubAvatar(username, function(imageUrl) {
-        pic = imageUrl;
-      });
-    }
-    else {
-      console.log(`ERROR: No GitHub username for ${email}; using letter icons instead`);
-      pic = getLetterIcon(name);    
-    }
+      else {
+        console.log(`[GitHub API] ${ghCommit} --> ERROR: ${err}`);
+        console.log("ERROR: GitHub API request failed; using letter icons instead");
+  
+        pic = getLetterIcon(name);
+      }
+      callback(pic);
+    });    
+
+  }
+  // upstreamUrl/commitHash not provided, so fallback to letter icons
+  else {
+    pic = getLetterIcon(name);
     callback(pic);
   }
 }

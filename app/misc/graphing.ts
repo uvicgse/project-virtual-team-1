@@ -388,23 +388,30 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             nodeType: NodeType.Basic
         });
 
-        // Get the image URL, then update the node for the commmit
-        imageForUser(name, email, c.sha(), function (pic) {
-            imageUrl = pic;
+        c.repo.config().then(config => {
+            config.getStringBuf("remote.origin.url").then(buf => {
+                // console.log(buf.toString());
+                let upstreamUrl = buf.toString();
 
-            bsNodes.update({
-                id: id,
-                shape: "circularImage",
-                title: title,
-                image: imageUrl,
-                color: colorData,
-                physics: false,
-                fixed: false,
-                x: (column - 1) * spacingX,
-                y: (id - 1) * spacingY,
-                author: c.author(),
-                nodeType: NodeType.Basic
-            });
+                // Get the image URL, then update the node for the commmit
+                imageForUser(name, email, upstreamUrl, c.sha(), function (pic) {
+                    imageUrl = pic;
+
+                    bsNodes.update({
+                        id: id,
+                        shape: "circularImage",
+                        title: title,
+                        image: imageUrl,
+                        color: colorData,
+                        physics: false,
+                        fixed: false,
+                        x: (column - 1) * spacingX,
+                        y: (id - 1) * spacingY,
+                        author: c.author(),
+                        nodeType: NodeType.Basic
+                    });
+                });
+            })
         });
 
         // Update node list
@@ -546,26 +553,32 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
         }
     }
 
-    let imageUrl;
+    c.repo.config().then(config => {
+        config.getStringBuf("remote.origin.url").then(buf => {
+            // console.log(buf.toString());
+            let upstreamUrl = buf.toString();
 
-    imageForUser(name, email, c.sha(), function (pic) {
-        imageUrl = pic;    
+            let imageUrl;
+            imageForUser(name, email, upstreamUrl, c.sha(), function (pic) {
+                imageUrl = pic;    
 
-        nodes.add({
-            id: id,
-            shape: "circularImage",
-            title: title,
-            image: imageUrl,
-            physics: false,
-            fixed: false,
-            color: colorData,
-            x: (column - 1) * spacingX,
-            y: (id - 1) * spacingY,
-            author: c.author(),
-            nodeType: NodeType.Node,
-            commitSha: c.sha()
-        });
-
+                nodes.add({
+                    id: id,
+                    shape: "circularImage",
+                    title: title,
+                    image: imageUrl,
+                    physics: false,
+                    fixed: false,
+                    color: colorData,
+                    x: (column - 1) * spacingX,
+                    y: (id - 1) * spacingY,
+                    author: c.author(),
+                    nodeType: NodeType.Node,
+                    commitSha: c.sha()
+                });
+                
+            });
+        })
     });
 
     // Add branches to commits, if any exist
