@@ -777,78 +777,84 @@ function mergeCommits(from) {
 }
 
 // Rebase modal functionality starts here!
-function showRebaseModal() {
+async function showRebaseModal() {
   $('#rebase-modal').modal('show');
-  getRebaseFromBranch();
-  let branches = getEveryBranch();
-  // console.log('Out of method ' + branches);
+  checkForOngoingRebase();
+  getRebaseBranches();
 }
 
-function getRebaseFromBranch() {
-    let rebaseFromBranch = document.getElementById("currentBranch");
-    rebaseFromBranch.innerText = repoCurrentBranch;
+// Check if there is already a rebase in progress, if so abort
+function checkForOngoingRebase() {
+    let sGitRepo = sGit(repoFullPath);
+    if(fs.existsSync(repoFullPath + "/.git/rebase-apply")) {
+        console.log('Aborting ongoing rebase');
+        sGitRepo.silent(true).rebase(['--abort']);
+    }
 }
 
+// A helper function that gets the strings selected for the rebase
+function applyRebase() {
+  // Get the branch selections
+  let tempFromBranch = document.getElementById("fromBranches");
+  let fromBranch = tempFromBranch.options[tempFromBranch.selectedIndex].value;
+  let tempToBranch = document.getElementById("ontoBranches");
+  let toBranch = tempToBranch.options[tempToBranch.selectedIndex].value;
+
+  console.log('Branches to rebase from: ' + fromBranch + ', to: ' + toBranch);
+  if ( document.getElementById("inlineCheckbox1").checked )
+  {
+    $('#exampleModal').modal('show');
+  }
+  // Calls the rebase function
+  rebaseSimpleGit(fromBranch, toBranch);
+}
+
+// Populate dropdown menus with rebasable branches
+async function getRebaseBranches(): void {
+    let branches = await getEveryBranch();
+    let rebaseOntoBranches = document.getElementById("ontoBranches");
+    let rebaseFromBranches = document.getElementById("fromBranches");
+    $( "#fromBranches" ).empty();
+    $( "#ontoBranches" ).empty();
+    for(let branch of branches){
+        // onto options
+        let ontoOption = document.createElement("option");
+        ontoOption.value  = branch;
+        ontoOption.innerText = branch;
+        rebaseOntoBranches.appendChild(ontoOption);
+
+        // from options
+        let fromOption = document.createElement("option");
+        fromOption.value  = branch;
+        fromOption.innerText = branch;
+        rebaseFromBranches.appendChild(fromOption);
+    }
+}
+
+// Retrieves all possible branches for rebasing
 async function getEveryBranch() {
   async function fetchBranches() {
-      let repos;
-      return Git.Repository.open(repoFullPath)
+    let repos;
+    return Git.Repository.open(repoFullPath)
         .then(function (repo) {
           repos = repo;
           return repo.getReferenceNames(Git.Reference.TYPE.LISTALL);
-      });
+        });
   }
 
   let branches = await fetchBranches();
-  // console.log('In method: ' + branches);
   return branches;
 }
 
-function rebaseCommits(from: string, to: string) {
-  let repos;
-  let index;
-  let branch;
-  Git.Repository.open(repoFullPath)
-    .then(function (repo) {
-      repos = repo;
-      //return repos.getCommit(fromSha);
-      addCommand("git rebase " + to);
-      return Git.Reference.nameToId(repos, 'refs/heads/' + from);
-    })
-    .then(function (oid) {
-      console.log("Looking for commit id: " + oid + " in repositories.");
-      return Git.AnnotatedCommit.lookup(repos, oid);
-    })
-    .then(function (annotated) {
-      console.log("Finding the id of " + annotated);
-      branch = annotated;
-      return Git.Reference.nameToId(repos, 'refs/heads/' + to);
-    })
-    .then(function (oid) {
-      console.log("Oid: " + oid);
-      return Git.AnnotatedCommit.lookup(repos, oid);
-    })
-    .then(function (annotated) {
-      console.log("Changing commit message.");
-      return Git.Rebase.init(repos, branch, annotated, null, null);
-    })
-    .then(function (rebase) {
-      console.log("Rebasing.");
-      return rebase.next();
-    })
-    .then(function (operation) {
-      refreshAll(repos);
-    });
-}
-
-function rebaseInMenu(from: string, to: string) {
-  let p1 = document.getElementById("fromRebase");
-  let p2 = document.getElementById("toRebase");
-  let p3 = document.getElementById("rebaseModalBody");
-  p1.innerHTML = from;
-  p2.innerHTML = to;
-  p3.innerHTML = "Do you want to rebase branch " + from + " to " + to + " ?";
-  $("#rebaseModal").modal('show');
+// Actual Rebase implemented here with Simple-Git library.
+function rebaseSimpleGit(from: string, to: string) {
+  let sGitRepo = sGit(repoFullPath);
+  sGitRepo.silent(true).rebase([to], (err, data) => {
+    if (!err) {
+        console.log('Remote url for repository at ' + __dirname + ':');
+        console.log(data);
+    }
+  });
 }
 
 function mergeInMenu(from: string) {
