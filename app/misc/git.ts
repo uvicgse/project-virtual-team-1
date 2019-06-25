@@ -1767,6 +1767,37 @@ function setUpstreamModal() {
 }
 
 /**
+ * Modal for editing the current upstream repo.
+ */
+function showEditUpstream() {
+  $('#edit-upstream-modal').modal('show');
+}
+
+/**
+ * Edit the current upstream repo.
+ */
+function editUpstream() {
+  let repository;
+  let upstreamRepoPath = document.getElementById("upstream-path").value;
+  if(upstreamRepoPath != null) {
+    Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+      repository = repo;
+      addCommand("git remote rm upstream");
+      Git.Remote.delete(repository, 'upstream').then(function(result) {
+        addCommand("git remote add upstream " + upstreamRepoPath);
+        Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*').then(function(remote) {
+          displayModal("Upstream repository successfully configured.");
+        }, function(err){
+          displayModal(err);
+        });
+      });
+    })
+  }
+  clearUpstreamModalText();
+}
+
+/**
  * Clears the fields from the upstream repo modal.
  */
 function clearUpstreamModalText() {
@@ -1795,6 +1826,7 @@ function deleteUpstream() {
   let repository;
   Git.Repository.open(repoFullPath)
       .then(function (repo) {
+    addCommand("git remote rm upstream");
     Git.Remote.delete(repo, 'upstream').then(function(result) {
       displayModal('Upstream repository successfully deleted.')
     }, function(err) {
@@ -1810,10 +1842,13 @@ function deleteUpstream() {
 function setUpstreamRepo() {
   let repository;
   let upstreamRepoPath = document.getElementById("upstream-path").value;
-  if(upstreamRepoPath != null) {
-    Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-      repository = repo;
+  Git.Repository.open(repoFullPath)
+    .then(function (repo) {
+    repository = repo;
+    Git.Remote.lookup(repository, 'upstream').then(function(remote) {
+      showEditUpstream();
+      return;
+    }, function(err) {
       var result = Git.Remote.createWithFetchspec(repository, 'upstream', upstreamRepoPath, '+refs/heads/*:refs/remotes/upstream/*');
       addCommand("git remote add upstream " + upstreamRepoPath);
       result.catch(function(error) {
