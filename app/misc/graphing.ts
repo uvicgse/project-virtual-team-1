@@ -43,7 +43,7 @@ Types of nodes in the network.
     Tag = Represents a tag reference. Is linked to a single commit node
 */
 
-/* 
+/*
 Types of nodes in the network.
     Basic = Commit node in the highest zoom level (1st level). Represents a collection of commits
     Node = Commit node in the lowest zoom level (2rd level). Represents a a single commit
@@ -69,12 +69,12 @@ function generateUniqueNumber() {
 
 // Process and populate the initial graph
 function processGraph(commits: nodegit.Commit[]) {
-    
+
     var promise = new Promise(function(resolve,reject){
         commitHistory = [];
         basicList = [];
         numOfCommits = commits.length;
-        
+
         sortCommits(commits)
             .then(populateCommits)
             .then(function(data) {
@@ -82,7 +82,7 @@ function processGraph(commits: nodegit.Commit[]) {
                 if (textBox != null) {
                         document.getElementById('graph-loading').style.display = 'none';
                     } else {
-                        console.log("Modal-text-box is missing");
+                        console.log("ERROR: Modal-text-box is missing.");
                     }
                 });
     });
@@ -92,8 +92,8 @@ function processGraph(commits: nodegit.Commit[]) {
 // Sort the commit nodes in order to better populate the graph
 function sortCommits(commits) {
     var promise = new Promise((resolve, reject) => {
-        let stageStartProgress = 0; 
-        let stageEndProgress = 80; 
+        let stageStartProgress = 0;
+        let stageEndProgress = 80;
 
         updateGraphProgress(stageStartProgress);
 
@@ -102,9 +102,9 @@ function sortCommits(commits) {
 
         function computeChunk() {
             var count = chunk;
-            
+
             while (commits.length > 0 && count--) {
-                updateGraphProgress((commitHistory.length / numCommits) * stageEndProgress);  
+                updateGraphProgress((commitHistory.length / numCommits) * stageEndProgress);
 
                 let commit = commits.shift();
                 let parents = commit.parents();
@@ -146,10 +146,10 @@ function sortCommits(commits) {
 
 // Populate the graph nodes and add edges where appropriate
 function populateCommits(oldResult) {
-    let stageStartProgress = 80; 
-    let stageEndProgress = 100; 
+    let stageStartProgress = 80;
+    let stageEndProgress = 100;
 
-    updateGraphProgress(stageStartProgress);    
+    updateGraphProgress(stageStartProgress);
 
     var promise = new Promise((resolve, reject) => {
         // reset variables for idempotency, shouldn't be needed when a class is created instead
@@ -160,10 +160,10 @@ function populateCommits(oldResult) {
         columns = [];
         branchIds = [];
         tagIds = [];
-        
+
         // Plot the graph
         for (let i = 0; i < commitHistory.length; i++) {
-            updateGraphProgress((i / commitHistory.length) * stageEndProgress);  
+            updateGraphProgress((i / commitHistory.length) * stageEndProgress);
 
             let parents: string[] = commitHistory[i].parents();
             let nodeColumn;
@@ -241,9 +241,9 @@ function populateCommits(oldResult) {
         for (let i = 0; i < basicList.length; i++) {
             addBasicEdge(basicList[i]);
         }
-        
+
         //sortBasicGraph();
-        
+
         updateGraphProgress(stageEndProgress);
 
         commitList = commitList.sort(timeCompare);
@@ -357,7 +357,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
 
     if (flag) {
         id = basicNodeId++;
-        let title = "Author: " + name + "<br>" + "Number of Commits: " + count;
+        let title = "Author: " + name + " || " + "Number of Commits: " + count;
         console.log(title);
         let imageUrl;
         let colorData = {};
@@ -405,7 +405,7 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
                 author: c.author(),
                 nodeType: NodeType.Basic
             });
-        });   
+        });
 
         // Update node list
         let shaList = [];
@@ -429,11 +429,13 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1];
-            console.log(shortName + " sub-branch: " + branchName.isHead().toString());
-            if (branchName.isHead()) {
+
+            // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+            // add a special case for HEAD
+            if (branchName.isHead() || branchName == "HEAD") {
                 shortName = "*" + shortName;
             }
-            let bsnodeId = shortName;
+            let bsnodeId = generateUniqueNumber();
             bsNodes.add({
                 id: bsnodeId,
                 shape: "icon",
@@ -469,11 +471,13 @@ function makeBasicNode(c, column: number, isUnpushCommit: boolean) {
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1];
-            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+
+            // console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            // I believe this will never happen, but I will not delete it just in case
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }
-            let bsnodeId = shortTagName;
+            let bsnodeId = generateUniqueNumber();
             bsNodes.add({
                 id: bsnodeId,
                 // shape: "ellipse", // old shape
@@ -531,7 +535,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
     }
 
     let flag = false;
-  
+
     let colorData = {}
     if ( isUnpushCommit )
     {
@@ -545,7 +549,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
             }
         }
     }
-    
+
     nodes.add({
         id: id,
         shape: "circularImage",
@@ -567,8 +571,8 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
             let branchName = bname[c.toString()][i];
             let bp = branchName.name().split("/");
             let shortName = bp[bp.length - 1]; // Get the branch's name instead of ref/origin/branch
-            console.log(shortName + " sub-branch: " + branchName.isHead().toString());
-            if (branchName.isHead()) {
+            // console.log(shortName + " sub-branch: " + branchName.isHead().toString());
+            if (branchName.isHead() || branchName == "HEAD") {
                 shortName = "*" + shortName;
             }
             let bsnodeId = generateUniqueNumber();
@@ -610,7 +614,7 @@ function makeNode(c, column: number, isUnpushCommit : boolean) {
             let tagName = tags[c.toString()][i];
             let tp = tagName.name().split("/");
             let shortTagName = tp[tp.length - 1]; // Get the tag's name instead of ref/origin/tag
-            console.log(shortTagName + " tag: " + tagName.isHead().toString());
+            // console.log(shortTagName + " tag: " + tagName.isHead().toString());
             if (tagName.isHead()) {
                 shortTagName = "*" + shortTagName;
             }
@@ -695,7 +699,10 @@ function reCenter() {
         }
     };
 
-    network.focus(commitList[commitList.length - 1]["id"], moveOptions);
+    // Recenter on the first commit
+    if (commitList.length > 0) {
+        network.focus(commitList[commitList.length - 1]["id"], moveOptions);
+    }
 }
 
 // Open a specific commit's dialog box

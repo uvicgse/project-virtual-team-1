@@ -9,18 +9,19 @@
         <span class="icon-bar"></span>
       </button>
       <a href="#"><img src="./assets/AddRepositoryFolder.svg" onclick="switchToAddRepositoryPanel()"
-          class="add-repository-button" title="Add Repository"></a>
+          class="add-repository-button" title="Add Repository" id="nav-open-repo-button"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar">
 
-       <!-- Repo/branch/tag     -->
-      <div class="nav navbar-nav col-md-5 hidden-xs">
-        <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
+       <!-- Repo/branch/tag -->
+      <div class="nav navbar-nav col-md-5 hidden-xs" id="nav-repo-branch-tag-info">
+        <li><i class="fas fa-angle-right fa-2x"></i></li>
+
         <li class="repo-name dropdown-toggle">
           <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal"
             onclick="checkSignedIn()">repository</a>
         </li>
-        <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
+        <li><i class="fas fa-angle-right fa-2x"></i></li>
         <li class="branch-name dropdown">
           <a href="#" class="dropdown-toggle" id="branch-name" data-toggle="dropdown" onclick="switchToMainPanel()">
             branch/tag<span class="caret"></span>
@@ -60,69 +61,69 @@
       </div>
 
       <!--Toolbar-->
-      <div class="navbar-nav-toolbar hidden-xs toolbar-Container">
+      <div class="navbar-nav-toolbar hidden-xs toolbar-Container" id="nav-toolbar">
           <a class="toolbar-Icons" onclick="openWiki()">
-            <i class="fa fa-wikipedia-w fa-lg">
+            <i class="fab fa-wikipedia-w fa-2x">
                 <span class="toolbar-Text">Wiki</span>
             </i>
           </a>
           <a class="toolbar-Icons text-center" (click)="displayFileEditor()">
-            <i class="fa fa-edit fa-lg">
+            <i class="fas fa-edit fa-2x">
               <span class="toolbar-Text">Editor</span>
             </i>
           </a>
         <a class="toolbar-Icons text-center" (click)="displayIssuePanel()">
-          <i class="fa fa-exclamation-circle fa-lg">
+          <i class="fas fa-exclamation-circle fa-2x">
             <span class="toolbar-Text">Issues</span>
           </i>
         </a>
           <a class="toolbar-Icons text-center" onclick="commitModal()">
-            <i class="fa fa-plus-circle fa-lg">
+            <i class="fas fa-plus-circle fa-2x">
             <span class="toolbar-Text">Commit</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="pushToRemote()">
-            <i class="fa fa-cloud-upload fa-lg">
+            <i class="fas fa-cloud-upload-alt fa-2x">
                 <span class="toolbar-Text">Push</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="pullFromRemote()">
-            <i class="fa fa-cloud-download fa-lg">
+            <i class="fas fa-cloud-download-alt fa-2x">
                 <span class="toolbar-Text">Pull</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="cleanRepo()">
-            <i class="fa fa-recycle fa-lg">
+            <i class="fas fa-broom fa-2x">
                 <span class="toolbar-Text">Clean</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="openBranchModal()">
-            <i class="fa fa-pagelines fa-lg">
+            <i class="fas fa-code-branch fa-2x">
                 <span class="toolbar-Text">Branch</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="revertCommit()">
-            <i class="fa fa-history fa-lg">
+            <i class="fas fa-history fa-2x">
                 <span class="toolbar-Text">Revert</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="showStashModal()">
-            <i class="fa fa-star fa-lg">
+            <i class="fas fa-box-open fa-2x">
                 <span class="toolbar-Text">Stash</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="setUpstreamModal()">
-            <i class="fa fa-chevron-up fa-lg">
+            <i class="fas fa-chevron-up fa-2x">
                 <span class="toolbar-Text">Upstream</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="syncFromFork()">
-            <i class="fa fa-share-alt fa-lg">
+            <i class="fas fa-sync-alt fa-2x">
                 <span class="toolbar-Text">Sync</span>
             </i>
           </a>
           <a class="toolbar-Icons" onclick="showRebaseModal()">
-            <i class="fa fa-refresh fa-lg">
+            <i class="fas fa-network-wired fa-2x">
                 <span class="toolbar-Text">Rebase</span>
             </i>
           </a>
@@ -135,7 +136,7 @@
               <label class ="logout-label" id="githubname" style="color:white"></label>
           </div>
           <div id="Button_Sign_in">
-              <a class="fa fa-github fa-2x"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()" title="Sign in with GitHub"></a>
+              <a class="fab fa-github fa-3x"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1" onclick="hideSignInButton()" (click)="authenticateGithub()" title="Sign in with GitHub"></a>
           </div>
       </div>
 
@@ -330,6 +331,26 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="pullFromRemote()">OK</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal for commiting from navbar-->
+<div id="set-commit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content" style=" width: 602px !important">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Commit changes</h4>
+      </div>
+      <div class="modal-body" id="modal-text-box">
+        Please provide a commit message.
+        <input type="text" id="commit-message-input-navbar" class="form-control" style=" width: 554px !important" placeholder="Enter a commit message">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="setCommitButton" onclick="addAndCommit()">Commit</button>
       </div>
     </div>
   </div>

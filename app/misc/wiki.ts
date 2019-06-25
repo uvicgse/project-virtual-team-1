@@ -19,7 +19,7 @@ function openWiki() {
     wikis.style.height = "100vh";
     wikis.style.zIndex = "15";
 
-    console.log(repoFullPath);
+    console.log("Full repo path: " + repoFullPath);
     if (!fs.existsSync(repoFullPath + "\\wiki")) {
         cloneWiki();
     } else {
@@ -27,8 +27,9 @@ function openWiki() {
     }
 
     let externalLinkButton = document.getElementById("wikiLinkButton")!;
+    console.log("Getting wiki url: ");
     console.log(getWikiUrl()!);
-    externalLinkButton.setAttribute("href", getWikiUrl()! + "/wiki"); 
+    externalLinkButton.setAttribute("href", getWikiUrl()! + "/wiki");
 }
 
 function cloneWiki() {
@@ -51,13 +52,13 @@ function cloneWiki() {
     console.log("The wiki path is: ", wikiPath);
     let repository = Git.Clone.clone(cloneUrl, wikiPath, options)
         .then(function (repository) {
-            console.log("Wiki successfully cloned")
+            console.log("Wiki successfully cloned.")
 
             findPageNames(wikiPath, displayWiki)
-            
+
         }, function (err) {
             updateModalText("Clone Failed. Wiki does not exist for this repository or you do not have permission to access the wiki. ");
-            console.log("repo.ts, line 64, failed to clone repo: " + err); // TODO show error on screen
+            console.log("ERROR in repo.ts: failed to clone repo: " + err); // TODO show error on screen
             switchToAddRepositoryPanel();
         }
         );
@@ -97,7 +98,7 @@ function readFileContents(wikiDirectory: string) {
 function displayWiki() : void {
     let marked = require('marked');
     let wiki_page_counter = 0;
-    
+
     let wiki_content = document.getElementById("wiki-content")!;
     while (wiki_content.firstChild){
         wiki_content.removeChild(wiki_content.firstChild);
@@ -130,7 +131,7 @@ function displayWiki() : void {
         let content_body = document.createElement("div");
         content_body.className = "content-body";
         content_body.innerHTML = marked(page.pageContent);
-        
+
         wiki_content_template.appendChild(content_body);
         wiki_titles.appendChild(wiki_content_template);*/
     });
@@ -143,9 +144,9 @@ function updateWiki() {
     Git.Repository.open(localWikiPath)
         .then(function (repo) {
             repository = repo;
-            console.log("Pulling new changes from the remote repository");
+            console.log("Pulling new changes from the remote repository.");
             addCommand("git pull");
-            displayModal("Pulling new changes from the remote repository");
+            displayModal("Pulling new changes from the remote repository.");
 
             return repository.fetchAll({
                 callbacks: {
@@ -157,20 +158,20 @@ function updateWiki() {
                     }
                 }
             });
-        })  
+        })
         // Now that we're finished fetching, go ahead and merge our local branch
         // with the new one
         .then(function() {
           return Git.Reference.nameToId(repository, "refs/remotes/origin/master");
         })
         .then(function(oid) {
-          console.log("Looking up commit with id " + oid + " in all wiki repositories");
+          console.log("Looking up commit with id " + oid + " in all wiki repositories.");
           return Git.AnnotatedCommit.lookup(repository, oid);
         }, function(err) {
-          console.log("Error is " + err);
+          console.log("ERROR looking up commit id(s) in wiki repositories: " + err);
         })
         .then(function(annotated) {
-          console.log("merging " + annotated + "with local forcefully");
+          console.log("Merging " + annotated + " with local forcefully.");
           Git.Merge.merge(repository, annotated, null, {
             checkoutStrategy: Git.Checkout.STRATEGY.FORCE,
           });
@@ -184,7 +185,7 @@ function getWikiUrl(){
     if (readFile.exists(repoFullPath + "/.git/config")) {
         let gitConfigFileText = readFile.read(repoFullPath + "/.git/config", null);
         let searchString = "[remote \"origin\"]";
-        
+
         gitConfigFileText = gitConfigFileText.substr(gitConfigFileText.indexOf(searchString) + searchString.length, gitConfigFileText.length)
         gitConfigFileText = gitConfigFileText.substr(gitConfigFileText.indexOf("url = "), gitConfigFileText.lastIndexOf("."))
         gitConfigFileText = gitConfigFileText.replace(/ /g,"")
@@ -194,21 +195,21 @@ function getWikiUrl(){
         if(gitConfigFileText.includes(".g")){
             gitConfigFileText = gitConfigFileText.replace(".g","");
         }
-        
+
         let gitConfigFileSubstrings = gitConfigFileText.split('/');
-        
+
 
         //If the remote branch was set up using ssh, separate the elements between colons"
         if (gitConfigFileSubstrings[0].indexOf("@") != -1) {
           gitConfigFileSubstrings[0] = gitConfigFileSubstrings[0].substring(gitConfigFileSubstrings[0].indexOf(":") + 1);
         }
-        
+
         let owner = gitConfigFileSubstrings[gitConfigFileSubstrings.length - 2]
         let nameOfRepository = gitConfigFileSubstrings[gitConfigFileSubstrings.length - 1]
 
         var wikiUrl = "https://github.com/" + owner + "/" + nameOfRepository;
-    
+
         return wikiUrl;
-        
+
     }
 }

@@ -1,12 +1,14 @@
 let Git = require("nodegit");
+let readFile = require("fs-sync");
+let checkFile = require("fs");
+let jsonfile = require('jsonfile');
+
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
 let tags = {};
 let remoteName = {};
 let localBranches = [];
-let readFile = require("fs-sync");
-let checkFile = require("fs");
 let repoCurrentBranch = "master";
 let modal;
 let span;
@@ -14,8 +16,9 @@ let contributors: [any] = [0];
 let previousOpen;
 let repoName : string = "";
 let lastRefList = [];
-let jsonfile = require('jsonfile');
 let refreshAllFlagRef = false;
+let detachedFlag = false;
+let detachedRef;
 
 // Issue 6
 // Retrieve repos from repos.json
@@ -26,7 +29,7 @@ function getRecentRepositories() {
     try {
         repoList = JSON.parse(checkFile.readFileSync(repoFile));
     } catch (err) {
-        console.log('Cannot read ' + repoFile);
+        console.log('ERROR: Cannot read file: ' + repoFile);
         repoList = {
             recentRepos: []
         }
@@ -47,13 +50,13 @@ function saveRecentRepositories(repoPath) {
     try {
         repoList = JSON.parse(checkFile.readFileSync(repoFile));
     } catch (err) {
-        console.log('Cannot read ' + repoFile);
+        console.log('ERROR: Cannot read file ' + repoFile);
         repoList = {
             recentRepos: []
         }
     }
 
-    console.log('Updating recent repos');
+    console.log('Updating recent repos.');
     updatedRepoList = {
         recentRepos: updateRecentRepos(repoList.recentRepos, repoPath)
     }
@@ -61,7 +64,8 @@ function saveRecentRepositories(repoPath) {
     try {
       jsonfile.writeFileSync(repoFile, updatedRepoList);
     } catch (err) {
-      console.log(err);
+      let recentRepoError = err;
+      console.log("ERROR saving recent repository list: " + recentRepoError);
     }
 }
 
@@ -85,7 +89,7 @@ function updateRecentRepos(recentRepos, repoToAdd) {
     recentRepos.push(repoToAdd);
 
     if (recentRepos.length > maxRepos) {
-        console.log('Removing head of list')
+        console.log('Removing head of list.')
         recentRepos.splice(0, 1);
     }
     return recentRepos;
@@ -102,7 +106,7 @@ function downloadRepository() {
   } else {
 
     fullLocalPath = document.getElementById("dirPickerSaveNew").files[0].path;
-    console.log(repoFullPath)
+    console.log("Full repo path: " + repoFullPath);
 
   }
 
@@ -143,14 +147,13 @@ function downloadFunc(cloneURL, fullLocalPath) {
     }
   };
 
-  console.log("cloning into " + fullLocalPath);
+  console.log("Cloning into " + fullLocalPath);
   let repository = Git.Clone.clone(cloneURL, fullLocalPath, options)
     .then(function (repository) {
       progressDiv.style.visibility = 'collapse';
       updateProgressBar(0);
-      console.log("Repo successfully cloned");
+      console.log("Repo successfully cloned.");
       document.getElementById('graph-loading').style.display = 'block';
-      refreshAll(repository);
       updateModalText("Clone Successful, repository saved under: " + fullLocalPath);
       addCommand("git clone " + cloneURL + " " + fullLocalPath);
       repoFullPath = fullLocalPath;
@@ -160,8 +163,10 @@ function downloadFunc(cloneURL, fullLocalPath) {
       switchToMainPanel();
     },
       function (err) {
+        progressDiv.style.visibility = 'collapse';
+        updateProgressBar(0);
         updateModalText("Clone Failed - " + err);
-        console.log("repo.ts, line 64, failed to clone repo: " + err); // TODO show error on screen
+        console.log("ERROR failed to clone repo: " + err); // TODO show error on screen
         switchToAddRepositoryPanel();
       });
 }
@@ -174,7 +179,7 @@ function updateProgressBar(ratio) {
 }
 
 function openRepository() {
-  console.log("Open Repository")
+  console.log("Opening Repository...")
   if (document.getElementById("dirPickerOpenLocal").value === previousOpen && previousOpen != undefined) {
     return;
   }
@@ -199,7 +204,7 @@ function openRepository() {
       }
     }
 
-    console.log('Saving repository path');
+    console.log('Saving repository path...');
     saveRecentRepositories(fullLocalPath);
 
     console.log("Trying to open repository at " + fullLocalPath);
@@ -210,7 +215,7 @@ function openRepository() {
       repoLocalPath = localPath;
       if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
         let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
-        console.log("current HEAD commit: " + tid);
+        console.log("Current HEAD commit: " + tid);
       }
       //Reads the git config file and extracts info about the remote "origin" branch on GitHub
       if (readFile.exists(repoFullPath + "/.git/config")) {
@@ -264,12 +269,12 @@ function openRepository() {
       }
       document.getElementById('graph-loading').style.display = 'block';
       refreshAll(repository);
-      console.log("Repo successfully opened");
-      updateModalText("Repository successfully opened");
+      console.log("Repo successfully opened.");
+      updateModalText("Repository successfully opened.");
     },
       function (err) {
         updateModalText("No repository found. Select a folder with a repository.");
-        console.log("repo.ts, line 101, cannot open repository: " + err); // TODO show error on screen
+        console.log("ERROR: cannot open repository: " + err); // TODO show error on screen
         switchToAddRepositoryPanel();
       });
     document.getElementById("dirPickerOpenLocal").value = "";
@@ -319,7 +324,7 @@ function openRepository() {
       },
         function (err) {
           updateModalText("Creating Failed - " + err);
-          //console.log("repo.ts, line 131, cannot open repository: "+err); // TODO show error on screen
+          //console.log("ERROR cannot open repository: "+err); // TODO show error on screen
         });
     }
 
@@ -332,7 +337,7 @@ function openRepository() {
     elem.innerHTML = '';
     for (let i = 0; i < localBranches.length; i++) {
       if (localBranches[i] !== thisB) {
-        console.log("local branch: " + localBranches[i]);
+        console.log("Local branch is: " + localBranches[i]);
         let li = document.createElement("li");
         let a = document.createElement("a");
         a.appendChild(document.createTextNode(localBranches[i]));
@@ -370,7 +375,7 @@ function refreshReferences(verbose, force) {
           }
 
           // detects changes, refresh the lists
-          console.log("branch or tag changes detected... refreshing branch and tag list");
+          console.log("Branch or tag changes detected... refreshing branch and tag list.");
 
           if (!refreshAllFlagRef) {
             // show refresh graph alert
@@ -387,7 +392,7 @@ function refreshReferences(verbose, force) {
           tags = {};
           clearBranchAndTagElement();
           for (let i = 0; i < refList.length; i++) {
-            if (verbose) { console.log("reference name: " + refList[i].name()); }
+            if (verbose) { console.log("Reference name: " + refList[i].name()); }
             //get simplified name
             let refName = refList[i].name().split("/")[refList[i].name().split("/").length - 1];
 
@@ -417,12 +422,11 @@ function refreshReferences(verbose, force) {
                           tags[commit.sha()] = [refList[i]];
                       }
                   });
-
               } else{
                 console.log("Unsupported reference: " + refList[i].name());
               }
             }, function (err) {
-              console.log("repo.ts, line 269, could not find referenced branch" + err);
+              console.log("ERROR: could not find referenced branch" + err);
             });
 
             // display branch list and tag list
@@ -434,11 +438,23 @@ function refreshReferences(verbose, force) {
               localBranches.push(refName);
               displayBranch(refName, "branch-item-list", "checkoutLocalBranch(this)");
             } else if (refList[i].isTag()){
-              displayTag(refName, "tag-item-list", ""); // TODO: support switching to a tag by adding an on-click function
+              displayTag(refName, "tag-item-list", "checkoutTag(\""+refList[i]+"\")");
             } else{
-              console.log("Unsupported reference: " + refList[i].name());
+              console.log("ERROR: Unsupported reference: " + refList[i].name());
             }
           }
+
+          // dealing with case where HEAD is detached at a commit
+          if (detachedFlag) {
+            let detachedOid = detachedRef.target().tostrS();
+            if (detachedOid in bname) {
+              bname[detachedOid].push(detachedRef);
+            }
+            else {
+              bname[detachedOid] = [detachedRef];
+            }
+          }
+
           // update lastRefList
           lastRefList = refList.slice();
         })
@@ -449,14 +465,27 @@ function refreshReferences(verbose, force) {
     document.getElementById('graph-loading').style.display = 'block';
     let branch;
     lastRefList = [];
+    let navRepoName = repoLocalPath;
 
     //Get the current branch from the repo
     repository.getCurrentBranch()
       .then(function (reference) {
         //Get the simplified name from the branch
         let branchParts = reference.name().split("/");
-        console.log("branch parts: " + branchParts);
+        console.log("Branch parts: " + branchParts);
         branch = branchParts[branchParts.length - 1];
+
+        // checkout-tag special case: HEAD is detached at a commit
+        if (branchParts == "HEAD") {
+          // signalling the detached flag
+          detachedFlag = true;
+          let detachedCid = reference.target().tostrS();
+          console.log("HEAD is detached at ["+detachedCid+"]");
+          branch = branch + " detached at " + detachedCid;
+          detachedRef = reference;
+        } else {
+          detachedFlag = false;
+        }
       })
       .then(function () {
         // suppress commit detection alert
@@ -466,33 +495,25 @@ function refreshReferences(verbose, force) {
         checkCommitChange();
       })
       .then(function () {
-        console.log("Updating the graph and the labels");
+        console.log("Updating the graph and the labels.");
         drawGraph();
-        let breakStringFrom;
         if (repoLocalPath.length > 20) {
-          for (var i = 0; i < repoLocalPath.length; i++) {
-            if (repoLocalPath[i] == "/") {
-              breakStringFrom = i;
-            }
-          }
-          repoLocalPath = "..." + repoLocalPath.slice(breakStringFrom, repoLocalPath.length);
+            navRepoName = "..." + repoLocalPath.replace(/^.*[\\\/]/, '');
         }
-        document.getElementById("repo-name").innerHTML = repoLocalPath;
-        // TODO: add a condition here to switch between tag and branch name string
-        document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
+        document.getElementById("repo-name").innerHTML = navRepoName;
+        document.getElementById("branch-name").innerHTML = '<span id="name-selected">' + branch +'</span>' + '<span class="caret"></span>';
       }, function (err) {
         //If the repository has no commits, getCurrentBranch will throw an error.
         //Default values will be set for the branch labels
         window.alert("Warning:\n" +
           "No branches have been found in this repository.\n" +
           "This is likely because there have been no commits made.");
-        console.log("No branches found. Setting default label values to master");
-        console.log("Updating the labels and graph");
+        console.log("No branches found. Setting default label values to master.");
+        console.log("Updating the labels and graph.");
         drawGraph();
-        document.getElementById("repo-name").innerHTML = repoLocalPath;
+        document.getElementById("repo-name").innerHTML = navRepoName;
         //default label set to master
-        // TODO: add a condition here to switch between tag and branch name string
-        document.getElementById("branch-name").innerHTML = 'Branch: ' + '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
+        document.getElementById("branch-name").innerHTML = '<span id="name-selected">' + "master" +'</span>' + '<span class="caret"></span>';
       });
   }
 
@@ -507,14 +528,14 @@ function refreshReferences(verbose, force) {
       .then(function (branchList) {
         clearBranchAndTagElement();
         for (let i = 0; i < branchList.length; i++) {
-          console.log("branch discovered: " + branchList[i]);
+          console.log("Branch discovered: " + branchList[i]);
           let bp = branchList[i].split("/");
           if (bp[1] !== "remotes") {
             displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
           }
           Git.Reference.nameToId(repos, branchList[i]).then(function (oid) {
             // Use oid
-            console.log("old id " + oid);
+            console.log("Oid " + oid);
           });
         }
       });
@@ -537,7 +558,7 @@ function refreshReferences(verbose, force) {
       })
       .then(function (ref) {
         let name = ref.name().split("/");
-        console.log("merging remote branch with tracked local branch");
+        console.log("Merging remote branch with tracked local branch.");
         clearBranchAndTagElement();
         for (let i = 0; i < list.length; i++) {
           let bp = list[i].split("/");
@@ -656,7 +677,7 @@ function refreshReferences(verbose, force) {
     var deleteDropdownList = document.getElementById("deleteTagList");
     var deleteChilds = deleteDropdownList.childNodes;
     var createNewDelTag = true;
-    for(i = 0; i < deleteChilds.length; i++) {
+    for(let i = 0; i < deleteChilds.length; i++) {
       if(deleteChilds[i].firstChild.innerHTML == name) {
         createNewDelTag = false;
       }
@@ -671,7 +692,7 @@ function refreshReferences(verbose, force) {
     button.onclick = (event) => {
 
       // get name of tag from event
-      tagName = event.srcElement.getAttribute("id");
+      let tagName = event.srcElement.getAttribute("id");
 
       let repo;
       Git.Repository.open(repoFullPath)
@@ -684,7 +705,7 @@ function refreshReferences(verbose, force) {
       ).catch(function(msg) {
         let errorMessage = "Error: " + msg.message;
       });
-    }
+    };
 
     // create tag element in list
     span.appendChild(button);
@@ -710,7 +731,7 @@ function refreshReferences(verbose, force) {
     // deleting a tag
     li.onclick = () => {
 
-      updateModalText("Tag sucessfully deleted - refresh to see the updated graph. ");
+      updateModalText("Tag successfully deleted - refresh to see the updated graph. ");
 
       let repo;
       Git.Repository.open(repoFullPath)
@@ -726,12 +747,12 @@ function refreshReferences(verbose, force) {
 
       var parentList = document.getElementById("deleteTagList");
       var deleteChildren = parentList.childNodes;
-      for( i = 0; i < deleteChildren.length; i++ ) {
+      for(let i = 0; i < deleteChildren.length; i++) {
         if (deleteChildren[i].firstChild.innerHTML == name) {
           deleteChildren[i].remove();
         }
       }
-    }
+    };
     li.appendChild(a);
     parentDropdownList.appendChild(li);
   }
@@ -747,13 +768,13 @@ function refreshReferences(verbose, force) {
     let icon = document.createElement("i");
     icon.style.cssFloat = "right";
     icon.style.marginRight = "20px";
-    icon.className = "fa fa-window-minimize"
+    icon.className = "fa fa-window-minimize";
 
     button.appendChild(icon);
 
     div.setAttribute("id", name);
     div.setAttribute("role", "menu");
-    div.setAttribute("class", "list-group")
+    div.setAttribute("class", "list-group");
     button.onclick = (e) => {
       showDropDown(button);
       icon.className === "fa fa-window-minimize" ? icon.className = "fa fa-plus" : icon.className = "fa fa-window-minimize";
@@ -764,7 +785,7 @@ function refreshReferences(verbose, force) {
 
   function showDropDown(ele) {
     //If the forked Repo is clicked collapse or uncollapse the forked repo list
-    let div = document.getElementById(ele.className)
+    let div = document.getElementById(ele.className);
     if (div.style.display === 'none') {
       div.style.display = 'block';
     }
@@ -773,74 +794,98 @@ function refreshReferences(verbose, force) {
     }
 
   }
-
+  
   function checkoutLocalBranch(element) {
-    let bn;
-    let img = "<img"
+    let button;   // entry in branch drop-down
+    let img = "<img";
     if (typeof element === "string") {
-      bn = element;
+      button = element;
     } else {
-      bn = element.innerHTML;
+      button = element.innerHTML;
     }
-    if (bn.includes(img)) {
-      bn = bn.substr(0, bn.lastIndexOf(img)) // remove local branch <img> tag from branch name string
-      if (bn.includes(img)) {
-        bn = bn.substr(0, bn.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
+    if (button.includes(img)) {
+      button = button.substr(0, button.lastIndexOf(img)); // remove local branch <img> tag from branch name string
+      if (button.includes(img)) {
+        button = button.substr(0, button.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
       }
     }
-    console.log("name of branch being checked out: " + bn);
+    
+    console.log("name of branch being checked out: " + button);
+
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
         document.getElementById('graph-loading').style.display = 'block';
-        addCommand("git checkout " + bn);
-        repo.checkoutBranch("refs/heads/" + bn)
+        addCommand("git checkout " + button);
+        repo.checkoutBranch("refs/heads/" + button)
           .then(function () {
             refreshAll(repo);
           }, function (err) {
-            console.log("repo.tx, line 271, cannot checkout local branch: " + err);
+            console.log("ERROR: cannot checkout local branch: " + err);
           });
       })
   }
 
+  // checkout tag function
+  function checkoutTag(element) {
+    Git.Repository.open(repoFullPath)
+      .then(function (repo) {
+        document.getElementById('graph-loading').style.display = 'block';
+        addCommand("git checkout " + element);
+
+        repo.setHead(element)
+          .then(function () {
+            refreshAll(repo);
+          }, function (err) {
+            console.log("repo.ts, cannot checkout local tag: " + err);
+            displayModal("ERROR: cannot checkout local tag " + element);
+            refreshAll(repo);
+          });
+      });
+  }
+
   function checkoutRemoteBranch(element) {
-    let bn;
-    let img = "<img"
+    let button;   // entry in branch drop-down
+    let img = "<img";
     if (typeof element === "string") {
-      bn = element;
+      button = element;
     } else {
-      bn = element.innerHTML;
+      button = element.innerHTML;
     }
-    if (bn.includes(img)) {
-      bn = bn.substr(0, bn.lastIndexOf(img)) // remove remote branch <img> tag from branch name string
-      if (bn.includes(img)) {
-        bn = bn.substr(0, bn.lastIndexOf(img))  // remove local branch <img> tag from branch name string
+    if (button.includes(img)) {
+      button = button.substr(0, button.lastIndexOf(img)); // remove remote branch <img> tag from branch name string
+      if (button.includes(img)) {
+        button = button.substr(0, button.lastIndexOf(img))  // remove local branch <img> tag from branch name string
       }
     }
-    console.log("current branch name: " + bn);
+
+    console.log("current branch name: " + button);
+
     let repos;
     Git.Repository.open(repoFullPath)
       .then(function (repo) {
         repos = repo;
         addCommand("git fetch");
-        addCommand("git checkout -b " + bn);
-        let cid = remoteName[bn];
+
+        addCommand("git checkout -b " + button);
+        let cid = remoteName[button];
         console.log("name of remote branch:  " + cid);
         return Git.Commit.lookup(repo, cid);
       })
       .then(function (commit) {
         console.log("commiting");
-        return Git.Branch.create(repos, bn, commit, 0);
+        return Git.Branch.create(repos, button, commit, 0);
       })
       .then(function (code) {
-        console.log("name of local branch " + bn);
-        repos.mergeBranches(bn, "origin/" + bn)
+        console.log("name of local branch " + button);
+        repos.mergeBranches(button, "origin/" + button)
+
           .then(function () {
             document.getElementById('graph-loading').style.display = 'block';
             refreshAll(repos);
-            console.log("Pull successful");
+            console.log("Pull successful.");
           });
       }, function (err) {
-        console.log("repo.ts, line 306, could not pull from repository" + err);
+        console.log("ERROR: could not pull from repository" + err);
       })
   }
 
