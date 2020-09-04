@@ -50,7 +50,7 @@
     "jquery-migrate": "^3.0.1",
     "marked": "^0.6.2",
     "material-letter-icons": "^1.0.8",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "nodegit": "^0.24.3",
     "octonode": "^0.9.5",
     "reflect-metadata": "0.1.3",
